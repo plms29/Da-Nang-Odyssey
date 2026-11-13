@@ -1,6 +1,38 @@
 # plan.md
 
-## Giai đoạn B, đợt B1: Photobooth check-in + hộ chiếu + hạ tầng (KH mục 11, giai đoạn 2)
+## Giai đoạn B, đợt B2: Bản đồ, kéo thả, trạm hô bằng giọng nói (KH mục 11, giai đoạn 3 phần màn chơi)
+
+Mục tiêu: ba màn P0 chơi được đúng như KH mục 4. Trạm Tìm ghim trên Google Maps thật; trạm Làm kéo thả;
+trạm hô bài chòi ghi âm tối đa 20 giây và được Gemini chấm (KH mục 7, dòng "Chấm trạm Thể hiện (giọng nói)").
+Tour 5 phút (F6, B3) để đợt B3.
+
+**Xung đột với nhánh `ui-dong`** (`plan-ui-dong.md`, task U6, U7): U7 sửa `components/level/stations/*` và `HintBox.tsx`,
+U6 sửa `LevelPlayer.tsx`. B2 sửa các trạm trước; U7 phải làm sau khi B2 vào `main` (rebase nhánh `ui-dong`),
+và chỉ thêm lớp hiệu ứng lên các component kéo thả/bản đồ mới, không thay cách tương tác.
+
+Giao kèo mới (T10 tạo, worker không đổi):
+- `JudgeRequest` thêm `audio?: { mime: string; data_base64: string }` (có `audio` thì `text` có thể rỗng);
+  `JudgeResult` thêm `transcript?: string`.
+- Biến môi trường `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`. Không có khóa thì trạm Tìm giữ ô nhập tọa độ + nút demo hiện tại.
+- Âm thanh không được lưu, không ghi log; server chỉ chuyển cho Gemini rồi bỏ.
+
+| # | Task | Worker | File sở hữu | Phụ thuộc |
+|---|------|--------|-------------|-----------|
+| T10 | Sửa giao kèo trên trong `lib/types.ts`; cài `@dnd-kit/core`, `@dnd-kit/sortable`, `@types/google.maps` (dev); thêm khóa Maps vào `.env.example` | **Claude (main)**: giao kèo | `lib/types.ts`, `package.json`, `.env.example` | — |
+| T11 | F2 bản đồ: nạp Maps JS API bằng thẻ script (không thêm thư viện), `MapView` có marker, chạm để ghim, nút "Xác nhận ghim"; `MapPinStation` dùng bản đồ khi có khóa, giữ cách cũ khi không; chấm vẫn bằng `checkMapPin` | `ui-argon` | `components/map/*`, `components/level/stations/MapPinStation.tsx` | T10 |
+| T12 | F4 kéo thả: ghép mảnh và xếp thứ tự bằng dnd-kit (sortable, cảm biến chạm + bàn phím có thông báo tiếng Việt cho trình đọc màn hình); giữ nút ▲/▼ ở trạm xếp thứ tự; chấm vẫn bằng `checkJigsaw`/`checkOrder` | `ui-argon` | `components/level/stations/JigsawStation.tsx`, `OrderStation.tsx` | T10 |
+| T13 | F5 ghi âm: `VoiceRecorder` (MediaRecorder, xin micro khi bấm, tự dừng ở `max_seconds`, nghe lại, ghi lại), gửi `audio` base64 tới `/api/judge`; luôn có lựa chọn gõ chữ; hiện `transcript` khi có; câu báo trước "Đoạn ghi âm chỉ gửi đi để chấm và không lưu lại" | `ui-hydrogen-high` | `components/level/VoiceRecorder.tsx`, `components/level/stations/ExpressStation.tsx` | T10 |
+| T14 | B2 chấm giọng nói: route nhận `audio` (danh sách mime cho phép, giới hạn kích thước theo `max_seconds`, nâng trần content-length cho riêng âm thanh); `gradeWithGemini` gửi âm thanh dạng `inline_data`, schema thêm `transcript`; chỉ có âm thanh mà Gemini lỗi/không có khóa → 422 "Chưa chấm được giọng nói, bạn gõ chữ nhé"; test không gọi mạng | `ui-hydrogen-high` | `lib/judge/*`, `app/api/judge/route.ts` | T10 |
+
+T11–T14 chạy song song sau T10 (file không chồng nhau). Worker không chạy shell; phiên chính chạy tsc, lint, test, build, thử trên trình duyệt.
+Review: `reviewer` (sonnet), tối đa 2 vòng sửa.
+
+**Cần xác minh (KH mục 11):** định dạng âm thanh Gemini nhận (Chrome ghi `audio/webm;codecs=opus`, iOS Safari ghi `audio/mp4`);
+hạn mức đầu vào âm thanh; khóa Maps (bạn tạo, giới hạn theo domain Cloud Run). Micro và Maps chỉ thử được thật trên điện thoại qua HTTPS.
+
+---
+
+## Giai đoạn B, đợt B1 (đã xong): Photobooth check-in + hộ chiếu + hạ tầng (KH mục 11, giai đoạn 2)
 
 Giai đoạn A đã xong (xem `BAO-CAO-KHUNG-SUON.md`). Đợt B1 làm "Kết quả phải có" của giai đoạn 2:
 ảnh check-in có khung và dấu, tải về được.

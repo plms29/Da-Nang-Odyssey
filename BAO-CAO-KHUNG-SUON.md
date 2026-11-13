@@ -1,5 +1,28 @@
 # Báo cáo tiến độ
 
+## Đợt B2: Bản đồ, kéo thả, trạm hô bằng giọng nói
+
+Ba màn P0 giờ có đủ cách tương tác KH mục 4 yêu cầu. Kiểm tra chung: 58 test qua, tsc, lint, build sạch. Trang chơi màn tăng từ 7,6 kB lên 26,7 kB JS (dnd-kit).
+
+| Task | Worker | Review | Vòng sửa | Đã kiểm tra |
+| --- | --- | --- | --- | --- |
+| T10 giao kèo: `audio` trong yêu cầu chấm, `transcript` trong kết quả; cài dnd-kit | Claude (main) | — | — | tsc, test |
+| T11 Google Maps cho trạm Tìm (F2) | `ui-argon` → `ui-hydrogen-high` | 1 lỗi chặn: nạp Maps kiểu `loading=async` mà không gọi `importLibrary` thì bản đồ có thể không dựng | 1 (argon hết quota, chuyển worker theo quy tắc dự phòng) | Không có khóa: hiện đúng ô nhập tọa độ + nút demo. **Chưa thử với khóa thật** |
+| T12 kéo thả ghép mảnh và xếp thứ tự (F4) | `ui-argon` → `ui-hydrogen-high` | Sửa nhỏ: lớp đè khi kéo, nhãn trình đọc màn hình tiếng Anh, vuốt trang bị chặn trên điện thoại | 1 (argon hết quota giữa chừng) | Màn 1 ghép 9 mảnh qua trạm; màn 2 xếp bằng ▲/▼ qua trạm; nhãn "mục có thể sắp xếp". **Chưa thử kéo bằng tay trên điện thoại** |
+| T13 ghi âm trạm Thể hiện (F5) | `ui-hydrogen-high` | Sửa: nhãn định dạng âm thanh đoán bừa, bản ghi 0 byte vẫn gửi, hẹn giờ tự dừng bị trình duyệt làm chậm | 1 | Màn 1 và 3 hiện lựa chọn Nói / Gõ chữ. **Chưa ghi âm thật** (khung trình duyệt chặn micro) |
+| T14 chấm giọng nói ở `/api/judge` (B2) | `ui-hydrogen-high` | Sửa: chưa kiểm tra ký tự base64, đọc body không giới hạn khi thiếu header, thiếu test cho route | 1 | Claude đọc lại phần đọc body; 5 test route mới (413, 400, 422 không lộ dữ liệu âm thanh) |
+
+**Quota:** `ui-argon` hết quota tuần (còn khoảng 123 giờ). Các task giao diện phức tạp sau đây sẽ chạy trên `ui-hydrogen-high` cho đến khi quota reset, trừ khi bạn nâng gói.
+
+**Đã sửa thêm:** eslint từng quét cả worktree `.claude/worktrees/ui-dong` của phiên khác (336 lỗi giả); đã loại thư mục này.
+
+**Việc của bạn sau đợt B2:**
+1. Tạo khóa Google Maps (giới hạn theo domain Cloud Run), đặt `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` lúc build.
+2. Đặt `GEMINI_API_KEY`, `GEMINI_MODEL` và thử một câu hô bài chòi thật: chưa xác minh Gemini nhận `audio/webm` (Chrome) và `audio/mp4` (iPhone).
+3. Nhánh `ui-dong` cần rebase lên `main` trước khi làm U6, U7 vì các file trạm chơi đã thay đổi nhiều.
+
+---
+
 ## Đợt B1: Photobooth check-in, hộ chiếu, hạ tầng
 
 **Kết quả phải có của giai đoạn 2 (KH mục 11):** "Ảnh check-in có khung và dấu, tải về được". Code đã đủ: chạy được trên trình duyệt đến bước mở camera. Chưa chụp thử thật vì khung trình duyệt trong app chặn camera; **cần thử trên điện thoại qua HTTPS** (URL Cloud Run).
