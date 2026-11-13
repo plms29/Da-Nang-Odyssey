@@ -9,16 +9,24 @@ export interface ComposePhotoOptions {
   mode: "onsite" | "remote";
   mirrored: boolean;
   date: Date;
+  caption?: string;
+}
+
+export interface ComposeCanvasOptions {
+  spot: Spot;
+  mode: "onsite" | "remote";
+  date: Date;
+  caption?: string;
 }
 
 /**
- * Compose a 1080x1920 check-in JPEG entirely on the client device (CK-06).
- * Waits for `document.fonts.ready` before drawing text (CK-05).
+ * Snapshot the current video frame cropped to 9:16 (1080x1920) on an offscreen canvas
+ * so recomposing with updated text does not require the live camera stream.
  */
-export async function composePhoto(
+export function captureRawFrame(
   video: HTMLVideoElement,
-  opts: ComposePhotoOptions,
-): Promise<Blob> {
+  mirrored: boolean,
+): HTMLCanvasElement {
   const vw = video.videoWidth;
   const vh = video.videoHeight;
   if (!vw || !vh || vw <= 0 || vh <= 0) {
@@ -55,12 +63,34 @@ export async function composePhoto(
   }
 
   ctx.save();
-  if (opts.mirrored) {
+  if (mirrored) {
     ctx.translate(OUTPUT_WIDTH, 0);
     ctx.scale(-1, 1);
   }
   ctx.drawImage(video, sx, sy, sw, sh, 0, 0, OUTPUT_WIDTH, OUTPUT_HEIGHT);
   ctx.restore();
+
+  return canvas;
+}
+
+/**
+ * Compose a 1080x1920 check-in JPEG from a previously captured raw canvas (CK-06).
+ * Waits for `document.fonts.ready` before drawing text (CK-05).
+ */
+export async function composeFromCanvas(
+  sourceCanvas: HTMLCanvasElement,
+  opts: ComposeCanvasOptions,
+): Promise<Blob> {
+  const canvas = document.createElement("canvas");
+  canvas.width = OUTPUT_WIDTH;
+  canvas.height = OUTPUT_HEIGHT;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("Không thể khởi tạo khung vẽ 2D.");
+  }
+
+  ctx.drawImage(sourceCanvas, 0, 0, OUTPUT_WIDTH, OUTPUT_HEIGHT);
 
   // CK-05: Wait for Be Vietnam Pro font to finish loading before drawing Vietnamese diacritics
   if (typeof document !== "undefined" && document.fonts?.ready) {
@@ -68,7 +98,7 @@ export async function composePhoto(
     try {
       const family = getComputedStyle(document.body).fontFamily;
       await Promise.all(
-        ["600 30px", "700 48px"].map((f) =>
+        ["400 24px", "600 30px", "700 48px"].map((f) =>
           document.fonts.load(`${f} ${family}`, "ĐÃ ĐẾN Ặ"),
         ),
       );
@@ -79,6 +109,7 @@ export async function composePhoto(
     spot: opts.spot,
     mode: opts.mode,
     date: opts.date,
+    caption: opts.caption,
   });
 
   return new Promise<Blob>((resolve, reject) => {
@@ -93,5 +124,22 @@ export async function composePhoto(
       "image/jpeg",
       0.9,
     );
+  });
+}
+
+/**
+ * Compose a 1080x1920 check-in JPEG entirely on the client device (CK-06).
+ * Waits for `document.fonts.ready` before drawing text (CK-05).
+ */
+export async function composePhoto(
+  video: HTMLVideoElement,
+  opts: ComposePhotoOptions,
+): Promise<Blob> {
+  const rawCanvas = captureRawFrame(video, opts.mirrored);
+  return composeFromCanvas(rawCanvas, {
+    spot: opts.spot,
+    mode: opts.mode,
+    date: opts.date,
+    caption: opts.caption,
   });
 }

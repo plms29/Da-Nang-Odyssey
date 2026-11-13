@@ -2,13 +2,19 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Spot } from "@/lib/types";
-import { composePhoto, OUTPUT_HEIGHT, OUTPUT_WIDTH } from "./compose";
+import {
+  captureRawFrame,
+  composeFromCanvas,
+  OUTPUT_HEIGHT,
+  OUTPUT_WIDTH,
+} from "./compose";
 import { drawFrame } from "./frames";
 import { useCamera } from "./useCamera";
 
 export interface PhotoBoothProps {
   spot: Spot;
   mode: "onsite" | "remote";
+  caption?: string;
   onCaptured?: (blob: Blob) => void;
 }
 
@@ -21,7 +27,31 @@ function formatDateIso(date: Date): string {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-export function PhotoBooth({ spot, mode, onCaptured }: PhotoBoothProps) {
+function buildShareMetadata(
+  blob: Blob,
+  fileName: string,
+): { file: File | null; shareSupported: boolean } {
+  if (typeof File === "undefined") {
+    return { file: null, shareSupported: false };
+  }
+  const file = new File([blob], fileName, { type: "image/jpeg" });
+  let shareSupported = false;
+  if (typeof navigator !== "undefined") {
+    try {
+      shareSupported = Boolean(navigator.canShare?.({ files: [file] }));
+    } catch {
+      shareSupported = false;
+    }
+  }
+  return { file, shareSupported };
+}
+
+export function PhotoBooth({
+  spot,
+  mode,
+  caption,
+  onCaptured,
+}: PhotoBoothProps) {
   const {
     stream,
     facingMode,
@@ -49,8 +79,16 @@ export function PhotoBooth({ spot, mode, onCaptured }: PhotoBoothProps) {
   const overlayCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const usedPhotoRef = useRef(false);
   const mountedRef = useRef(true);
+  const rawFrameRef = useRef<HTMLCanvasElement | null>(null);
+  const captureDateRef = useRef<Date | null>(null);
+  const composedCaptionRef = useRef<string | undefined>(undefined);
+  const captionRef = useRef<string | undefined>(caption);
 
   const isMirrored = facingMode === "user";
+
+  useEffect(() => {
+    captionRef.current = caption;
+  }, [caption]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -144,6 +182,7 @@ export function PhotoBooth({ spot, mode, onCaptured }: PhotoBoothProps) {
         spot,
         mode,
         date: new Date(),
+        caption,
       });
     };
 
@@ -156,7 +195,7 @@ export function PhotoBooth({ spot, mode, onCaptured }: PhotoBoothProps) {
     return () => {
       cancelled = true;
     };
-  }, [phase, spot, mode]);
+  }, [phase, spot, mode, caption]);
 
   const performCapture = useCallback(async () => {
     const video = videoRef.current;
@@ -173,11 +212,13 @@ export function PhotoBooth({ spot, mode, onCaptured }: PhotoBoothProps) {
 
     try {
       const now = new Date();
-      const blob = await composePhoto(video, {
+      const activeCaption = captionRef.current;
+      const rawCanvas = captureRawFrame(video, facingMode === "user");
+      const blob = await composeFromCanvas(rawCanvas, {
         spot,
         mode,
-        mirrored: facingMode === "user",
         date: now,
+        caption: activeCaption,
       });
 
       if (!mountedRef.current) {
@@ -187,21 +228,13 @@ export function PhotoBooth({ spot, mode, onCaptured }: PhotoBoothProps) {
       // Stop all MediaStream tracks upon leaving live state for review
       stopCamera();
 
+      rawFrameRef.current = rawCanvas;
+      captureDateRef.current = now;
+      composedCaptionRef.current = activeCaption;
+
       const nextUrl = URL.createObjectURL(blob);
       const fileName = `checkin-${spot.id}-${formatDateIso(now)}.jpg`;
-
-      let file: File | null = null;
-      let shareSupported = false;
-      if (typeof File !== "undefined") {
-        file = new File([blob], fileName, { type: "image/jpeg" });
-        if (typeof navigator !== "undefined") {
-          try {
-            shareSupported = Boolean(navigator.canShare?.({ files: [file] }));
-          } catch {
-            shareSupported = false;
-          }
-        }
-      }
+      const { file, shareSupported } = buildShareMetadata(blob, fileName);
 
       usedPhotoRef.current = false;
       setUsedPhoto(false);
@@ -222,6 +255,53 @@ export function PhotoBooth({ spot, mode, onCaptured }: PhotoBoothProps) {
       setPhase("error");
     }
   }, [facingMode, mode, spot, stopCamera]);
+
+  // Recompose the captured raw frame (debounced 300ms) when caption changes during review
+  useEffect(() => {
+    if (phase !== "review" || caption === composedCaptionRef.current) {
+      return;
+    }
+    const rawCanvas = rawFrameRef.current;
+    const captureDate = captureDateRef.current;
+    if (!rawCanvas || !captureDate) {
+      return;
+    }
+
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      void (async () => {
+        try {
+          const blob = await composeFromCanvas(rawCanvas, {
+            spot,
+            mode,
+            date: captureDate,
+            caption,
+          });
+          if (cancelled || !mountedRef.current) {
+            return;
+          }
+
+          composedCaptionRef.current = caption;
+          const nextUrl = URL.createObjectURL(blob);
+          const fileName = `checkin-${spot.id}-${formatDateIso(captureDate)}.jpg`;
+          const { file, shareSupported } = buildShareMetadata(blob, fileName);
+
+          setCapturedBlob(blob);
+          setDownloadName(fileName);
+          setShareFile(file);
+          setCanShareFile(shareSupported);
+          setReviewUrl(nextUrl);
+        } catch {
+          // Keep the previous composed review photo if recomposition fails
+        }
+      })();
+    }, 300);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [phase, caption, spot, mode]);
 
   // 3-2-1 countdown timer
   useEffect(() => {
@@ -279,6 +359,9 @@ export function PhotoBooth({ spot, mode, onCaptured }: PhotoBoothProps) {
   }
 
   async function handleRetake() {
+    rawFrameRef.current = null;
+    captureDateRef.current = null;
+    composedCaptionRef.current = undefined;
     setReviewUrl(null);
     setCapturedBlob(null);
     setShareFile(null);

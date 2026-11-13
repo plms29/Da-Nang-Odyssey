@@ -1,5 +1,28 @@
 # Báo cáo tiến độ
 
+## Đợt B3: Tour 5 phút và chú thích ảnh
+
+Tour chạy trọn vòng không cần Gemini hay khóa Maps. Kiểm tra chung: 101 test qua, tsc, lint, build sạch. Tự thử trên trình duyệt: chọn tour, phụ đề chạy, nghe hết điểm 1 (60 giây) → trạm ghép mảnh → "Để sau" → sang điểm 2; bỏ qua hai điểm còn lại → màn kết ghi đúng một dấu `tour` cho điểm đã nghe (`bao-tang-cham: {tour: true}`); bỏ qua hết thì không ghi dấu; tiêu điểm bàn phím chuyển theo từng điểm. Màn check-in với `?demo=bao-tang-cham` hiện thẻ chú thích (câu dự phòng, tối đa 100 ký tự, nút "Bỏ chú thích", "Dùng lại gợi ý").
+
+| Task | Worker | Review | Vòng sửa | Ghi chú |
+| --- | --- | --- | --- | --- |
+| T15 giao kèo (`narration_audio`, `levelForSpot`, kiểu tour/chú thích) | Claude (main) | — | — | |
+| T16 lời kể Gemini cho tour (B3) | `ui-hydrogen-high` | Sửa: transition điểm cuối phải rỗng; transition chưa kiểm số; luật kiểm số chưa xử lý "1.945" | 1 | Mọi chữ số trong lời kể phải có trong kho tri thức của điểm, nếu không điểm đó dùng lời kể dựng sẵn |
+| T17 `/api/caption` (B5) | `ui-hydrogen` | — | 1 (test thoát dấu `<` `>` đỏ) | Mình lỡ commit khi test còn đỏ, đã sửa test và commit lại ngay |
+| T18 chú thích trên ảnh (F7, F8) | `ui-hydrogen-high` | Duyệt | 0 | Ảnh không gửi đi, chỉ mã điểm |
+| T19 logic tour (máy trạng thái, phụ đề, giọng đọc) | `ui-hydrogen-high` | Duyệt kèm 1 lỗi Chrome | 1 | Chrome kẹt im lặng nếu hủy lúc đang tạm dừng: đã thêm `resume()` sau `cancel()` |
+| T20 giao diện tour | `ui-hydrogen-high` | Sửa: lệch điểm dừng trên bản đồ khi API trả mã lạ, mất tiêu điểm, tự phát audio bị chặn | 1 | Quá 9 giây hoặc lỗi thì tự dựng tour dựng sẵn trên máy |
+
+Mình tự sửa hai test (T16, T17) vì lỗi nằm trong test, không phải code.
+
+**Chưa thử thật được:** giọng đọc tiếng Việt (máy này chưa có giọng, nên mới thấy phụ đề chạy theo hẹn giờ), camera bay trên bản đồ (cần khóa Maps), Gemini soạn lời kể và chú thích (cần khóa), có giọng `vi-VN` trên iPhone và Android hay không, và Gemini có giữ đúng độ dài theo số giây hay không.
+
+**Không làm trong B3 (theo thứ tự cắt):** hỏi bằng giọng nói và bằng chữ trong tour (B4), dải 3 khung, tách nền MediaPipe, audio Gemini TTS dựng sẵn.
+
+**Việc của bạn:** tour 10 phút hiện chỉ có 3 điểm vì dữ liệu mới có 3 điểm; đội nội dung cần thêm điểm. Kịch bản demo dùng tour 3 phút có hai điểm.
+
+---
+
 ## Đợt B2: Bản đồ, kéo thả, trạm hô bằng giọng nói
 
 Ba màn P0 giờ có đủ cách tương tác KH mục 4 yêu cầu. Kiểm tra chung: 58 test qua, tsc, lint, build sạch. Trang chơi màn tăng từ 7,6 kB lên 26,7 kB JS (dnd-kit).

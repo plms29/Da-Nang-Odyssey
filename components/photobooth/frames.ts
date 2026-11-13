@@ -28,6 +28,13 @@ export function formatDateDdMmYyyy(date: Date): string {
   return `${dd}/${mm}/${yyyy}`;
 }
 
+export interface DrawFrameOptions {
+  spot: Spot;
+  mode: "onsite" | "remote";
+  date: Date;
+  caption?: string;
+}
+
 /**
  * Draw the cultural photobooth frame, bottom info band, and verification stamp
  * using pure Canvas 2D primitives (CK-04: no external PNG/image assets).
@@ -36,7 +43,7 @@ export function drawFrame(
   ctx: CanvasRenderingContext2D,
   w: number,
   h: number,
-  opts: { spot: Spot; mode: "onsite" | "remote"; date: Date },
+  opts: DrawFrameOptions,
 ): void {
   const s = Math.min(w / 1080, h / 1920);
   const fontFamily = getBodyFontFamily();
@@ -324,13 +331,149 @@ function drawDoubleBorder(
   ctx.restore();
 }
 
+function measureTextWidth(ctx: CanvasRenderingContext2D, text: string): number {
+  return ctx.measureText?.(text)?.width ?? 0;
+}
+
+function truncateWithEllipsis(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+): string {
+  const ellipsis = "…";
+  if (measureTextWidth(ctx, text) <= maxWidth) {
+    return text;
+  }
+  let end = text.length;
+  while (end > 0) {
+    const candidate = `${text.slice(0, end).trimEnd()}${ellipsis}`;
+    if (measureTextWidth(ctx, candidate) <= maxWidth) {
+      return candidate;
+    }
+    end -= 1;
+  }
+  return ellipsis;
+}
+
+function wrapWordsToMaxTwoLines(
+  ctx: CanvasRenderingContext2D,
+  words: string[],
+  maxWidth: number,
+): { lines: string[]; fits: boolean } {
+  const lines: string[] = [];
+  let current = "";
+
+  for (const word of words) {
+    const candidate = current.length > 0 ? `${current} ${word}` : word;
+    if (measureTextWidth(ctx, candidate) <= maxWidth) {
+      current = candidate;
+      continue;
+    }
+
+    if (current.length === 0) {
+      return { lines: [word], fits: false };
+    }
+
+    lines.push(current);
+    if (lines.length >= 2) {
+      return { lines, fits: false };
+    }
+
+    if (measureTextWidth(ctx, word) > maxWidth) {
+      return { lines: [lines[0], word], fits: false };
+    }
+    current = word;
+  }
+
+  if (current.length > 0) {
+    lines.push(current);
+  }
+
+  return { lines, fits: lines.length <= 2 };
+}
+
+function clampCaptionToTwoLines(
+  ctx: CanvasRenderingContext2D,
+  words: string[],
+  maxWidth: number,
+): string[] {
+  if (words.length === 0) return [];
+
+  let line1 = "";
+  let index = 0;
+  while (index < words.length) {
+    const next = line1.length > 0 ? `${line1} ${words[index]}` : words[index];
+    if (measureTextWidth(ctx, next) <= maxWidth) {
+      line1 = next;
+      index += 1;
+    } else {
+      break;
+    }
+  }
+
+  if (line1.length === 0) {
+    const full = words.join(" ");
+    let split = full.length;
+    while (split > 1 && measureTextWidth(ctx, full.slice(0, split)) > maxWidth) {
+      split -= 1;
+    }
+    line1 = full.slice(0, split).trimEnd();
+    const remainder = full.slice(split).trimStart();
+    if (remainder.length === 0) {
+      return [line1];
+    }
+    return [line1, truncateWithEllipsis(ctx, remainder, maxWidth)];
+  }
+
+  if (index >= words.length) {
+    return [line1];
+  }
+
+  const remainingText = words.slice(index).join(" ");
+  return [line1, truncateWithEllipsis(ctx, remainingText, maxWidth)];
+}
+
+/**
+ * Wrap Vietnamese caption text to at most 2 lines within `maxWidth`,
+ * shrinking font size from 28px*s down to a minimum of 22px*s.
+ */
+function layoutCaption(
+  ctx: CanvasRenderingContext2D,
+  caption: string,
+  maxWidth: number,
+  s: number,
+  fontFamily: string,
+): { lines: string[]; fontSize: number } {
+  const words = caption.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) {
+    return { lines: [], fontSize: Math.max(1, Math.round(22 * s)) };
+  }
+
+  const maxFontSize = Math.max(1, Math.round(28 * s));
+  const minFontSize = Math.max(1, Math.round(22 * s));
+
+  for (let size = maxFontSize; size >= minFontSize; size -= 1) {
+    ctx.font = `400 ${size}px ${fontFamily}`;
+    const wrapped = wrapWordsToMaxTwoLines(ctx, words, maxWidth);
+    if (wrapped.fits) {
+      return { lines: wrapped.lines, fontSize: size };
+    }
+  }
+
+  ctx.font = `400 ${minFontSize}px ${fontFamily}`;
+  return {
+    lines: clampCaptionToTwoLines(ctx, words, maxWidth),
+    fontSize: minFontSize,
+  };
+}
+
 function drawBottomBand(
   ctx: CanvasRenderingContext2D,
   w: number,
   h: number,
   s: number,
   fontFamily: string,
-  opts: { spot: Spot; mode: "onsite" | "remote"; date: Date },
+  opts: DrawFrameOptions,
 ): void {
   const margin = Math.round(36 * s);
   const bandH = Math.round(280 * s);
@@ -352,23 +495,36 @@ function drawBottomBand(
   const stampX = w - margin - Math.round(140 * s);
   const stampY = bandY + Math.round(bandH / 2);
 
-  // Left column: cultural header, spot.name (bold, large), and dd/mm/yyyy date
+  // Left column: cultural header, spot.name (bold, large), optional caption, and dd/mm/yyyy date
   const textX = margin + Math.round(36 * s);
   const availableWidth = Math.max(
     1,
     stampX - stampR - textX - Math.round(24 * s),
   );
 
+  const captionText = opts.caption?.trim() ?? "";
+  const hasCaption = captionText.length > 0;
+  const captionLayout = hasCaption
+    ? layoutCaption(ctx, captionText, availableWidth, s, fontFamily)
+    : null;
+  const isTwoLineCaption = (captionLayout?.lines.length ?? 0) > 1;
+
+  const headerY = hasCaption
+    ? bandY + Math.round((isTwoLineCaption ? 46 : 48) * s)
+    : bandY + Math.round(62 * s);
+  const nameY = hasCaption
+    ? bandY + Math.round((isTwoLineCaption ? 104 : 108) * s)
+    : bandY + Math.round(140 * s);
+  const dateY = hasCaption
+    ? bandY + Math.round((isTwoLineCaption ? 236 : 234) * s)
+    : bandY + Math.round(212 * s);
+
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";
 
   ctx.fillStyle = COLOR_GOLD;
   ctx.font = `600 ${Math.round(22 * s)}px ${fontFamily}`;
-  ctx.fillText(
-    "HÀNH TRÌNH VĂN HÓA ĐÀ NẴNG",
-    textX,
-    bandY + Math.round(62 * s),
-  );
+  ctx.fillText("HÀNH TRÌNH VĂN HÓA ĐÀ NẴNG", textX, headerY);
 
   const baseNameSize = Math.max(1, Math.round(48 * s));
   const minNameSize = Math.max(1, Math.round(baseNameSize * 0.6));
@@ -376,19 +532,30 @@ function drawBottomBand(
   ctx.font = `700 ${nameFontSize}px ${fontFamily}`;
   while (
     nameFontSize > minNameSize &&
-    (ctx.measureText?.(opts.spot.name)?.width ?? 0) > availableWidth
+    measureTextWidth(ctx, opts.spot.name) > availableWidth
   ) {
     nameFontSize -= 1;
     ctx.font = `700 ${nameFontSize}px ${fontFamily}`;
   }
 
   ctx.fillStyle = COLOR_SAND;
-  ctx.fillText(opts.spot.name, textX, bandY + Math.round(140 * s));
+  ctx.fillText(opts.spot.name, textX, nameY);
+
+  if (captionLayout && captionLayout.lines.length > 0) {
+    ctx.fillStyle = COLOR_SAND;
+    ctx.font = `400 ${captionLayout.fontSize}px ${fontFamily}`;
+    const captionStartY =
+      bandY + Math.round((isTwoLineCaption ? 146 : 156) * s);
+    const lineHeight = Math.round(captionLayout.fontSize * 1.28);
+    captionLayout.lines.forEach((line, index) => {
+      ctx.fillText(line, textX, captionStartY + index * lineHeight);
+    });
+  }
 
   const dateStr = formatDateDdMmYyyy(opts.date);
   ctx.fillStyle = COLOR_SANDSTONE;
   ctx.font = `600 ${Math.round(30 * s)}px ${fontFamily}`;
-  ctx.fillText(dateStr, textX, bandY + Math.round(212 * s));
+  ctx.fillText(dateStr, textX, dateY);
 
   const isOnsite = opts.mode === "onsite";
   const stampColor = isOnsite ? COLOR_GOLD : COLOR_RIVER;
