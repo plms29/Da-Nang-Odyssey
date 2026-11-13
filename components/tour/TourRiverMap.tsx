@@ -48,6 +48,11 @@ const X_MIN = 78;
 const X_MAX = 322;
 const Y_MIN = 42;
 const Y_MAX = 258;
+const RIVER_X_MIN = 186;
+const RIVER_X_MAX = 227;
+const RIVER_GAP = 4;
+const FRAME_PAD = 12;
+const MARKER_GAP = 12;
 const EPSILON = 1e-6;
 
 function clamp(value: number, min: number, max: number): number {
@@ -58,6 +63,102 @@ function truncateLabel(name: string, maxChars = 22): string {
   const trimmed = name.trim();
   if (trimmed.length <= maxChars) return trimmed;
   return `${trimmed.slice(0, maxChars - 1).trimEnd()}…`;
+}
+
+function estimateTextWidth(text: string, fontSize: number): number {
+  let units = 0;
+  for (const ch of text) {
+    if ("ijlItfr.,!|1… ".includes(ch) || "ìíỉĩị".includes(ch)) {
+      units += 0.38;
+    } else if ("mwMWQGODĐ".includes(ch)) {
+      units += 0.78;
+    } else if (ch !== ch.toLowerCase()) {
+      units += 0.68;
+    } else {
+      units += 0.56;
+    }
+  }
+  return units * fontSize;
+}
+
+interface StopLabelLayout {
+  text: string;
+  rectX: number;
+  rectY: number;
+  pillW: number;
+  pillH: number;
+  textX: number;
+  textY: number;
+  textAnchor: "end" | "start";
+}
+
+function computeStopLabelLayout(
+  point: ProjectedStop,
+  {
+    fontSize,
+    maxChars,
+    padX,
+    pillH,
+    markerRadius,
+  }: {
+    fontSize: number;
+    maxChars: number;
+    padX: number;
+    pillH: number;
+    markerRadius: number;
+  },
+): StopLabelLayout {
+  // Stops on the left bank or on the river channel place labels to the left; right-bank stops place to the right.
+  const placeLeft = point.x <= RIVER_X_MAX;
+  const minX = placeLeft ? FRAME_PAD : RIVER_X_MAX + RIVER_GAP;
+  const maxX = placeLeft ? RIVER_X_MIN - RIVER_GAP : VIEW_W - FRAME_PAD;
+  const maxWidth = maxX - minX;
+
+  let chars = maxChars;
+  let text = truncateLabel(point.stop.name, chars);
+  let textWidth = estimateTextWidth(text, fontSize);
+  while (textWidth + padX * 2 > maxWidth && chars > 4) {
+    chars -= 1;
+    text = truncateLabel(point.stop.name, chars);
+    textWidth = estimateTextWidth(text, fontSize);
+  }
+
+  const pillW = clamp(Math.ceil(textWidth + padX * 2), 54, maxWidth);
+  const idealRectX = placeLeft
+    ? Math.min(point.x - MARKER_GAP, maxX) - pillW
+    : Math.max(point.x + MARKER_GAP, minX);
+  const rectX = clamp(idealRectX, minX, maxX - pillW);
+
+  const overlapsMarkerHorizontally =
+    rectX < point.x + markerRadius + 2 &&
+    rectX + pillW > point.x - markerRadius - 2;
+
+  let rectY: number;
+  if (overlapsMarkerHorizontally) {
+    const belowY = point.y + markerRadius + 4;
+    const aboveY = point.y - markerRadius - 4 - pillH;
+    rectY =
+      belowY + pillH <= VIEW_H - 14
+        ? belowY
+        : clamp(aboveY, 14, VIEW_H - pillH - 14);
+  } else {
+    rectY = clamp(point.y - pillH / 2, 14, VIEW_H - pillH - 14);
+  }
+
+  const textAnchor = placeLeft ? "end" : "start";
+  const textX = placeLeft ? rectX + pillW - padX : rectX + padX;
+  const textY = rectY + pillH * 0.69;
+
+  return {
+    text,
+    rectX,
+    rectY,
+    pillW,
+    pillH,
+    textX,
+    textY,
+    textAnchor,
+  };
 }
 
 function projectStops(stops: Spot[]): ProjectedStop[] {
@@ -523,52 +624,65 @@ export function TourRiverMap({ stops, activeSpotId }: TourRiverMapProps) {
               })}
             </g>
 
-            {/* Non-active stop markers (done = bold, upcoming = faded) */}
+            {/* Non-active stop markers (done = bold, upcoming = faded dot only) */}
             {nonActivePoints.map((point) => {
               const isDone = activeIndex !== -1 && point.index < activeIndex;
-              const alignRight = point.x < VIEW_W / 2;
-              const labelX = alignRight ? point.x + 13 : point.x - 13;
-              const textAnchor = alignRight ? "start" : "end";
-              const labelText = truncateLabel(point.stop.name, 20);
+              const markerRadius = isDone ? 7.5 : 6.5;
+              const label = computeStopLabelLayout(point, {
+                fontSize: 13,
+                maxChars: 18,
+                padX: 8,
+                pillH: 22,
+                markerRadius,
+              });
 
               return (
-                <g
-                  key={point.stop.id}
-                  opacity={isDone ? 1 : 0.45}
-                >
-                  <circle
-                    cx={point.x}
-                    cy={point.y}
-                    r={isDone ? 7.5 : 6.5}
-                    fill={isDone ? "#1F4E6B" : "#F6EFE4"}
-                    stroke={isDone ? "#1F1A17" : "#5E5148"}
-                    strokeWidth={isDone ? 1.5 : 1.2}
-                    strokeDasharray={isDone ? undefined : "2 1.5"}
-                  />
-                  <text
-                    x={point.x}
-                    y={point.y + 3.2}
-                    textAnchor="middle"
-                    fontSize="8.5"
-                    fontWeight="700"
-                    fill={isDone ? "#F6EFE4" : "#5E5148"}
-                  >
-                    {point.index + 1}
-                  </text>
-                  <text
-                    x={labelX}
-                    y={point.y + 3.2}
-                    textAnchor={textAnchor}
-                    fontSize="9.5"
-                    fontWeight={isDone ? "600" : "400"}
-                    fill={isDone ? "#1F1A17" : "#5E5148"}
-                    paintOrder="stroke"
-                    stroke="#FAF5EC"
-                    strokeWidth="3"
-                    strokeLinejoin="round"
-                  >
-                    {labelText}
-                  </text>
+                <g key={point.stop.id}>
+                  <g opacity={isDone ? 1 : 0.45}>
+                    <circle
+                      cx={point.x}
+                      cy={point.y}
+                      r={markerRadius}
+                      fill={isDone ? "#1F4E6B" : "#F6EFE4"}
+                      stroke={isDone ? "#1F1A17" : "#5E5148"}
+                      strokeWidth={isDone ? 1.5 : 1.2}
+                      strokeDasharray={isDone ? undefined : "2 1.5"}
+                    />
+                    <text
+                      x={point.x}
+                      y={point.y + 3.2}
+                      textAnchor="middle"
+                      fontSize="8.5"
+                      fontWeight="700"
+                      fill={isDone ? "#F6EFE4" : "#5E5148"}
+                    >
+                      {point.index + 1}
+                    </text>
+                  </g>
+                  <g>
+                    <rect
+                      x={label.rectX}
+                      y={label.rectY}
+                      width={label.pillW}
+                      height={label.pillH}
+                      rx={label.pillH / 2}
+                      fill="#FFFFFF"
+                      fillOpacity={0.85}
+                      stroke="#1F1A17"
+                      strokeOpacity={isDone ? 0.28 : 0.2}
+                      strokeWidth="1.1"
+                    />
+                    <text
+                      x={label.textX}
+                      y={label.textY}
+                      textAnchor={label.textAnchor}
+                      fontSize="13"
+                      fontWeight={isDone ? "600" : "500"}
+                      fill="#1F1A17"
+                    >
+                      {label.text}
+                    </text>
+                  </g>
                 </g>
               );
             })}
@@ -632,43 +746,35 @@ export function TourRiverMap({ stops, activeSpotId }: TourRiverMapProps) {
                 </text>
 
                 {(() => {
-                  const displayName = truncateLabel(activePoint.stop.name, 22);
-                  const pillW = Math.min(
-                    168,
-                    Math.max(66, displayName.length * 6.2 + 18),
-                  );
-                  const pillH = 20;
-                  const alignRight = activePoint.x < VIEW_W / 2;
-                  const rectX = alignRight
-                    ? Math.min(activePoint.x + 14, VIEW_W - pillW - 12)
-                    : Math.max(activePoint.x - 14 - pillW, 12);
-                  const rectY = clamp(
-                    activePoint.y - pillH / 2,
-                    14,
-                    VIEW_H - pillH - 14,
-                  );
+                  const label = computeStopLabelLayout(activePoint, {
+                    fontSize: 13.5,
+                    maxChars: 18,
+                    padX: 9,
+                    pillH: 23,
+                    markerRadius: 8.5,
+                  });
 
                   return (
                     <g>
                       <rect
-                        x={rectX}
-                        y={rectY}
-                        width={pillW}
-                        height={pillH}
-                        rx="10"
+                        x={label.rectX}
+                        y={label.rectY}
+                        width={label.pillW}
+                        height={label.pillH}
+                        rx={label.pillH / 2}
                         fill="#FAF5EC"
                         stroke="#C99A2E"
                         strokeWidth="1.6"
                       />
                       <text
-                        x={rectX + pillW / 2}
-                        y={rectY + 13.5}
-                        textAnchor="middle"
-                        fontSize="10.5"
+                        x={label.textX}
+                        y={label.textY}
+                        textAnchor={label.textAnchor}
+                        fontSize="13.5"
                         fontWeight="700"
                         fill="#1F1A17"
                       >
-                        {displayName}
+                        {label.text}
                       </text>
                     </g>
                   );
