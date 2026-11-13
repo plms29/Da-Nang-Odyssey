@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+.agy-tasks
+.claude
+.env*
+!.env.example
+*.md
+Dockerfile
+.dockerignore

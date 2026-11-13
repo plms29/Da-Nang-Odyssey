@@ -1,4 +1,30 @@
-# plan.md — Giai đoạn A: Khung sườn sản phẩm
+# plan.md
+
+## Giai đoạn B, đợt B1: Photobooth check-in + hộ chiếu + hạ tầng (KH mục 11, giai đoạn 2)
+
+Giai đoạn A đã xong (xem `BAO-CAO-KHUNG-SUON.md`). Đợt B1 làm "Kết quả phải có" của giai đoạn 2:
+ảnh check-in có khung và dấu, tải về được.
+
+Giao kèo mới (worker không được đổi):
+- `components/photobooth/PhotoBooth.tsx` export `PhotoBooth({ spot, mode, onCaptured })`,
+  `mode: "onsite" | "remote"`, `onCaptured(blob: Blob)` gọi khi người dùng bấm "Dùng ảnh này".
+- Chỉ trang check-in gọi `usePassport.getState().stamp(spot.id, "visited")`, và chỉ ở mode `onsite`.
+- Đọc store hộ chiếu trong giao diện phải chờ hydrate xong (`usePassport.persist.hasHydrated()` / `onFinishHydration`).
+
+| # | Task | Worker | File sở hữu | Phụ thuộc |
+|---|------|--------|-------------|-----------|
+| T6 | F9 trang hộ chiếu: đọc store sau khi hydrate, lưới điểm với 3 loại dấu (màn, đã nghe, đã đến vàng), sao từng màn, tổng điểm code, trạng thái rỗng | `ui-hydrogen` | `app/ho-chieu/page.tsx`, `components/passport/*` | — |
+| T7 | F7 photobooth: camera trước/sau (getUserMedia), khung 9:16, đếm ngược 3 giây, chụp, xem lại/chụp lại; ghép trên canvas: khung họa tiết theo chủ đề (vẽ bằng code khi chưa có PNG, CK-04), tên điểm, ngày, dấu "ĐÃ ĐẾN" (onsite) hoặc "GHÉ THĂM TRỰC TUYẾN" (remote); chờ `document.fonts.ready` trước khi vẽ chữ (CK-05); tải về + Web Share; ảnh không rời máy (CK-06). Kiểu remote ở đợt này: khung viền không tách nền (CK-07 dạng tối thiểu) | `ui-argon-high` | `components/photobooth/*` | — |
+| T8 | F8 luồng check-in ở `/photobooth`: câu giải thích trước khi xin quyền vị trí, `getCurrentPosition`, `locateSpot`, cờ `?demo=spot_id` (CK-03); trong bán kính → `PhotoBooth` onsite + ghi dấu visited; ngoài bán kính → "còn cách khoảng X m", nút chỉ đường Google Maps, mời kiểu từ xa (chỉ khi đã có dấu màn/tour của điểm); sai số lớn → thử lại (CK-02); từ chối quyền → vẫn dùng kiểu từ xa | `ui-hydrogen-high` | `app/photobooth/page.tsx`, `components/checkin/*` | T7 (giao kèo trên, làm song song được) |
+| T9 | I1: `output: "standalone"`, Dockerfile, `.dockerignore`, GitHub Actions chạy validate + test + build; hướng dẫn deploy Cloud Run asia-southeast1 + Secret Manager | **Claude (main)**: hạ tầng, không phải UI | `Dockerfile`, `.github/workflows/ci.yml`, `next.config.ts`, `DEPLOY.md` | — |
+
+T6, T7, T8, T9 chạy song song (file không chồng nhau). Worker không chạy shell; phiên chính chạy tsc, lint, test, build và thử trên trình duyệt.
+Review: `reviewer` (sonnet) cho mỗi task, tối đa 2 vòng sửa.
+Ngoài đợt B1: bản đồ Maps, kéo thả, ghi âm, tour (đợt B2, B3), MediaPipe, Firestore.
+
+---
+
+# Giai đoạn A: Khung sườn sản phẩm (đã xong)
 
 Nguồn: `Kế hoạch sản phẩm Hành trình văn hóa Đà Nẵng (DevFest 2026).md` (gọi tắt KH).
 Mục tiêu giai đoạn A: mọi route và mọi "giao kèo" giữa module (KH mục 9) tồn tại và chạy được
