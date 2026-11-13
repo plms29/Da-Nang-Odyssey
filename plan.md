@@ -1,3 +1,24 @@
+# Kế hoạch tiếp nối (từ BAO-CAO-TIEP-NOI.md)
+
+Mẫu tham chiếu chung: `components/level/stations/MatchStation.tsx` và `HintBox` (đã có đủ hiệu ứng).
+Quy tắc chung cho T1–T4: đúng/sai chỉ hiện sau khi bấm "Kiểm tra"; rung bằng `useAnimate` (không đổi `key`);
+không đổi cách tính điểm, đếm gợi ý, payload `onDone`; nút kiểm tra là `GlowButton`; gọi `haptic()`; vòng sáng vàng khi chọn.
+Chấp nhận: `npx tsc --noEmit`, `npx eslint components`, `npx vitest run` đều qua.
+
+| Task | File (chỉ sửa file này) | Worker |
+|---|---|---|
+| T1 Hiệu ứng ExpressStation | `components/level/stations/ExpressStation.tsx` | ui-hydrogen |
+| T2 Hiệu ứng JigsawStation (dnd-kit) | `components/level/stations/JigsawStation.tsx` | ui-hydrogen-high |
+| T3 Hiệu ứng MapPinStation (bản đồ thật) | `components/level/stations/MapPinStation.tsx` | ui-hydrogen-high |
+| T4 Hiệu ứng OrderStation | `components/level/stations/OrderStation.tsx` | ui-hydrogen |
+
+T1–T4 chạy song song (không chung file). Sau mỗi task: `reviewer`, tối đa 2 vòng sửa.
+
+Giai đoạn sau (xin duyệt riêng khi tới): T5 làm đẹp `/tour` + bản máy tính, T6 `/photobooth`, T7 dọn nit nhỏ, kiểm trình duyệt 375px/1440px.
+(argon hết hạn mức → dùng hydrogen/flash.)
+
+---
+
 # plan.md
 
 ## Giai đoạn B, đợt B3: Tour 5 phút + chú thích ảnh (KH mục 5, mục 6 CK-08, mục 11 giai đoạn 3)

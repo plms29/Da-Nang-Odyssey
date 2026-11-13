@@ -1,6 +1,9 @@
 "use client";
 
 import { useCallback, useId, useState, type FormEvent } from "react";
+import { motion, useAnimate, useReducedMotion } from "motion/react";
+import { GlowButton } from "@/components/fx/GlowButton";
+import { haptic } from "@/lib/haptics";
 import type {
   ExpressStation as ExpressStationType,
   JudgeRequest,
@@ -38,6 +41,10 @@ export function ExpressStation({
   levelId,
   onDone,
 }: ExpressStationProps) {
+  const prefersReducedMotion = useReducedMotion();
+  const reduced = Boolean(prefersReducedMotion);
+  const [scope, animate] = useAnimate();
+
   const maxSeconds =
     station.type === "open_text_or_voice" &&
     typeof station.max_seconds === "number" &&
@@ -79,7 +86,14 @@ export function ExpressStation({
     [],
   );
 
+  function triggerShake() {
+    if (!reduced && scope.current) {
+      animate(scope.current, { x: [0, -8, 8, -6, 6, 0] }, { duration: 0.3 });
+    }
+  }
+
   function handleModeChange(nextMode: "voice" | "text") {
+    haptic("tap");
     setAnswerMode(nextMode);
     setError(null);
     if (nextMode === "text") {
@@ -111,6 +125,8 @@ export function ExpressStation({
         };
       } catch {
         setError("Không đọc được đoạn ghi âm, thử lại nhé.");
+        haptic("error");
+        triggerShake();
         setLoading(false);
         return;
       }
@@ -137,6 +153,8 @@ export function ExpressStation({
             ? data.error
             : "Không chấm được bài, thử lại nhé.";
         setError(message);
+        haptic("error");
+        triggerShake();
         if (response.status === 422 && supportsVoice) {
           setAnswerMode("text");
           setRecording(null);
@@ -146,19 +164,30 @@ export function ExpressStation({
 
       if (!Array.isArray(data?.criteria)) {
         setError("Không chấm được bài, thử lại nhé.");
+        haptic("error");
+        triggerShake();
         return;
       }
 
+      haptic("success");
       setJudgeResult(data as JudgeResult);
     } catch {
       setError("Lỗi kết nối mạng");
+      haptic("error");
+      triggerShake();
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <section className="rounded-lg border border-ink/15 bg-white/80 p-4">
+    <section
+      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
+        judgeResult
+          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+          : ""
+      }`}
+    >
       <p className="text-base font-medium leading-relaxed text-ink">
         {station.prompt}
       </p>
@@ -173,7 +202,7 @@ export function ExpressStation({
       )}
 
       {!judgeResult ? (
-        <form onSubmit={handleSubmit} className="mt-4 space-y-3">
+        <form ref={scope} onSubmit={handleSubmit} className="mt-4 space-y-3">
           {supportsVoice && (
             <div
               role="radiogroup"
@@ -190,7 +219,7 @@ export function ExpressStation({
                 <label
                   className={`inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
                     answerMode === "voice"
-                      ? "border-terracotta bg-terracotta/10 text-terracotta"
+                      ? "border-terracotta bg-terracotta/10 text-terracotta ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
                       : "border-ink/20 bg-white text-ink hover:bg-sand/60"
                   } ${loading ? "cursor-not-allowed opacity-60" : ""}`}
                 >
@@ -208,7 +237,7 @@ export function ExpressStation({
                 <label
                   className={`inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
                     answerMode === "text"
-                      ? "border-terracotta bg-terracotta/10 text-terracotta"
+                      ? "border-terracotta bg-terracotta/10 text-terracotta ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
                       : "border-ink/20 bg-white text-ink hover:bg-sand/60"
                   } ${loading ? "cursor-not-allowed opacity-60" : ""}`}
                 >
@@ -276,20 +305,29 @@ export function ExpressStation({
             </p>
           )}
 
-          <button
+          <GlowButton
             type="submit"
             disabled={loading || !canSubmit}
             className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Đang chấm…" : "Nộp bài"}
-          </button>
+          </GlowButton>
 
           <p aria-live="polite" className="sr-only">
             {loading ? "Đang chấm…" : ""}
           </p>
         </form>
       ) : (
-        <div className="mt-4 space-y-4">
+        <motion.div
+          initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 8 }}
+          animate={reduced ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
+          transition={
+            reduced
+              ? { duration: 0.15 }
+              : { type: "spring", stiffness: 380, damping: 24 }
+          }
+          className="mt-4 space-y-4"
+        >
           {judgeResult.transcript && judgeResult.transcript.trim().length > 0 && (
             <p className="rounded-md border border-ink/15 bg-sand/60 p-3 text-sm text-ink">
               <span className="font-semibold text-ink">Bản chép lời: </span>
@@ -342,7 +380,7 @@ export function ExpressStation({
           >
             Tiếp tục
           </button>
-        </div>
+        </motion.div>
       )}
     </section>
   );
