@@ -1,10 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import { motion, useAnimate, useReducedMotion } from "motion/react";
-import { GlowButton } from "@/components/fx/GlowButton";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  DndContext,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type Announcements,
+  type DragEndEvent,
+  type ScreenReaderInstructions,
+  type UniqueIdentifier,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  rectSortingStrategy,
+  sortableKeyboardCoordinates,
+  useSortable,
+} from "@dnd-kit/sortable";
 import { checkJigsaw } from "@/lib/activities/scoring";
-import { haptic } from "@/lib/haptics";
 import type { JigsawStation as JigsawStationType, StationResult } from "@/lib/types";
 import { deterministicShuffle } from "../shuffle";
 import { useAttempt } from "../useAttempt";
@@ -15,10 +31,99 @@ export interface JigsawStationProps {
   onDone: (result: StationResult) => void;
 }
 
+const SCREEN_READER_INSTRUCTIONS: ScreenReaderInstructions = {
+  draggable:
+    "Nhấn Space hoặc Enter để nhấc, dùng phím mũi tên để di chuyển, nhấn lại Space hoặc Enter để thả, Esc để hủy.",
+};
+
+function pieceId(pieceIndex: number): string {
+  return `piece-${pieceIndex}`;
+}
+
+function getPieceLabel(id: UniqueIdentifier): string {
+  const raw = String(id).replace(/^piece-/, "");
+  const num = Number(raw);
+  return Number.isFinite(num) ? `Mảnh ${num + 1}` : `Mảnh ${raw}`;
+}
+
+function usePrefersReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      return;
+    }
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const handler = (event: MediaQueryListEvent) => setReduced(event.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  return reduced;
+}
+
+interface SortableTileProps {
+  id: string;
+  pieceNumber: number;
+  slotIndex: number;
+  isSelected: boolean;
+  reducedMotion: boolean;
+  onTap: (slotIndex: number) => void;
+}
+
+function SortableTile({
+  id,
+  pieceNumber,
+  slotIndex,
+  isSelected,
+  reducedMotion,
+  onTap,
+}: SortableTileProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id,
+    attributes: { roleDescription: "mục có thể sắp xếp" },
+    transition: reducedMotion ? null : undefined,
+  });
+
+  const style: CSSProperties = {
+    transform: transform
+      ? `translate3d(${Math.round(transform.x)}px, ${Math.round(transform.y)}px, 0)`
+      : undefined,
+    transition: reducedMotion ? "none" : transition,
+  };
+
+  return (
+    <button
+      ref={setNodeRef}
+      type="button"
+      style={style}
+      {...attributes}
+      {...listeners}
+      onClick={() => onTap(slotIndex)}
+      aria-label={`Mảnh ${pieceNumber}`}
+      aria-pressed={isSelected || isDragging}
+      className={`flex min-h-14 min-w-11 select-none items-center justify-center rounded-md border text-lg font-bold transition-colors motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
+        isDragging
+          ? "z-10 scale-105 border-terracotta bg-terracotta text-sand shadow-lg ring-2 ring-gold motion-reduce:scale-100"
+          : isSelected
+            ? "border-terracotta bg-terracotta text-sand"
+            : "cursor-grab border-ink/20 bg-sand text-ink hover:border-terracotta active:cursor-grabbing"
+      }`}
+    >
+      {pieceNumber}
+    </button>
+  );
+}
+
 export function JigsawStation({ station, onDone }: JigsawStationProps) {
-  const prefersReducedMotion = useReducedMotion();
-  const reduced = Boolean(prefersReducedMotion);
-  const [scope, animate] = useAnimate();
   const [rows, cols] = station.grid;
   const total = rows * cols;
   const [placement, setPlacement] = useState<number[]>(() =>
@@ -31,12 +136,75 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [revealedHints, setRevealedHints] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [checked, setChecked] = useState(false);
-  const [correctPop, setCorrectPop] = useState(false);
   const { hintsUsed, nextHint, addWrong, result } = useAttempt(station.hints);
+  const reducedMotion = usePrefersReducedMotion();
+  const didDragRef = useRef(false);
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: { distance: 4 },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 150, tolerance: 5 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const itemIds = placement.map((pieceIndex) => pieceId(pieceIndex));
+
+  function getSlotPosition(id: UniqueIdentifier): number {
+    const idx = placement.findIndex((p) => pieceId(p) === String(id));
+    return idx >= 0 ? idx + 1 : 1;
+  }
+
+  const announcements: Announcements = {
+    onDragStart({ active }) {
+      return `Đã nhấc ${getPieceLabel(active.id)}.`;
+    },
+    onDragOver({ active, over }) {
+      if (!over) return undefined;
+      return `${getPieceLabel(active.id)} đang ở vị trí ${getSlotPosition(over.id)}.`;
+    },
+    onDragEnd({ active, over }) {
+      if (!over) return `Đã thả ${getPieceLabel(active.id)}.`;
+      return `Đã thả ${getPieceLabel(active.id)} ở vị trí ${getSlotPosition(over.id)}.`;
+    },
+    onDragCancel({ active }) {
+      return `Đã hủy kéo ${getPieceLabel(active.id)}.`;
+    },
+  };
+
+  function handleDragStart() {
+    didDragRef.current = true;
+    setSelectedSlot(null);
+    setFeedback(null);
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setPlacement((prev) => {
+        const oldIndex = prev.findIndex((p) => pieceId(p) === String(active.id));
+        const newIndex = prev.findIndex((p) => pieceId(p) === String(over.id));
+        if (oldIndex < 0 || newIndex < 0) return prev;
+        return arrayMove(prev, oldIndex, newIndex);
+      });
+    }
+    setSelectedSlot(null);
+    setFeedback(null);
+  }
+
+  function handleDragCancel() {
+    setSelectedSlot(null);
+  }
 
   function handleTileTap(slotIndex: number) {
-    haptic("tap");
+    if (didDragRef.current) {
+      didDragRef.current = false;
+      return;
+    }
     setFeedback(null);
     if (selectedSlot === null) {
       setSelectedSlot(slotIndex);
@@ -60,21 +228,11 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
   function handleCheck() {
     if (checkJigsaw(placement, station.grid)) {
       setFeedback(null);
-      setChecked(true);
-      setCorrectPop(true);
-      haptic("success");
-      if (!reduced && scope.current) {
-        animate(scope.current, { scale: [1, 1.03, 1] }, { duration: 0.35 });
-      }
       onDone(result(true));
       return;
     }
     addWrong();
-    haptic("error");
-    if (!reduced && scope.current) {
-      animate(scope.current, { x: [0, -8, 8, -6, 6, 0] }, { duration: 0.3 });
-    }
-    setFeedback("Chưa đúng thứ tự, hãy chạm hai mảnh để đổi chỗ.");
+    setFeedback("Chưa đúng thứ tự, hãy kéo thả hoặc chạm hai mảnh để đổi chỗ.");
   }
 
   function handleHint() {
@@ -85,69 +243,51 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
   }
 
   return (
-    <section
-      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
-        correctPop
-          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-          : ""
-      }`}
-    >
+    <section className="rounded-lg border border-ink/15 bg-white/80 p-4">
       <p className="text-base font-medium leading-relaxed text-ink">
         {station.instruction}
       </p>
       <p className="mt-1 text-xs text-muted">
-        Chạm một mảnh rồi chạm mảnh khác để đổi chỗ.
+        Kéo thả mảnh ghép hoặc chạm hai mảnh để đổi chỗ ({rows}×{cols}).
       </p>
 
-      <div className="relative mt-4">
-        <motion.div
-          ref={scope}
-          className={`grid ${checked ? "gap-0" : "gap-2"}`}
-          style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
-        >
-          {placement.map((pieceIndex, slotIndex) => {
-            const pieceNumber = pieceIndex + 1;
-            const isSelected = selectedSlot === slotIndex;
-            return (
-              <motion.button
-                key={pieceIndex}
-                type="button"
-                layout={!reduced}
-                animate={
-                  reduced ? undefined : { scale: isSelected ? 1.05 : 1 }
-                }
-                transition={
-                  reduced
-                    ? { duration: 0.15 }
-                    : { type: "spring", stiffness: 420, damping: 34 }
-                }
-                onClick={() => handleTileTap(slotIndex)}
-                aria-label={`Mảnh ${pieceNumber}`}
-                aria-pressed={isSelected}
-                className={`flex min-h-14 items-center justify-center rounded-md border text-lg font-bold transition-[color,background-color,border-color,opacity,box-shadow] duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
-                  isSelected
-                    ? "border-terracotta bg-terracotta text-sand ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-                    : checked
-                      ? "border-transparent bg-sand text-ink"
-                      : "border-ink/20 bg-sand text-ink hover:border-terracotta"
-                }`}
-              >
-                {pieceNumber}
-              </motion.button>
-            );
-          })}
-        </motion.div>
-
-        {checked && (
-          <motion.div
-            aria-hidden="true"
-            initial={reduced ? { opacity: 0 } : { opacity: 0.35 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: reduced ? 0.15 : 0.35 }}
-            className="pointer-events-none absolute inset-0 rounded-md bg-gradient-to-br from-gold/25 via-transparent to-river/25"
-          />
-        )}
-      </div>
+      <DndContext
+        id={`dnd-${station.id}`}
+        sensors={sensors}
+        accessibility={{
+          announcements,
+          screenReaderInstructions: SCREEN_READER_INSTRUCTIONS,
+        }}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
+      >
+        <SortableContext items={itemIds} strategy={rectSortingStrategy}>
+          <div
+            className="mt-4 grid gap-2"
+            style={{
+              gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+            }}
+          >
+            {placement.map((pieceIndex, slotIndex) => {
+              const pieceNumber = pieceIndex + 1;
+              const isSelected = selectedSlot === slotIndex;
+              const id = pieceId(pieceIndex);
+              return (
+                <SortableTile
+                  key={id}
+                  id={id}
+                  pieceNumber={pieceNumber}
+                  slotIndex={slotIndex}
+                  isSelected={isSelected}
+                  reducedMotion={reducedMotion}
+                  onTap={handleTileTap}
+                />
+              );
+            })}
+          </div>
+        </SortableContext>
+      </DndContext>
 
       {feedback && (
         <p role="status" className="mt-3 text-sm font-medium text-terracotta">
@@ -156,13 +296,13 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
       )}
 
       <div className="mt-4">
-        <GlowButton
+        <button
           type="button"
           onClick={handleCheck}
-          className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity motion-reduce:transition-none hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Kiểm tra
-        </GlowButton>
+        </button>
       </div>
 
       <HintBox

@@ -1,4 +1,6 @@
 import { PageHeader } from "@/components/shell/PageHeader";
+import { TourApp } from "@/components/tour/TourApp";
+import { getSpots } from "@/lib/content";
 
 export default function TourPage() {
   return (
@@ -9,23 +11,7 @@ export default function TourPage() {
         backHref="/"
       />
 
-      <section className="rounded-lg border border-ink/15 bg-white/75 p-4 text-sm leading-relaxed text-ink">
-        <p>
-          Chọn thời lượng và chủ đề yêu thích để nghe thuyết minh ngắn gọn qua
-          các điểm di sản dọc sông Hàn, nhận dấu <strong>đã nghe tour</strong>{" "}
-          vào hộ chiếu văn hóa.
-        </p>
-      </section>
-
-      <section
-        aria-label="Trạng thái tính năng"
-        className="rounded-lg border border-dashed border-river/50 bg-river/5 p-6 text-center"
-      >
-        <p className="text-sm font-bold text-river">Đang xây dựng</p>
-        <p className="mt-1 text-xs text-muted">
-          Trình phát tour âm thanh và bản đồ lộ trình sẽ mở ở giai đoạn tiếp theo.
-        </p>
-      </section>
+      <TourApp spots={getSpots()} />
     </main>
   );
 }

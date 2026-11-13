@@ -1,10 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import { motion, useAnimate, useReducedMotion } from "motion/react";
-import { GlowButton } from "@/components/fx/GlowButton";
+import { useEffect, useState, type CSSProperties } from "react";
+import {
+  DndContext,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type Announcements,
+  type DragEndEvent,
+  type ScreenReaderInstructions,
+  type UniqueIdentifier,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { checkOrder } from "@/lib/activities/scoring";
-import { haptic } from "@/lib/haptics";
 import type { OrderStation as OrderStationType, StationResult } from "@/lib/types";
 import { deterministicShuffle } from "../shuffle";
 import { useAttempt } from "../useAttempt";
@@ -15,10 +31,116 @@ export interface OrderStationProps {
   onDone: (result: StationResult) => void;
 }
 
+const SCREEN_READER_INSTRUCTIONS: ScreenReaderInstructions = {
+  draggable:
+    "Nhấn Space hoặc Enter để nhấc, dùng phím mũi tên để di chuyển, nhấn lại Space hoặc Enter để thả, Esc để hủy.",
+};
+
+function usePrefersReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      return;
+    }
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const handler = (event: MediaQueryListEvent) => setReduced(event.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  return reduced;
+}
+
+interface SortableOrderRowProps {
+  item: { id: string; label: string };
+  index: number;
+  total: number;
+  reducedMotion: boolean;
+  onMove: (index: number, delta: -1 | 1) => void;
+}
+
+function SortableOrderRow({
+  item,
+  index,
+  total,
+  reducedMotion,
+  onMove,
+}: SortableOrderRowProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: item.id,
+    attributes: { roleDescription: "mục có thể sắp xếp" },
+    transition: reducedMotion ? null : undefined,
+  });
+
+  const style: CSSProperties = {
+    transform: transform
+      ? `translate3d(${Math.round(transform.x)}px, ${Math.round(transform.y)}px, 0)`
+      : undefined,
+    transition: reducedMotion ? "none" : transition,
+  };
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={style}
+      className={`relative flex items-center justify-between gap-2 rounded-md border px-3 py-2 transition-shadow motion-reduce:transition-none ${
+        isDragging
+          ? "z-10 border-terracotta bg-sand shadow-lg ring-2 ring-terracotta"
+          : "border-ink/15 bg-sand/60"
+      }`}
+    >
+      <div className="flex min-w-0 flex-1 items-center gap-2">
+        <button
+          ref={setActivatorNodeRef}
+          type="button"
+          style={{ touchAction: "none" }}
+          {...attributes}
+          {...listeners}
+          aria-label={`Kéo để sắp xếp: ${item.label}`}
+          className="touch-none inline-flex min-h-11 min-w-11 shrink-0 cursor-grab select-none items-center justify-center rounded-md border border-ink/20 bg-white text-base font-bold text-muted transition-colors motion-reduce:transition-none hover:border-terracotta hover:bg-sand hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta active:cursor-grabbing"
+        >
+          <span aria-hidden="true">⋮⋮</span>
+        </button>
+        <span className="text-sm font-medium text-ink">
+          <span className="mr-2 font-bold text-terracotta">{index + 1}.</span>
+          {item.label}
+        </span>
+      </div>
+      <div className="flex shrink-0 items-center gap-1">
+        <button
+          type="button"
+          aria-label="Đưa lên"
+          disabled={index === 0}
+          onClick={() => onMove(index, -1)}
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border border-ink/20 bg-white text-sm font-bold text-ink transition-colors motion-reduce:transition-none hover:bg-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          ▲
+        </button>
+        <button
+          type="button"
+          aria-label="Đưa xuống"
+          disabled={index === total - 1}
+          onClick={() => onMove(index, 1)}
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border border-ink/20 bg-white text-sm font-bold text-ink transition-colors motion-reduce:transition-none hover:bg-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          ▼
+        </button>
+      </div>
+    </li>
+  );
+}
+
 export function OrderStation({ station, onDone }: OrderStationProps) {
-  const prefersReducedMotion = useReducedMotion();
-  const reduced = Boolean(prefersReducedMotion);
-  const [scope, animate] = useAnimate();
   const [items, setItems] = useState(() =>
     deterministicShuffle(station.items, station.id, (arr) =>
       checkOrder(
@@ -29,16 +151,74 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
   );
   const [revealedHints, setRevealedHints] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [lastMovedId, setLastMovedId] = useState<string | null>(null);
-  const [correctPop, setCorrectPop] = useState(false);
   const { hintsUsed, nextHint, addWrong, result } = useAttempt(station.hints);
+  const reducedMotion = usePrefersReducedMotion();
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: { distance: 4 },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 150, tolerance: 5 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const itemIds = items.map((item) => item.id);
+
+  function getItemLabel(id: UniqueIdentifier): string {
+    return items.find((item) => item.id === String(id))?.label ?? String(id);
+  }
+
+  function getItemPosition(id: UniqueIdentifier): number {
+    const idx = items.findIndex((item) => item.id === String(id));
+    return idx >= 0 ? idx + 1 : 1;
+  }
+
+  const announcements: Announcements = {
+    onDragStart({ active }) {
+      return `Đã nhấc ${getItemLabel(active.id)}.`;
+    },
+    onDragOver({ active, over }) {
+      if (!over) return undefined;
+      return `${getItemLabel(active.id)} đang ở vị trí ${getItemPosition(over.id)}.`;
+    },
+    onDragEnd({ active, over }) {
+      if (!over) return `Đã thả ${getItemLabel(active.id)}.`;
+      return `Đã thả ${getItemLabel(active.id)} ở vị trí ${getItemPosition(over.id)}.`;
+    },
+    onDragCancel({ active }) {
+      return `Đã hủy kéo ${getItemLabel(active.id)}.`;
+    },
+  };
+
+  function handleDragStart() {
+    setFeedback(null);
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setItems((prev) => {
+        const oldIndex = prev.findIndex((item) => item.id === String(active.id));
+        const newIndex = prev.findIndex((item) => item.id === String(over.id));
+        if (oldIndex < 0 || newIndex < 0) return prev;
+        return arrayMove(prev, oldIndex, newIndex);
+      });
+    }
+    setFeedback(null);
+  }
+
+  function handleDragCancel() {
+    setFeedback(null);
+  }
 
   function moveItem(index: number, delta: -1 | 1) {
     const target = index + delta;
     if (target < 0 || target >= items.length) return;
-    haptic("tap");
     setFeedback(null);
-    setLastMovedId(items[index].id);
     setItems((prev) => {
       const next = prev.slice();
       const tmp = next[index];
@@ -51,19 +231,10 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
   function handleCheck() {
     if (checkOrder(station, items.map((item) => item.id))) {
       setFeedback(null);
-      setCorrectPop(true);
-      haptic("success");
-      if (!reduced && scope.current) {
-        animate(scope.current, { scale: [1, 1.03, 1] }, { duration: 0.35 });
-      }
       onDone(result(true));
       return;
     }
     addWrong();
-    haptic("error");
-    if (!reduced && scope.current) {
-      animate(scope.current, { x: [0, -8, 8, -6, 6, 0] }, { duration: 0.3 });
-    }
     setFeedback("Thứ tự chưa đúng, hãy sắp xếp lại nhé.");
   }
 
@@ -75,66 +246,40 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
   }
 
   return (
-    <section
-      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
-        correctPop
-          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-          : ""
-      }`}
-    >
+    <section className="rounded-lg border border-ink/15 bg-white/80 p-4">
       <p className="text-base font-medium leading-relaxed text-ink">
         {station.instruction}
       </p>
+      <p className="mt-1 text-xs text-muted">
+        Giữ nút kéo để sắp xếp hoặc dùng nút ▲ / ▼.
+      </p>
 
-      <motion.ul ref={scope} className="mt-4 space-y-2">
-        {items.map((item, index) => {
-          const isLastMoved = lastMovedId === item.id;
-          return (
-            <motion.li
-              key={item.id}
-              layout={!reduced}
-              animate={reduced ? undefined : { scale: isLastMoved ? 1.03 : 1 }}
-              transition={
-                reduced
-                  ? { duration: 0.15 }
-                  : { type: "spring", stiffness: 420, damping: 34 }
-              }
-              className={`flex items-center justify-between gap-2 rounded-md border border-ink/15 bg-sand/60 px-3 py-2 ${
-                isLastMoved
-                  ? "ring-1 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-                  : ""
-              }`}
-            >
-              <span className="text-sm font-medium text-ink">
-                <span className="mr-2 font-bold text-terracotta">
-                  {index + 1}.
-                </span>
-                {item.label}
-              </span>
-              <div className="flex shrink-0 items-center gap-1">
-                <button
-                  type="button"
-                  aria-label="Đưa lên"
-                  disabled={index === 0}
-                  onClick={() => moveItem(index, -1)}
-                  className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border border-ink/20 bg-white text-sm font-bold text-ink transition-colors hover:bg-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  ▲
-                </button>
-                <button
-                  type="button"
-                  aria-label="Đưa xuống"
-                  disabled={index === items.length - 1}
-                  onClick={() => moveItem(index, 1)}
-                  className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border border-ink/20 bg-white text-sm font-bold text-ink transition-colors hover:bg-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  ▼
-                </button>
-              </div>
-            </motion.li>
-          );
-        })}
-      </motion.ul>
+      <DndContext
+        id={`dnd-${station.id}`}
+        sensors={sensors}
+        accessibility={{
+          announcements,
+          screenReaderInstructions: SCREEN_READER_INSTRUCTIONS,
+        }}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
+      >
+        <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
+          <ul className="mt-4 space-y-2">
+            {items.map((item, index) => (
+              <SortableOrderRow
+                key={item.id}
+                item={item}
+                index={index}
+                total={items.length}
+                reducedMotion={reducedMotion}
+                onMove={moveItem}
+              />
+            ))}
+          </ul>
+        </SortableContext>
+      </DndContext>
 
       {feedback && (
         <p role="status" className="mt-3 text-sm font-medium text-terracotta">
@@ -143,13 +288,13 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
       )}
 
       <div className="mt-4">
-        <GlowButton
+        <button
           type="button"
           onClick={handleCheck}
-          className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity motion-reduce:transition-none hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Kiểm tra
-        </GlowButton>
+        </button>
       </div>
 
       <HintBox

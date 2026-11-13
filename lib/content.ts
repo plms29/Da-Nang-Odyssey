@@ -10,3 +10,4 @@ export const getSpots = (): Spot[] => spots;
 export const getSpot = (id: string): Spot | undefined => spots.find((s) => s.id === id);
 export const getLevels = (): Level[] => levels;
 export const getLevel = (id: string): Level | undefined => levels.find((l) => l.id === id);
+export const levelForSpot = (spotId: string): Level | undefined => levels.find((l) => l.spot_ids.includes(spotId));

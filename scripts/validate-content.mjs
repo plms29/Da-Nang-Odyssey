@@ -23,6 +23,7 @@ for (const s of spots) {
   spotIds.add(s.id);
   for (const k of ["name", "story", "image", "frame", "caption_fallback", "narration_fallback"])
     need(typeof s[k] === "string" && s[k], `${w}: thiếu ${k}`);
+  need(s.narration_audio === undefined || (typeof s.narration_audio === "string" && s.narration_audio), `${w}: narration_audio phải là chuỗi không rỗng`);
   need(THEMES.includes(s.theme), `${w}: theme không hợp lệ`);
   need(isArea(s.checkin), `${w}: checkin cần lat, lng, radius_m > 0`);
   need(s.tour_seconds > 0 && Number.isInteger(s.route_order), `${w}: thiếu tour_seconds/route_order`);

@@ -113,8 +113,7 @@ Cột Worker là gợi ý theo quy trình multi-agent. Nếu người làm tay t
 | U5 | Nội dung 4 kit trong `lib/scene/kits/*.ts` + **tranh SVG giữ chỗ** (hình khối đơn giản, đúng bảng màu, đúng bố cục để code chạy được trước khi có tranh thật). Danh sách lớp lấy theo mục 4. Đăng ký kit trong `lib/scene/kits/index.ts` (U0 tạo sẵn file này, export object rỗng theo `SceneId`; `lib/scene/index.ts` chỉ đọc từ đó) | `ui-argon` | `lib/scene/kits/*`, `public/scenes/**` (chỉ `.svg`) | U0 |
 | A1 | **Tranh thật** cho 4 kit theo đặc tả ở mục 4. Không phải code. Đội nội dung duyệt độ chính xác văn hoá trước khi đưa vào | **Người làm tranh** (AI tạo ảnh + tách nền) | `public/scenes/**` (`.webp`) | Chạy song song từ đầu |
 
-Ghi chú (đã chỉnh khi build): CSS của U1, U2, U4 nằm ở file riêng `app/fx/ambient.css`, `app/fx/text.css`, `app/fx/transition.css` (fx.css import cả ba), để các worker chạy song song không ghi đè nhau. `app/fx.css` được import từ `app/globals.css`.
-Trong worktree `ui-dong`: U10 bỏ qua vì code B1 (check-in) chưa commit; A1 và U12 (tranh thật) chờ người làm tranh, tạm dùng SVG giữ chỗ.
+Ghi chú: U1, U2, U4 cùng ghi thêm vào `app/fx.css` nhưng mỗi task chỉ ghi trong khối comment của mình. Nếu dùng git worktree thì gộp tay khối đó khi merge.
 
 ### Đợt 3: đưa hiệu ứng vào từng màn hình (song song)
 

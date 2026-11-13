@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { getSpots } from "@/lib/content";
 import { TOUR_STOPS } from "@/lib/tour/config";
-import { fallbackPlan, pickStops } from "@/lib/tour/plan";
+import { narrate } from "@/lib/tour/narrate";
+import { pickStops } from "@/lib/tour/plan";
 import type { Theme } from "@/lib/types";
 
 export async function POST(request: Request) {
@@ -37,7 +38,6 @@ export async function POST(request: Request) {
     );
   }
 
-  // Gemini narration will be added in phase B; return prebuilt fallback plan for now.
   const stops = pickStops(getSpots(), seconds, themes as Theme[]);
-  return NextResponse.json(fallbackPlan(stops));
+  return NextResponse.json(await narrate(stops, seconds));
 }
