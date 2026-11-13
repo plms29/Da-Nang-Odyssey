@@ -48,8 +48,9 @@ describe("buildCaptionPrompt", () => {
     const prompt = buildCaptionPrompt(injectedSpot);
     const startTag = "<cau_chuyen>";
     const endTag = "</cau_chuyen>";
-    const startIdx = prompt.lastIndexOf(startTag);
+    // The closing reminder line also mentions the opening tag, so search backwards from the real closing tag.
     const endIdx = prompt.lastIndexOf(endTag);
+    const startIdx = prompt.lastIndexOf(startTag, endIdx);
 
     expect(startIdx).toBeGreaterThan(-1);
     expect(endIdx).toBeGreaterThan(startIdx);
