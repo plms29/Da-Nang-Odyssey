@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" fill="none">
+  <defs>
+    <linearGradient id="chamHillFar" x1="480" y1="40" x2="480" y2="320" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5E5148" stop-opacity="0.45" />
+      <stop offset="100%" stop-color="#A84825" stop-opacity="0.25" />
+    </linearGradient>
+    <linearGradient id="chamHillNear" x1="480" y1="90" x2="480" y2="320" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5E5148" stop-opacity="0.78" />
+      <stop offset="100%" stop-color="#1F1A17" stop-opacity="0.65" />
+    </linearGradient>
+  </defs>
+  <!--Glowing sunset disc behind hills -->
+  <circle cx="480" cy="115" r="88" fill="#F6EFE4" fill-opacity="0.22" />
+  <circle cx="480" cy="115" r="56" fill="#C99A2E" fill-opacity="0.38" />
+  <!-- Far rolling hills -->
+  <path
+    d="M0 205 C120 155, 250 135, 380 175 C510 215, 640 120, 790 140 C865 150, 915 175, 960 190 L960 320 L0 320 Z"
+    fill="url(#chamHillFar)"
+  />
+  <!-- Closer valley ridge -->
+  <path
+    d="M0 245 C145 215, 290 238, 440 208 C590 178, 735 198, 960 232 L960 320 L0 320 Z"
+    fill="url(#chamHillNear)"
+  />
+</svg>

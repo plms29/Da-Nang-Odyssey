@@ -20,7 +20,10 @@ import {
   sortableKeyboardCoordinates,
   useSortable,
 } from "@dnd-kit/sortable";
+import { useAnimate, useReducedMotion } from "motion/react";
+import { GlowButton } from "@/components/fx/GlowButton";
 import { checkJigsaw } from "@/lib/activities/scoring";
+import { haptic } from "@/lib/haptics";
 import type { JigsawStation as JigsawStationType, StationResult } from "@/lib/types";
 import { deterministicShuffle } from "../shuffle";
 import { useAttempt } from "../useAttempt";
@@ -124,6 +127,9 @@ function SortableTile({
 }
 
 export function JigsawStation({ station, onDone }: JigsawStationProps) {
+  const prefersReducedMotion = useReducedMotion();
+  const reduced = Boolean(prefersReducedMotion);
+  const [scope, animate] = useAnimate();
   const [rows, cols] = station.grid;
   const total = rows * cols;
   const [placement, setPlacement] = useState<number[]>(() =>
@@ -136,6 +142,8 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [revealedHints, setRevealedHints] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [checked, setChecked] = useState(false);
+  const [correctPop, setCorrectPop] = useState(false);
   const { hintsUsed, nextHint, addWrong, result } = useAttempt(station.hints);
   const reducedMotion = usePrefersReducedMotion();
   const didDragRef = useRef(false);
@@ -228,6 +236,12 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
   function handleCheck() {
     if (checkJigsaw(placement, station.grid)) {
       setFeedback(null);
+      setChecked(true);
+      setCorrectPop(true);
+      haptic("success");
+      if (!reduced && scope.current) {
+        animate(scope.current, { scale: [1, 1.03, 1] }, { duration: 0.35 });
+      }
       onDone(result(true));
       return;
     }
@@ -243,7 +257,13 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
   }
 
   return (
-    <section className="rounded-lg border border-ink/15 bg-white/80 p-4">
+    <section
+      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
+        correctPop
+          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+          : ""
+      }`}
+    >
       <p className="text-base font-medium leading-relaxed text-ink">
         {station.instruction}
       </p>
@@ -264,6 +284,7 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
       >
         <SortableContext items={itemIds} strategy={rectSortingStrategy}>
           <div
+            ref={scope}
             className="mt-4 grid gap-2"
             style={{
               gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
@@ -296,13 +317,13 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
       )}
 
       <div className="mt-4">
-        <button
+        <GlowButton
           type="button"
           onClick={handleCheck}
           className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity motion-reduce:transition-none hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Kiểm tra
-        </button>
+        </GlowButton>
       </div>
 
       <HintBox

@@ -43,3 +43,7 @@ next-env.d.ts
 .agy-tasks/
 .env*.local
 !.env.example
+
+# worker briefs and logs
+.agy-tasks/
+.art-raw/

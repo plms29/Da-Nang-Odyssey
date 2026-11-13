@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" fill="none">
+  <defs>
+    <linearGradient id="incenseWisp1" x1="480" y1="620" x2="480" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F6EFE4" stop-opacity="0.08" />
+      <stop offset="40%" stop-color="#F6EFE4" stop-opacity="0.48" />
+      <stop offset="80%" stop-color="#C99A2E" stop-opacity="0.28" />
+      <stop offset="100%" stop-color="#F6EFE4" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="incenseWisp2" x1="480" y1="580" x2="480" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F6EFE4" stop-opacity="0.05" />
+      <stop offset="50%" stop-color="#F6EFE4" stop-opacity="0.34" />
+      <stop offset="100%" stop-color="#F6EFE4" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <!-- Main rising S-curve incense ribbon -->
+  <path
+    d="M460 620 C390 520, 560 430, 470 320 C380 210, 540 130, 450 25 C515 125, 425 220, 515 325 C605 430, 435 525, 485 620 Z"
+    fill="url(#incenseWisp1)"
+  />
+  <!-- Secondary delicate wisp -->
+  <path
+    d="M520 590 C590 495, 430 400, 515 295 C595 195, 465 120, 525 45 C485 125, 625 200, 545 305 C465 410, 615 500, 540 590 Z"
+    fill="url(#incenseWisp2)"
+  />
+</svg>

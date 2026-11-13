@@ -1,0 +1,85 @@
+/* U2 — TextReveal glitch. Chỉ chạy khi phần tử có .fx-glitch--run (một lần, lúc vào khung nhìn). */
+
+/* position: relative là vùng chứa của pseudo-element, nên không đặt element thành absolute/fixed được. */
+.fx-glitch {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Bản sao lệch màu nằm sau chữ thật; trong suốt khi nghỉ nên chữ bình thường. Không đổi layout (absolute). */
+.fx-glitch::before,
+.fx-glitch::after {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  color: transparent;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.fx-glitch::before {
+  text-shadow: 3px 0 var(--color-terracotta);
+}
+
+.fx-glitch::after {
+  text-shadow: -3px 0 var(--color-river);
+}
+
+.fx-glitch--run::before {
+  animation: fx-glitch-a 0.4s steps(1, end) var(--fx-delay, 0s) 1 both;
+}
+
+.fx-glitch--run::after {
+  animation: fx-glitch-b 0.4s steps(1, end) var(--fx-delay, 0s) 1 both;
+}
+
+@keyframes fx-glitch-a {
+  0% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translate(0, 0); }
+  12% { opacity: 1; clip-path: inset(12% 0 70% 0); transform: translate(-3px, 0); }
+  30% { opacity: 1; clip-path: inset(55% 0 15% 0); transform: translate(2px, 0); }
+  50% { opacity: 1; clip-path: inset(30% 0 45% 0); transform: translate(-1px, 0); }
+  70% { opacity: 1; clip-path: inset(80% 0 2% 0); transform: translate(3px, 0); }
+  88% { opacity: 1; clip-path: inset(5% 0 85% 0); transform: translate(-2px, 0); }
+  100% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translate(0, 0); }
+}
+
+@keyframes fx-glitch-b {
+  0% { opacity: 0; clip-path: inset(100% 0 0 0); transform: translate(0, 0); }
+  15% { opacity: 1; clip-path: inset(65% 0 10% 0); transform: translate(2px, 0); }
+  35% { opacity: 1; clip-path: inset(20% 0 60% 0); transform: translate(-3px, 0); }
+  55% { opacity: 1; clip-path: inset(50% 0 30% 0); transform: translate(1px, 0); }
+  75% { opacity: 1; clip-path: inset(8% 0 75% 0); transform: translate(-2px, 0); }
+  90% { opacity: 1; clip-path: inset(70% 0 5% 0); transform: translate(2px, 0); }
+  100% { opacity: 0; clip-path: inset(100% 0 0 0); transform: translate(0, 0); }
+}
+
+/* V0b — Fade-up & blur chạy ngay bằng CSS khi paint, không đợi hydrate/IO. */
+.fx-reveal-up {
+  animation: fx-reveal-up 380ms var(--fx-ease-out) both;
+  animation-delay: var(--fx-delay, 0s);
+}
+
+.fx-reveal-blur {
+  animation: fx-reveal-blur 380ms var(--fx-ease-out) both;
+  animation-delay: var(--fx-delay, 0s);
+}
+
+@keyframes fx-reveal-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes fx-reveal-blur {
+  from { opacity: 0; filter: blur(8px); }
+  to { opacity: 1; filter: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-reveal-up,
+  .fx-reveal-blur {
+    animation-delay: 0s;
+  }
+}

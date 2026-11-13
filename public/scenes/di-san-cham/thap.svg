@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" fill="none">
+  <defs>
+    <linearGradient id="chamBrickMain" x1="480" y1="40" x2="480" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#C9643B" />
+      <stop offset="45%" stop-color="#A84825" />
+      <stop offset="100%" stop-color="#6B2A14" />
+    </linearGradient>
+    <linearGradient id="chamBrickSide" x1="480" y1="140" x2="480" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#B5522C" />
+      <stop offset="100%" stop-color="#5E2411" />
+    </linearGradient>
+  </defs>
+
+  <!-- Ground terrace under the 3 kalan towers -->
+  <path d="M70 470 L890 470 L930 520 L30 520 Z" fill="#5E5148" />
+  <rect x="95" y="456" width="770" height="16" fill="#A84825" />
+
+  <!-- LEFT CHAM TOWER (smaller kalan) -->
+  <g>
+    <!-- Base & main shaft -->
+    <rect x="135" y="430" width="170" height="28" fill="#5E2411" />
+    <rect x="148" y="310" width="144" height="120" fill="url(#chamBrickSide)" />
+    <!-- Pilaster vertical bands -->
+    <rect x="164" y="315" width="12" height="110" fill="#5E2411" fill-opacity="0.45" />
+    <rect x="264" y="315" width="12" height="110" fill="#5E2411" fill-opacity="0.45" />
+    <!-- Receding tier 1 + corner ornaments -->
+    <rect x="142" y="298" width="156" height="14" fill="#C99A2E" fill-opacity="0.55" />
+    <polygon points="142,298 148,282 154,298" fill="#A84825" />
+    <polygon points="286,298 292,282 298,298" fill="#A84825" />
+    <rect x="164" y="252" width="112" height="46" fill="url(#chamBrickSide)" />
+    <!-- Receding tier 2 + corner ornaments -->
+    <rect x="158" y="242" width="124" height="12" fill="#C99A2E" fill-opacity="0.55" />
+    <polygon points="158,242 164,228 170,242" fill="#A84825" />
+    <polygon points="270,242 276,228 282,242" fill="#A84825" />
+    <rect x="182" y="204" width="76" height="38" fill="url(#chamBrickSide)" />
+    <!-- Receding tier 3 + pointed crown -->
+    <rect x="198" y="176" width="44" height="28" fill="#A84825" />
+    <polygon points="205,176 220,142 235,176" fill="#C99A2E" />
+    <!-- Stepped false arch doorway -->
+    <polygon points="190,430 198,348 220,322 242,348 250,430" fill="#1F1A17" />
+  </g>
+
+  <!-- RIGHT CHAM TOWER (smaller kalan) -->
+  <g>
+    <!-- Base & main shaft -->
+    <rect x="655" y="430" width="170" height="28" fill="#5E2411" />
+    <rect x="668" y="300" width="144" height="130" fill="url(#chamBrickSide)" />
+    <!-- Pilaster vertical bands -->
+    <rect x="684" y="305" width="12" height="120" fill="#5E2411" fill-opacity="0.45" />
+    <rect x="784" y="305" width="12" height="120" fill="#5E2411" fill-opacity="0.45" />
+    <!-- Receding tier 1 + corner ornaments -->
+    <rect x="662" y="288" width="156" height="14" fill="#C99A2E" fill-opacity="0.55" />
+    <polygon points="662,288 668,272 674,288" fill="#A84825" />
+    <polygon points="806,288 812,272 818,288" fill="#A84825" />
+    <rect x="684" y="242" width="112" height="46" fill="url(#chamBrickSide)" />
+    <!-- Receding tier 2 + corner ornaments -->
+    <rect x="678" y="232" width="124" height="12" fill="#C99A2E" fill-opacity="0.55" />
+    <polygon points="678,232 684,218 690,232" fill="#A84825" />
+    <polygon points="790,232 796,218 802,232" fill="#A84825" />
+    <rect x="702" y="194" width="76" height="38" fill="url(#chamBrickSide)" />
+    <!-- Receding tier 3 + pointed crown -->
+    <rect x="718" y="166" width="44" height="28" fill="#A84825" />
+    <polygon points="725,166 740,132 755,166" fill="#C99A2E" />
+    <!-- Stepped false arch doorway -->
+    <polygon points="710,430 718,342 740,316 762,342 770,430" fill="#1F1A17" />
+  </g>
+
+  <!-- MIDDLE CHAM TOWER (tallest central kalan) -->
+  <g>
+    <!-- Base plinth -->
+    <rect x="340" y="422" width="280" height="36" fill="#5E2411" />
+    <rect x="352" y="410" width="256" height="14" fill="#C99A2E" fill-opacity="0.55" />
+    <!-- Main brick body -->
+    <rect x="364" y="235" width="232" height="175" fill="url(#chamBrickMain)" />
+    <!-- Vertical pilasters -->
+    <rect x="384" y="242" width="16" height="162" fill="#5E2411" fill-opacity="0.45" />
+    <rect x="414" y="242" width="12" height="162" fill="#5E2411" fill-opacity="0.35" />
+    <rect x="534" y="242" width="12" height="162" fill="#5E2411" fill-opacity="0.35" />
+    <rect x="560" y="242" width="16" height="162" fill="#5E2411" fill-opacity="0.45" />
+
+    <!-- Cornice 1 + corner spire ornaments -->
+    <rect x="354" y="220" width="252" height="16" fill="#C99A2E" fill-opacity="0.65" />
+    <polygon points="354,220 362,196 370,220" fill="#A84825" />
+    <polygon points="402,220 408,202 414,220" fill="#A84825" />
+    <polygon points="546,220 552,202 558,220" fill="#A84825" />
+    <polygon points="590,220 598,196 606,220" fill="#A84825" />
+    <!-- Tier 1 -->
+    <rect x="388" y="164" width="184" height="56" fill="url(#chamBrickMain)" />
+
+    <!-- Cornice 2 + corner spire ornaments -->
+    <rect x="380" y="150" width="200" height="14" fill="#C99A2E" fill-opacity="0.65" />
+    <polygon points="380,150 388,128 396,150" fill="#A84825" />
+    <polygon points="564,150 572,128 580,150" fill="#A84825" />
+    <!-- Tier 2 -->
+    <rect x="414" y="102" width="132" height="48" fill="url(#chamBrickMain)" />
+
+    <!-- Cornice 3 + corner spire ornaments -->
+    <rect x="408" y="90" width="144" height="12" fill="#C99A2E" fill-opacity="0.65" />
+    <polygon points="408,90 415,72 422,90" fill="#A84825" />
+    <polygon points="538,90 545,72 552,90" fill="#A84825" />
+    <!-- Tier 3 -->
+    <rect x="442" y="54" width="76" height="36" fill="url(#chamBrickMain)" />
+
+    <!-- Pointed sandstone crown (kalasa) -->
+    <polygon points="454,54 480,14 506,54" fill="#C99A2E" />
+
+    <!-- Spear-arch sanctuary doorway & tympanum -->
+    <polygon points="424,280 480,224 536,280" fill="#C99A2E" fill-opacity="0.7" />
+    <polygon points="436,422 446,288 480,252 514,288 524,422" fill="#1F1A17" />
+  </g>
+</svg>

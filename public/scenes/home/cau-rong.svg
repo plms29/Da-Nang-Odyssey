@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" fill="none">
+  <defs>
+    <linearGradient id="dragonGold" x1="0" y1="80" x2="960" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E5B94E" />
+      <stop offset="50%" stop-color="#C99A2E" />
+      <stop offset="100%" stop-color="#A84825" />
+    </linearGradient>
+    <linearGradient id="riverBand" x1="480" y1="210" x2="480" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1F4E6B" stop-opacity="0.88" />
+      <stop offset="100%" stop-color="#14354A" stop-opacity="0.96" />
+    </linearGradient>
+  </defs>
+  <!-- Han River water surface beneath the bridge -->
+  <rect x="0" y="212" width="960" height="148" fill="url(#riverBand)" />
+  <!-- Golden water reflections -->
+  <g fill="#C99A2E" fill-opacity="0.32">
+    <rect x="110" y="232" width="150" height="5" rx="2.5" />
+    <rect x="360" y="244" width="210" height="6" rx="3" />
+    <rect x="650" y="235" width="160" height="5" rx="2.5" />
+    <rect x="240" y="268" width="180" height="4" rx="2" />
+    <rect x="540" y="276" width="140" height="4" rx="2" />
+  </g>
+  <!-- Bridge piers -->
+  <g fill="#5E5148">
+    <path d="M165 190 L195 190 L205 225 L155 225 Z" />
+    <path d="M455 190 L495 190 L505 225 L445 225 Z" />
+    <path d="M745 190 L775 190 L785 225 L735 225 Z" />
+  </g>
+  <!-- Undulating steel dragon body (behind/above deck) -->
+  <path
+    d="M55 182 C105 182, 130 112, 200 112 C270 112, 305 188, 365 188 C425 188, 455 96, 535 96 C615 96, 650 186, 710 186 C765 186, 795 118, 848 114"
+    stroke="url(#dragonGold)"
+    stroke-width="22"
+    stroke-linecap="round"
+  />
+  <!-- Dragon dorsal crest ridges -->
+  <g fill="#F6EFE4" fill-opacity="0.65">
+    <polygon points="180,103 190,86 200,102" />
+    <polygon points="210,103 220,88 228,105" />
+    <polygon points="505,88 516,70 526,87" />
+    <polygon points="535,87 546,70 556,88" />
+    <polygon points="565,91 574,76 582,94" />
+    <polygon points="810,112 820,96 830,110" />
+  </g>
+  <!-- Vertical suspension hangers -->
+  <g stroke="#C99A2E" stroke-width="3" stroke-opacity="0.8">
+    <line x1="175" y1="120" x2="175" y2="182" />
+    <line x1="205" y1="115" x2="205" y2="182" />
+    <line x1="235" y1="122" x2="235" y2="182" />
+    <line x1="495" y1="104" x2="495" y2="182" />
+    <line x1="535" y1="98" x2="535" y2="182" />
+    <line x1="575" y1="104" x2="575" y2="182" />
+    <line x1="805" y1="124" x2="805" y2="182" />
+    <line x1="835" y1="116" x2="835" y2="182" />
+  </g>
+  <!-- Dragon tail at left end -->
+  <path
+    d="M58 182 C38 175, 22 155, 16 132 C34 138, 46 148, 56 162 C44 142, 42 124, 48 108 C62 125, 68 148, 66 174 Z"
+    fill="url(#dragonGold)"
+  />
+  <!-- Dragon head at right end (raised, facing right) -->
+  <path
+    d="M840 122 C848 92, 872 74, 902 72 C892 84, 884 92, 880 98 C904 94, 926 98, 942 108 C922 116, 905 118, 888 116 C905 124, 922 132, 932 142 C906 144, 882 140, 862 130 Z"
+    fill="url(#dragonGold)"
+  />
+  <!-- Dragon horn & eye accent -->
+  <path d="M862 88 L842 62 L874 78 Z" fill="#A84825" />
+  <circle cx="894" cy="102" r="4" fill="#F6EFE4" />
+  <!-- Bridge road deck -->
+  <rect x="0" y="180" width="960" height="14" fill="#F6EFE4" />
+  <rect x="0" y="188" width="960" height="8" fill="#5E5148" />
+</svg>

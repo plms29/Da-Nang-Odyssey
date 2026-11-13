@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" fill="none">
+  <defs>
+    <linearGradient id="lang-cay-far" x1="480" y1="70" x2="480" y2="350" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#35526B" stop-opacity="0.72" />
+      <stop offset="65%" stop-color="#21384B" stop-opacity="0.88" />
+      <stop offset="100%" stop-color="#172A3A" stop-opacity="0.96" />
+    </linearGradient>
+    <linearGradient id="lang-cay-near" x1="480" y1="120" x2="480" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#263D50" />
+      <stop offset="60%" stop-color="#182A38" />
+      <stop offset="100%" stop-color="#111E28" />
+    </linearGradient>
+    <linearGradient id="lang-cay-haze" x1="480" y1="210" x2="480" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1F4E6B" stop-opacity="0" />
+      <stop offset="100%" stop-color="#172A3A" stop-opacity="0.65" />
+    </linearGradient>
+  </defs>
+
+  <!-- Far hazy village tree-line ridge (cool blue-grey mixed toward night sky) -->
+  <path
+    d="M0 245 C45 190, 95 182, 138 212 C175 155, 238 145, 290 192 C338 128, 412 122, 462 178 C515 112, 592 108, 646 168 C698 135, 758 145, 798 195 C848 158, 912 168, 960 218 L960 360 L0 360 Z"
+    fill="url(#lang-cay-far)"
+  />
+  <!-- Soft moonlit rim on far tree crowns (light from upper-left) -->
+  <path
+    d="M140 210 C176 157, 235 148, 285 188 M338 132 C382 122, 428 138, 458 174 M516 116 C560 108, 610 124, 642 164 M802 192 C846 160, 898 164, 945 204"
+    stroke="#8EB2CA"
+    stroke-opacity="0.45"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+
+  <!-- Nearer village tree canopy silhouettes (banyan, coconut palms, bamboo groves) -->
+  <path
+    d="M0 275 C52 222, 118 218, 165 256 C205 204, 278 202, 326 248 C372 214, 428 218, 470 258 C518 202, 594 198, 648 248 C696 198, 772 204, 822 252 C868 216, 922 224, 960 264 L960 360 L0 360 Z"
+    fill="url(#lang-cay-near)"
+  />
+  <!-- Moonlit rim highlights on nearer tree silhouettes -->
+  <path
+    d="M4 272 C52 224, 112 220, 158 250 M170 252 C208 206, 272 204, 318 242 M476 254 C520 204, 588 200, 640 242 M654 244 C698 200, 766 206, 814 246"
+    stroke="#A6C8DE"
+    stroke-opacity="0.52"
+    stroke-width="3.5"
+    stroke-linecap="round"
+  />
+
+  <!-- Stylized coconut palm silhouettes peeking on left and right horizons -->
+  <g stroke="#1C2F3E" stroke-width="6" stroke-linecap="round">
+    <path d="M98 282 Q112 205, 134 152" />
+    <path d="M876 290 Q862 212, 842 160" />
+  </g>
+  <g fill="#22384A">
+    <path d="M134 152 C104 134, 72 142, 48 164 C84 154, 112 152, 134 152 Z" />
+    <path d="M134 152 C136 118, 166 106, 198 118 C172 126, 152 138, 134 152 Z" />
+    <path d="M134 152 C164 146, 192 162, 212 184 C182 172, 158 162, 134 152 Z" />
+    <path d="M842 160 C812 142, 780 150, 756 172 C792 162, 820 160, 842 160 Z" />
+    <path d="M842 160 C844 126, 874 114, 906 126 C880 134, 860 146, 842 160 Z" />
+  </g>
+  <!-- Moonlit edge on palm fronds -->
+  <path d="M52 162 C76 142, 106 136, 134 152" stroke="#99BED6" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round" />
+  <path d="M760 170 C784 150, 814 144, 842 160" stroke="#99BED6" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Subtle atmospheric mist band at base -->
+  <rect x="0" y="210" width="960" height="150" fill="url(#lang-cay-haze)" />
+</svg>

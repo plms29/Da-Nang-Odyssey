@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 960" fill="none">
+  <defs>
+    <linearGradient id="thanh-dien-hai-slope-lit" x1="180" y1="180" x2="520" y2="520" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#D46B40" />
+      <stop offset="100%" stop-color="#A84825" />
+    </linearGradient>
+    <linearGradient id="thanh-dien-hai-slope-dark" x1="480" y1="440" x2="780" y2="780" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#8C371B" />
+      <stop offset="100%" stop-color="#5E220F" />
+    </linearGradient>
+    <linearGradient id="thanh-dien-hai-parapet" x1="220" y1="220" x2="740" y2="740" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F2DFBF" />
+      <stop offset="50%" stop-color="#DEC092" />
+      <stop offset="100%" stop-color="#BA9462" />
+    </linearGradient>
+    <linearGradient id="thanh-dien-hai-court" x1="280" y1="280" x2="680" y2="680" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EDE2CD" />
+      <stop offset="100%" stop-color="#D2C0A0" />
+    </linearGradient>
+    <linearGradient id="thanh-dien-hai-roof-lit" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#DF7548" />
+      <stop offset="100%" stop-color="#A84825" />
+    </linearGradient>
+    <linearGradient id="thanh-dien-hai-roof-dark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8E381B" />
+      <stop offset="100%" stop-color="#5B210E" />
+    </linearGradient>
+    <pattern id="thanh-dien-hai-brick-pat" width="24" height="14" patternUnits="userSpaceOnUse">
+      <path d="M0 7 H24 M12 0 V7 M0 7 V14 M24 7 V14" stroke="#2D160D" stroke-opacity="0.14" stroke-width="1" />
+    </pattern>
+    <pattern id="thanh-dien-hai-tile-pat" width="12" height="12" patternUnits="userSpaceOnUse">
+      <path d="M0 4 H12 M0 10 H12 M6 0 V12" stroke="#3B150A" stroke-opacity="0.16" stroke-width="1" />
+    </pattern>
+  </defs>
+
+  <!-- Long citadel wall shadow cast onto the moat toward bottom-right -->
+  <polygon
+    points="498,196 558,282 694,264 676,400 762,498 676,558 694,694 558,676 498,762 438,676 302,694 320,558 234,498 320,400 302,264 438,282"
+    fill="#0E2535"
+    fill-opacity="0.38"
+  />
+
+  <!-- Star-shaped bastion outer wall base (shaded side) -->
+  <polygon
+    points="480,174 544,264 684,244 664,384 754,480 664,544 684,684 544,664 480,754 416,664 276,684 296,544 206,480 296,384 276,244 416,264"
+    fill="url(#thanh-dien-hai-slope-dark)"
+  />
+
+  <!-- Sunlit NW bastion faces (two-tone wall thickness) -->
+  <polygon
+    points="480,174 544,264 684,244 480,480 206,480 296,384 276,244 416,264"
+    fill="url(#thanh-dien-hai-slope-lit)"
+  />
+  <polygon
+    points="206,480 480,480 276,684 296,544"
+    fill="url(#thanh-dien-hai-slope-lit)"
+    fill-opacity="0.82"
+  />
+  <!-- Brick masonry texture overlay -->
+  <polygon
+    points="480,174 544,264 684,244 664,384 754,480 664,544 684,684 544,664 480,754 416,664 276,684 296,544 206,480 296,384 276,244 416,264"
+    fill="url(#thanh-dien-hai-brick-pat)"
+  />
+
+  <!-- Elevated flat parapet wall top face -->
+  <polygon
+    points="480,204 536,282 656,266 640,386 718,480 640,536 656,656 536,640 480,718 424,640 304,656 320,536 242,480 320,386 304,266 424,282"
+    fill="url(#thanh-dien-hai-parapet)"
+  />
+  <!-- Crisp rim light along sunlit NW parapet crest -->
+  <polyline
+    points="242,480 320,386 304,266 424,282 480,204 536,282 656,266"
+    stroke="#FFF9ED"
+    stroke-opacity="0.88"
+    stroke-width="3.5"
+    stroke-linejoin="round"
+  />
+
+  <!-- Inner drop wall shadow ring inside parapet -->
+  <polygon
+    points="480,242 526,306 622,294 610,390 674,480 610,526 622,622 526,610 480,674 434,610 338,622 350,526 286,480 350,390 338,294 434,306"
+    fill="#7B5C41"
+  />
+
+  <!-- Inner parade ground courtyard -->
+  <polygon
+    points="480,254 520,312 608,302 598,392 656,480 598,520 608,608 520,598 480,656 440,598 352,608 362,520 304,480 362,392 352,302 440,312"
+    fill="url(#thanh-dien-hai-court)"
+  />
+
+  <!-- Axial courtyard stone pathways & central flag plinth -->
+  <rect x="466" y="275" width="28" height="410" rx="4" fill="#C9A86C" fill-opacity="0.65" />
+  <rect x="315" y="466" width="330" height="28" rx="4" fill="#C9A86C" fill-opacity="0.65" />
+  <polygon points="480,432 524,454 524,506 480,528 436,506 436,454" fill="#B58E52" />
+  <polygon points="480,438 516,457 516,503 480,522 444,503 444,457" fill="#E6D2AE" />
+
+  <!-- Inner Building 1: North Command Hall (Hanh Cung) -->
+  <g>
+    <polygon points="424,344 552,344 568,424 440,424" fill="#2D241E" fill-opacity="0.22" />
+    <rect x="414" y="392" width="132" height="22" rx="2" fill="#7A3219" />
+    <polygon points="404,358 480,334 556,358 480,378" fill="url(#thanh-dien-hai-roof-lit)" />
+    <polygon points="404,358 556,358 556,396 404,396" fill="url(#thanh-dien-hai-roof-dark)" />
+    <polygon points="404,358 480,334 480,396 404,396" fill="url(#thanh-dien-hai-roof-lit)" />
+    <polygon points="404,358 480,334 556,358 556,396 404,396" fill="url(#thanh-dien-hai-tile-pat)" />
+    <line x1="422" y1="358" x2="538" y2="358" stroke="#F6EFE4" stroke-opacity="0.72" stroke-width="3" stroke-linecap="round" />
+    <line x1="404" y1="358" x2="480" y2="334" stroke="#F9EAD0" stroke-opacity="0.7" stroke-width="2.5" />
+  </g>
+
+  <!-- Inner Building 2: West Arsenal Pavilion -->
+  <g>
+    <polygon points="366,438 418,438 430,536 378,536" fill="#2D241E" fill-opacity="0.22" />
+    <rect x="362" y="510" width="52" height="16" rx="2" fill="#6E2C16" />
+    <polygon points="354,432 388,422 422,432 422,516 354,516" fill="url(#thanh-dien-hai-roof-dark)" />
+    <polygon points="354,432 388,422 388,516 354,516" fill="url(#thanh-dien-hai-roof-lit)" />
+    <polygon points="354,432 388,422 422,432 422,516 354,516" fill="url(#thanh-dien-hai-tile-pat)" />
+    <line x1="388" y1="426" x2="388" y2="514" stroke="#F4E6CD" stroke-opacity="0.7" stroke-width="3" stroke-linecap="round" />
+  </g>
+
+  <!-- Inner Building 3: East Barracks Pavilion -->
+  <g>
+    <polygon points="552,438 604,438 616,536 564,536" fill="#2D241E" fill-opacity="0.22" />
+    <rect x="546" y="510" width="52" height="16" rx="2" fill="#6E2C16" />
+    <polygon points="538,432 572,422 606,432 606,516 538,516" fill="url(#thanh-dien-hai-roof-dark)" />
+    <polygon points="538,432 572,422 572,516 538,516" fill="url(#thanh-dien-hai-roof-lit)" />
+    <polygon points="538,432 572,422 606,432 606,516 538,516" fill="url(#thanh-dien-hai-tile-pat)" />
+    <line x1="572" y1="426" x2="572" y2="514" stroke="#F4E6CD" stroke-opacity="0.7" stroke-width="3" stroke-linecap="round" />
+  </g>
+
+  <!-- Inner Building 4: South Gatehouse -->
+  <g>
+    <polygon points="444,548 530,548 542,608 456,608" fill="#2D241E" fill-opacity="0.22" />
+    <rect x="436" y="584" width="88" height="18" rx="2" fill="#7A3219" />
+    <polygon points="428,554 480,536 532,554 532,588 428,588" fill="url(#thanh-dien-hai-roof-dark)" />
+    <polygon points="428,554 480,536 480,588 428,588" fill="url(#thanh-dien-hai-roof-lit)" />
+    <polygon points="428,554 480,536 532,554 532,588 428,588" fill="url(#thanh-dien-hai-tile-pat)" />
+    <line x1="442" y1="554" x2="518" y2="554" stroke="#F4E6CD" stroke-opacity="0.7" stroke-width="2.5" stroke-linecap="round" />
+  </g>
+</svg>

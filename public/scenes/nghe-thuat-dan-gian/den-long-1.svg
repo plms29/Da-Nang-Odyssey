@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1120" fill="none">
+  <defs>
+    <radialGradient id="den-long-1-halo" cx="0.5" cy="0.45" r="0.5">
+      <stop offset="0%" stop-color="#F8D882" stop-opacity="0.55" />
+      <stop offset="48%" stop-color="#C98A2E" stop-opacity="0.26" />
+      <stop offset="100%" stop-color="#A84825" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="den-long-1-silk" x1="240" y1="200" x2="740" y2="660" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E87A46" />
+      <stop offset="45%" stop-color="#B84925" />
+      <stop offset="100%" stop-color="#6B200C" />
+    </linearGradient>
+    <radialGradient id="den-long-1-core" cx="0.46" cy="0.46" r="0.48">
+      <stop offset="0%" stop-color="#FFF9E6" stop-opacity="0.95" />
+      <stop offset="38%" stop-color="#F2BF52" stop-opacity="0.82" />
+      <stop offset="78%" stop-color="#C9582B" stop-opacity="0.28" />
+      <stop offset="100%" stop-color="#A84825" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="den-long-1-gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8A6118" />
+      <stop offset="35%" stop-color="#F2CF72" />
+      <stop offset="70%" stop-color="#C99A2E" />
+      <stop offset="100%" stop-color="#704D12" />
+    </linearGradient>
+    <pattern id="den-long-1-rib-pat" width="16" height="16" patternUnits="userSpaceOnUse">
+      <path d="M0 8 H16" stroke="#3D1105" stroke-opacity="0.14" stroke-width="1.5" />
+    </pattern>
+  </defs>
+
+  <!-- Soft outer warm lantern night glow -->
+  <circle cx="480" cy="435" r="420" fill="url(#den-long-1-halo)" />
+
+  <!-- Hanging cord anchored strictly to TOP edge (y=0) for animate="sway" -->
+  <rect x="470" y="0" width="20" height="162" fill="url(#den-long-1-gold)" />
+  <circle cx="480" cy="92" r="22" fill="#9E3B1B" />
+  <circle cx="476" cy="88" r="10" fill="#F2CF72" fill-opacity="0.7" />
+
+  <!-- Upper sculpted wooden/gold collar -->
+  <rect x="358" y="150" width="244" height="36" rx="10" fill="#2A1C16" />
+  <rect x="366" y="154" width="228" height="10" rx="5" fill="url(#den-long-1-gold)" />
+
+  <!-- Main garlic-bulb terracotta silk lantern body -->
+  <path
+    d="M362 184 C168 270, 148 450, 370 652 L590 652 C812 450, 792 270, 598 184 Z"
+    fill="url(#den-long-1-silk)"
+  />
+  <path
+    d="M362 184 C168 270, 148 450, 370 652 L590 652 C812 450, 792 270, 598 184 Z"
+    fill="url(#den-long-1-rib-pat)"
+  />
+  <!-- Luminous warm inner candle glow -->
+  <ellipse cx="476" cy="416" rx="228" ry="200" fill="url(#den-long-1-core)" />
+
+  <!-- Delicate curved bamboo frame ribs (soft low-opacity dark + sunlit edge) -->
+  <path
+    d="M402 184 C272 280, 264 452, 408 652 M558 184 C688 280, 696 452, 552 652 M480 184 L480 652"
+    stroke="#4A1708"
+    stroke-opacity="0.42"
+    stroke-width="7"
+  />
+  <!-- Rim light along left silk curve -->
+  <path
+    d="M366 196 C190 278, 174 440, 366 636"
+    stroke="#FFD89A"
+    stroke-opacity="0.48"
+    stroke-width="4"
+    stroke-linecap="round"
+  />
+
+  <!-- Lower collar -->
+  <rect x="368" y="646" width="224" height="34" rx="10" fill="#2A1C16" />
+  <rect x="376" y="650" width="208" height="9" rx="4.5" fill="url(#den-long-1-gold)" />
+
+  <!-- Gold silk tassel knot & flowing multi-strand fringe -->
+  <rect x="473" y="680" width="14" height="68" fill="url(#den-long-1-gold)" />
+  <circle cx="480" cy="752" r="24" fill="#9E3B1B" />
+  <circle cx="476" cy="747" r="10" fill="#F2CF72" />
+  <path d="M454 772 L416 1052 L544 1052 L506 772 Z" fill="url(#den-long-1-gold)" />
+  <g stroke="#7A3616" stroke-opacity="0.45" stroke-width="4">
+    <line x1="464" y1="784" x2="444" y2="1052" />
+    <line x1="480" y1="784" x2="480" y2="1052" />
+    <line x1="496" y1="784" x2="516" y2="1052" />
+  </g>
+</svg>

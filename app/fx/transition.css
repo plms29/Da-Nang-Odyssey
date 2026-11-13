@@ -1,0 +1,417 @@
+/* U4 — PhaseTransition, Celebrate, StampPress keyframes */
+
+/* ==========================================================================
+   1. PhaseTransition keyframes (prefixed fx-)
+   Only animate transform, opacity, filter, clip-path.
+   ========================================================================== */
+
+@keyframes fx-dust-sweep-in {
+  0% {
+    transform: translate3d(-110%, 110%, 0) rotate(-32deg) scale(1.35);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(0%, 0%, 0) rotate(-32deg) scale(1.35);
+    opacity: 1;
+  }
+}
+
+@keyframes fx-dust-sweep-out {
+  0% {
+    transform: translate3d(0%, 0%, 0) rotate(-32deg) scale(1.35);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(110%, -110%, 0) rotate(-32deg) scale(1.35);
+    opacity: 0;
+  }
+}
+
+@keyframes fx-smoke-backdrop-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 20%, 0);
+  }
+  45% {
+    opacity: 0.65;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0%, 0);
+  }
+}
+
+@keyframes fx-smoke-backdrop-out {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -18%, 0);
+  }
+}
+
+@keyframes fx-smoke-puff-in {
+  0% {
+    transform: translate3d(0, 115%, 0) scale(0.75);
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.92;
+  }
+  100% {
+    transform: translate3d(0, 0%, 0) scale(1.3);
+    opacity: 1;
+  }
+}
+
+@keyframes fx-smoke-puff-out {
+  0% {
+    transform: translate3d(0, 0%, 0) scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, -65%, 0) scale(1.55);
+    opacity: 0;
+  }
+}
+
+@keyframes fx-card-flip-in {
+  0% {
+    transform: translate3d(65%, 0, 0) rotateY(-88deg) scale(0.9);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0%, 0, 0) rotateY(0deg) scale(1.02);
+    opacity: 1;
+  }
+}
+
+@keyframes fx-card-flip-out {
+  0% {
+    transform: translate3d(0%, 0, 0) rotateY(0deg) scale(1.02);
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-65%, 0, 0) rotateY(88deg) scale(0.9);
+    opacity: 0;
+  }
+}
+
+@keyframes fx-river-wipe-in {
+  0% {
+    transform: translate3d(-115%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
+}
+
+@keyframes fx-river-wipe-out {
+  0% {
+    transform: translate3d(0%, 0, 0);
+  }
+  100% {
+    transform: translate3d(115%, 0, 0);
+  }
+}
+
+.fx-dust-sweep-cover {
+  animation: fx-dust-sweep-in 400ms var(--fx-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+.fx-dust-sweep-reveal {
+  animation: fx-dust-sweep-out 400ms var(--fx-ease-in-out, cubic-bezier(0.65, 0, 0.35, 1)) forwards;
+}
+
+.fx-smoke-backdrop-cover {
+  animation: fx-smoke-backdrop-in 400ms var(--fx-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+.fx-smoke-backdrop-reveal {
+  animation: fx-smoke-backdrop-out 400ms var(--fx-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+.fx-smoke-puff-cover {
+  animation: fx-smoke-puff-in 400ms var(--fx-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+.fx-smoke-puff-reveal {
+  animation: fx-smoke-puff-out 400ms var(--fx-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+.fx-card-flip-cover {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  animation: fx-card-flip-in 400ms var(--fx-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+.fx-card-flip-reveal {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  animation: fx-card-flip-out 400ms var(--fx-ease-in-out, cubic-bezier(0.65, 0, 0.35, 1)) forwards;
+}
+
+@keyframes fx-card-backdrop-in {
+  0%,
+  30% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fx-card-backdrop-out {
+  0% {
+    opacity: 1;
+  }
+  70%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.fx-card-backdrop-cover {
+  animation: fx-card-backdrop-in 400ms var(--fx-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+.fx-card-backdrop-reveal {
+  animation: fx-card-backdrop-out 400ms var(--fx-ease-in-out, cubic-bezier(0.65, 0, 0.35, 1)) forwards;
+}
+
+.fx-river-wipe-cover {
+  animation: fx-river-wipe-in 400ms var(--fx-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+.fx-river-wipe-reveal {
+  animation: fx-river-wipe-out 400ms var(--fx-ease-in-out, cubic-bezier(0.65, 0, 0.35, 1)) forwards;
+}
+
+/* ==========================================================================
+   2. Celebrate keyframes (prefixed fx-)
+   ========================================================================== */
+
+@keyframes fx-gold-burst {
+  0% {
+    transform: scale(0.35);
+    opacity: 0;
+  }
+  22% {
+    transform: scale(1.05);
+    opacity: 0.95;
+  }
+  55% {
+    transform: scale(1.25);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+@keyframes fx-flag-pole-fade {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  12% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  85% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+@keyframes fx-flag-raise {
+  0% {
+    transform: translate3d(0, 140px, 0);
+  }
+  60% {
+    transform: translate3d(0, 0px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0px, 0);
+  }
+}
+
+@keyframes fx-flag-cloth-wave {
+  0%,
+  100% {
+    transform: skewY(0deg) scaleX(1);
+  }
+  25% {
+    transform: skewY(-5deg) scaleX(0.96);
+  }
+  50% {
+    transform: skewY(3deg) scaleX(1.02);
+  }
+  75% {
+    transform: skewY(-4deg) scaleX(0.97);
+  }
+}
+
+@keyframes fx-drum-bounce {
+  0% {
+    transform: translate3d(0, 60px, 0) scale(0.7, 0.7);
+    opacity: 0;
+  }
+  10% {
+    transform: translate3d(0, 0px, 0) scale(1.16, 0.84);
+    opacity: 1;
+  }
+  22% {
+    transform: translate3d(0, -42px, 0) scale(0.94, 1.06);
+    opacity: 1;
+  }
+  34% {
+    transform: translate3d(0, 0px, 0) scale(1.14, 0.86);
+    opacity: 1;
+  }
+  46% {
+    transform: translate3d(0, -28px, 0) scale(0.96, 1.04);
+    opacity: 1;
+  }
+  58% {
+    transform: translate3d(0, 0px, 0) scale(1.1, 0.9);
+    opacity: 1;
+  }
+  70% {
+    transform: translate3d(0, -14px, 0) scale(0.98, 1.02);
+    opacity: 1;
+  }
+  80% {
+    transform: translate3d(0, 0px, 0) scale(1, 1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, 8px, 0) scale(0.95, 0.95);
+    opacity: 0;
+  }
+}
+
+@keyframes fx-sky-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  12% {
+    opacity: 0.75;
+    transform: scale(1.02);
+  }
+  32% {
+    opacity: 0.18;
+    transform: scale(1.05);
+  }
+  48% {
+    opacity: 0.45;
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+
+.fx-celebrate-gold-burst {
+  animation: fx-gold-burst 1950ms var(--fx-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+.fx-celebrate-flag-pole {
+  animation: fx-flag-pole-fade 2000ms var(--fx-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+.fx-celebrate-flag-raise {
+  animation: fx-flag-raise 2000ms var(--fx-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+.fx-celebrate-flag-wave {
+  transform-origin: left center;
+  animation: fx-flag-cloth-wave 650ms ease-in-out infinite;
+}
+
+.fx-celebrate-drum {
+  transform-origin: center bottom;
+  animation: fx-drum-bounce 1950ms cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+}
+
+.fx-celebrate-sky-flash {
+  animation: fx-sky-flash 1850ms var(--fx-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+/* ==========================================================================
+   3. StampPress keyframes (prefixed fx-)
+   Children start at opacity 0, scale 1.6, rotate -10deg, slam to scale 1,
+   rotate -3deg in ~260ms (ease-in), then tiny 2-frame shake after landing.
+   ========================================================================== */
+
+@keyframes fx-stamp-slam {
+  0% {
+    opacity: 0;
+    transform: scale(1.6) rotate(-10deg);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+  72% {
+    opacity: 1;
+    transform: scale(1) rotate(-3deg);
+    animation-timing-function: steps(1, end);
+  }
+  81% {
+    opacity: 1;
+    transform: translate3d(-2px, 1.5px, 0) scale(0.985) rotate(-4.2deg);
+    animation-timing-function: steps(1, end);
+  }
+  90% {
+    opacity: 1;
+    transform: translate3d(2px, -1px, 0) scale(1.01) rotate(-1.8deg);
+    animation-timing-function: ease-out;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(-3deg);
+  }
+}
+
+@keyframes fx-stamp-ink-bleed {
+  0%,
+  65% {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+  74% {
+    opacity: 0.42;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.38);
+  }
+}
+
+.fx-stamp-press-active {
+  animation: fx-stamp-slam 260ms forwards;
+}
+
+.fx-stamp-ink-ring {
+  background: radial-gradient(
+    circle,
+    rgba(168, 72, 37, 0.36) 0%,
+    rgba(168, 72, 37, 0.22) 52%,
+    rgba(168, 72, 37, 0) 75%
+  );
+  animation: fx-stamp-ink-bleed 620ms var(--fx-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}

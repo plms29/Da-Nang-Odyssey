@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 680" fill="none">
+  <defs>
+    <linearGradient id="dai-bao-bronze" x1="480" y1="220" x2="505" y2="390" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#8A611C" />
+      <stop offset="18%" stop-color="#F7E3A4" />
+      <stop offset="38%" stop-color="#D7A73B" />
+      <stop offset="68%" stop-color="#9A6B20" />
+      <stop offset="88%" stop-color="#53370E" />
+      <stop offset="100%" stop-color="#7D5618" />
+    </linearGradient>
+    <linearGradient id="dai-bao-carriage" x1="160" y1="360" x2="560" y2="540" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#C85D36" />
+      <stop offset="55%" stop-color="#9B3D1E" />
+      <stop offset="100%" stop-color="#692610" />
+    </linearGradient>
+    <linearGradient id="dai-bao-wheel-rim" x1="380" y1="360" x2="590" y2="590" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6E5D4F" />
+      <stop offset="50%" stop-color="#433830" />
+      <stop offset="100%" stop-color="#221C18" />
+    </linearGradient>
+    <radialGradient id="dai-bao-ball" cx="0.35" cy="0.32" r="0.65">
+      <stop offset="0%" stop-color="#6A615B" />
+      <stop offset="45%" stop-color="#2D2724" />
+      <stop offset="100%" stop-color="#14110F" />
+    </radialGradient>
+    <pattern id="dai-bao-wood-pat" width="32" height="12" patternUnits="userSpaceOnUse">
+      <path d="M0 4 H32 M6 10 H28" stroke="#3D1609" stroke-opacity="0.18" stroke-width="1.5" />
+    </pattern>
+  </defs>
+
+  <!-- Soft long ground shadow cast toward bottom-right -->
+  <polygon points="150,510 560,445 780,535 610,618 190,596" fill="#231D18" fill-opacity="0.28" />
+
+  <!-- Wooden stepped gun carriage (shaded side cheek + sunlit top steps) -->
+  <path d="M136 518 L572 518 L572 376 L478 376 L478 418 L380 418 L380 458 L136 458 Z" fill="url(#dai-bao-carriage)" />
+  <path d="M136 518 L572 518 L572 376 L478 376 L478 418 L380 418 L380 458 L136 458 Z" fill="url(#dai-bao-wood-pat)" />
+  <!-- Lit top ledges of the carriage -->
+  <path d="M136 458 L380 458 L380 418 L478 418 L478 376 L572 376" stroke="#EE9972" stroke-opacity="0.65" stroke-width="5" stroke-linejoin="round" />
+
+  <!-- Bronze cannon barrel tilted upward toward the river -->
+  <g transform="rotate(-17 470 340)">
+    <!-- Cascabel knob at breech -->
+    <circle cx="162" cy="340" r="32" fill="#7D5618" />
+    <circle cx="156" cy="332" r="14" fill="#E8C266" fill-opacity="0.6" />
+
+    <!-- Main tapered bronze tube with multi-stop metallic sheen -->
+    <path d="M190 278 L842 304 L842 376 L190 402 Z" fill="url(#dai-bao-bronze)" />
+    <!-- Top rim specular highlight -->
+    <line x1="202" y1="292" x2="828" y2="314" stroke="#FFF6D6" stroke-opacity="0.72" stroke-width="5" stroke-linecap="round" />
+
+    <!-- Sculpted bronze reinforcement bands -->
+    <rect x="295" y="274" width="22" height="132" rx="7" fill="#C99A2E" />
+    <rect x="297" y="278" width="8" height="46" rx="4" fill="#FFF2C2" fill-opacity="0.75" />
+
+    <rect x="498" y="282" width="20" height="116" rx="6" fill="#C99A2E" />
+    <rect x="500" y="286" width="7" height="42" rx="3.5" fill="#FFF2C2" fill-opacity="0.75" />
+
+    <rect x="702" y="290" width="18" height="100" rx="6" fill="#C99A2E" />
+    <rect x="704" y="294" width="6" height="36" rx="3" fill="#FFF2C2" fill-opacity="0.75" />
+
+    <!-- Muzzle swell & dark bore -->
+    <ellipse cx="848" cy="340" rx="22" ry="48" fill="#B88728" />
+    <ellipse cx="844" cy="340" rx="18" ry="42" fill="#E6BC5A" />
+    <ellipse cx="852" cy="340" rx="10" ry="26" fill="#2A1C09" />
+  </g>
+
+  <!-- Heavy spoked carriage wheel (two-tone bevel, zero harsh ink outline) -->
+  <g>
+    <circle cx="486" cy="488" r="110" fill="url(#dai-bao-wheel-rim)" />
+    <circle cx="486" cy="488" r="88" fill="#8C735B" />
+    <circle cx="486" cy="488" r="76" fill="#2B231E" fill-opacity="0.28" />
+    <!-- Spokes -->
+    <g stroke="#5E4D40" stroke-width="14" stroke-linecap="round">
+      <line x1="486" y1="398" x2="486" y2="578" />
+      <line x1="396" y1="488" x2="576" y2="488" />
+      <line x1="422" y1="424" x2="550" y2="552" />
+      <line x1="422" y1="552" x2="550" y2="424" />
+    </g>
+    <!-- Lit top-left wheel arc -->
+    <path d="M402 420 A106 106 0 0 1 558 410" stroke="#E5D5BE" stroke-opacity="0.58" stroke-width="5" stroke-linecap="round" />
+    <!-- Bronze axle hub -->
+    <circle cx="486" cy="488" r="28" fill="#B88728" />
+    <circle cx="482" cy="484" r="14" fill="#F2D178" />
+  </g>
+
+  <!-- Stacked iron cannonballs with specular highlights -->
+  <g>
+    <circle cx="206" cy="560" r="34" fill="url(#dai-bao-ball)" />
+    <circle cx="276" cy="560" r="34" fill="url(#dai-bao-ball)" />
+    <circle cx="241" cy="504" r="34" fill="url(#dai-bao-ball)" />
+  </g>
+</svg>

@@ -1,0 +1,180 @@
+/* V3 — GlassPanel, GlowButton */
+
+@property --angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes fx-glow-spin {
+  to {
+    --angle: 360deg;
+  }
+}
+
+.fx-glass {
+  position: relative;
+  isolation: isolate;
+  border-radius: 1rem;
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  box-shadow: 0 10px 30px -12px rgba(31, 26, 23, 0.35);
+}
+
+.fx-glass--light {
+  background: rgba(246, 239, 228, 0.55);
+  color: var(--color-ink, #1F1A17);
+}
+
+.fx-glass--dark {
+  background: rgba(31, 26, 23, 0.45);
+  color: var(--color-sand, #F6EFE4);
+}
+
+.fx-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.1) 40%,
+    rgba(255, 255, 255, 0.05) 60%,
+    rgba(255, 255, 255, 0.35)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.fx-glass--dark::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.45),
+    rgba(255, 255, 255, 0.06) 40%,
+    rgba(255, 255, 255, 0.02) 60%,
+    rgba(255, 255, 255, 0.2)
+  );
+}
+
+.fx-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--mx, 50%) var(--my, 30%),
+    rgba(255, 255, 255, 0.22),
+    transparent 45%
+  );
+  opacity: 0.6;
+  transition: none;
+}
+
+.fx-glass > * {
+  position: relative;
+  z-index: 1;
+}
+
+@supports (backdrop-filter: url(#x)) {
+  .fx-glass--refract {
+    backdrop-filter: url(#fx-glass-refract) blur(18px) saturate(1.6);
+    -webkit-backdrop-filter: url(#fx-glass-refract) blur(18px) saturate(1.6);
+  }
+}
+
+.fx-glow-btn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.75rem;
+  color: var(--color-sand, #F6EFE4);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.fx-glow-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--angle),
+    var(--color-gold, #C99A2E),
+    var(--color-terracotta, #A84825),
+    var(--color-sand, #F6EFE4),
+    var(--color-gold, #C99A2E)
+  );
+  animation: fx-glow-spin 4s linear infinite;
+  pointer-events: none;
+}
+
+.fx-glow-btn::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--color-terracotta, #A84825);
+  pointer-events: none;
+}
+
+.fx-glow-btn__glow {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  border-radius: inherit;
+  box-shadow: 0 0 18px var(--color-gold, #C99A2E);
+  opacity: 0.45;
+  transition: opacity var(--fx-fast, 200ms) var(--fx-ease-out, ease-out);
+  pointer-events: none;
+}
+
+.fx-glow-btn__label {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fx-glow-btn:hover .fx-glow-btn__glow,
+.fx-glow-btn:focus-visible .fx-glow-btn__glow {
+  opacity: 0.85;
+}
+
+.fx-glow-btn:focus-visible {
+  outline: 2px solid var(--color-river, #1F4E6B);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-glass::after {
+    background: radial-gradient(
+      circle at 50% 30%,
+      rgba(255, 255, 255, 0.22),
+      transparent 45%
+    );
+  }
+
+  .fx-glow-btn::before {
+    animation: none;
+    background: linear-gradient(
+      135deg,
+      var(--color-gold, #C99A2E),
+      var(--color-terracotta, #A84825)
+    );
+  }
+}

@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 960" fill="none">
+  <defs>
+    <linearGradient id="hao-nuoc-glacis" x1="160" y1="140" x2="800" y2="820" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#D9CCA9" />
+      <stop offset="50%" stop-color="#B9AC85" />
+      <stop offset="100%" stop-color="#8A7E5D" />
+    </linearGradient>
+    <linearGradient id="hao-nuoc-water" x1="180" y1="180" x2="780" y2="780" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3A7594" />
+      <stop offset="45%" stop-color="#1F4E6B" />
+      <stop offset="100%" stop-color="#123145" />
+    </linearGradient>
+    <linearGradient id="hao-nuoc-bridge" x1="450" y1="680" x2="515" y2="825" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#DFC28C" />
+      <stop offset="100%" stop-color="#A88248" />
+    </linearGradient>
+    <pattern id="hao-nuoc-ripple-pat" width="60" height="40" patternUnits="userSpaceOnUse">
+      <path d="M6 14 Q20 10, 34 14 T56 14" stroke="#91C4DA" stroke-opacity="0.16" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M12 30 Q26 26, 40 30" stroke="#F6EFE4" stroke-opacity="0.12" stroke-width="1.5" stroke-linecap="round" />
+    </pattern>
+  </defs>
+
+  <!-- Soft outer earthwork shadow toward bottom-right -->
+  <polygon
+    points="496,92 586,214 776,192 754,382 876,496 754,586 776,776 586,754 496,876 406,754 216,776 238,586 116,496 238,382 216,192 406,214"
+    fill="#2D241E"
+    fill-opacity="0.18"
+  />
+
+  <!-- Outer Vauban glacis embankment -->
+  <polygon
+    points="480,76 570,198 760,176 738,366 860,480 738,570 760,760 570,738 480,860 390,738 200,760 222,570 100,480 222,366 200,176 390,198"
+    fill="url(#hao-nuoc-glacis)"
+  />
+  <!-- Rim light on NW glacis edges -->
+  <polyline
+    points="200,760 222,570 100,480 222,366 200,176 390,198 480,76 570,198 760,176"
+    stroke="#F6EFE4"
+    stroke-opacity="0.48"
+    stroke-width="3"
+    stroke-linejoin="round"
+  />
+
+  <!-- Stone moat retaining curb -->
+  <polygon
+    points="480,104 560,214 736,194 716,370 826,480 716,560 736,736 560,716 480,826 400,716 224,736 244,560 134,480 244,370 224,194 400,214"
+    fill="#7B6B56"
+  />
+
+  <!-- Star-shaped moat water ring -->
+  <polygon
+    points="480,118 555,222 722,204 704,372 808,480 704,555 722,722 555,704 480,808 405,704 238,722 256,555 152,480 256,372 238,204 405,222"
+    fill="url(#hao-nuoc-water)"
+  />
+  <polygon
+    points="480,118 555,222 722,204 704,372 808,480 704,555 722,722 555,704 480,808 405,704 238,722 256,555 152,480 256,372 238,204 405,222"
+    fill="url(#hao-nuoc-ripple-pat)"
+  />
+
+  <!-- Sunlit inner water glint along NW moat channels -->
+  <polyline
+    points="178,480 266,378 250,218 412,234 480,138"
+    stroke="#8EC3DA"
+    stroke-opacity="0.48"
+    stroke-width="6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <polyline
+    points="706,220 554,236 480,138"
+    stroke="#F6EFE4"
+    stroke-opacity="0.32"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- South gate stone bridge over the moat + cast shadow -->
+  <polygon points="504,690 526,704 526,836 468,836 458,822" fill="#0E2535" fill-opacity="0.4" />
+  <rect x="458" y="684" width="44" height="142" rx="4" fill="url(#hao-nuoc-bridge)" />
+  <rect x="458" y="684" width="6" height="142" rx="2" fill="#F6EFE4" fill-opacity="0.6" />
+  <rect x="496" y="684" width="6" height="142" rx="2" fill="#7D5C2B" />
+</svg>

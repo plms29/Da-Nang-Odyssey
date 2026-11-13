@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { motion, useAnimate, useReducedMotion } from "motion/react";
+import { GlowButton } from "@/components/fx/GlowButton";
 import { checkMatch } from "@/lib/activities/scoring";
+import { haptic } from "@/lib/haptics";
 import type { MatchStation as MatchStationType, StationResult } from "@/lib/types";
 import { deterministicShuffle } from "../shuffle";
 import { useAttempt } from "../useAttempt";
@@ -13,6 +16,9 @@ export interface MatchStationProps {
 }
 
 export function MatchStation({ station, onDone }: MatchStationProps) {
+  const prefersReducedMotion = useReducedMotion();
+  const reduced = Boolean(prefersReducedMotion);
+  const [scope, animate] = useAnimate();
   const [rightOptions] = useState(() =>
     deterministicShuffle(
       station.pairs.map((p) => ({ id: p.id, right: p.right })),
@@ -24,15 +30,19 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
   const [mapping, setMapping] = useState<Record<string, string>>({});
   const [revealedHints, setRevealedHints] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [checked, setChecked] = useState(false);
+  const [solvedGlow, setSolvedGlow] = useState(false);
   const { hintsUsed, nextHint, addWrong, result } = useAttempt(station.hints);
 
   function handleSelectLeft(leftId: string) {
+    haptic("tap");
     setFeedback(null);
     setSelectedLeftId((prev) => (prev === leftId ? null : leftId));
   }
 
   function handleSelectRight(rightId: string) {
     if (!selectedLeftId) return;
+    haptic("tap");
     setFeedback(null);
     setMapping((prev) => {
       const next: Record<string, string> = {};
@@ -49,15 +59,23 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
 
   function handleCheck() {
     if (Object.keys(mapping).length < station.pairs.length) {
+      haptic("error");
       setFeedback("Hãy ghép đủ các cặp");
       return;
     }
     if (checkMatch(station, mapping)) {
       setFeedback(null);
+      setChecked(true);
+      setSolvedGlow(true);
+      haptic("success");
       onDone(result(true));
       return;
     }
     addWrong();
+    haptic("error");
+    if (!reduced && scope.current) {
+      animate(scope.current, { x: [0, -8, 8, -6, 6, 0] }, { duration: 0.3 });
+    }
     setFeedback("Có cặp ghép chưa đúng, hãy kiểm tra lại nhé.");
   }
 
@@ -70,9 +88,18 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
 
   const rightLabelById = new Map(rightOptions.map((opt) => [opt.id, opt.right]));
   const usedRightIds = new Set(Object.values(mapping));
+  const leftByRightId = new Map(
+    Object.entries(mapping).map(([leftId, rightId]) => [rightId, leftId]),
+  );
 
   return (
-    <section className="rounded-lg border border-ink/15 bg-white/80 p-4">
+    <section
+      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
+        solvedGlow
+          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+          : ""
+      }`}
+    >
       <p className="text-base font-medium leading-relaxed text-ink">
         {station.instruction}
       </p>
@@ -80,7 +107,10 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
         Chọn một mục bên trái rồi chọn nội dung tương ứng bên phải để ghép cặp.
       </p>
 
-      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div
+        ref={scope}
+        className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2"
+      >
         <div className="space-y-2">
           <h3 className="text-xs font-bold uppercase tracking-wider text-muted">
             Vế trái
@@ -91,28 +121,56 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
             const pairedText = pairedRightId
               ? rightLabelById.get(pairedRightId)
               : null;
+            const isPaired = Boolean(pairedRightId);
+            const isLocked = checked && pairedRightId === pair.id;
 
             return (
-              <button
+              <motion.button
                 key={pair.id}
                 type="button"
                 onClick={() => handleSelectLeft(pair.id)}
                 aria-pressed={isSelected}
+                animate={
+                  reduced
+                    ? undefined
+                    : { x: isLocked ? 6 : 0, y: isSelected ? -2 : 0 }
+                }
+                transition={
+                  reduced
+                    ? { duration: 0.15 }
+                    : { type: "spring", stiffness: 380, damping: 30 }
+                }
                 className={`flex min-h-11 w-full flex-col items-start rounded-md border px-3 py-2 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
                   isSelected
-                    ? "border-terracotta bg-terracotta text-sand"
-                    : "border-ink/20 bg-sand/60 text-ink hover:border-terracotta"
+                    ? "border-terracotta bg-terracotta text-sand ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+                    : isLocked
+                      ? "border-river bg-river/10 text-ink"
+                      : isPaired
+                        ? "border-river bg-sand/60 text-ink ring-1 ring-river hover:border-terracotta"
+                        : "border-ink/20 bg-sand/60 text-ink hover:border-terracotta"
                 }`}
               >
-                <span className="font-semibold">{pair.left}</span>
+                <div className="flex w-full items-center justify-between gap-2">
+                  <span className="font-semibold">{pair.left}</span>
+                  {isLocked && (
+                    <span
+                      aria-hidden="true"
+                      className={`shrink-0 font-bold ${
+                        isSelected ? "text-sand" : "text-river"
+                      }`}
+                    >
+                      ✓
+                    </span>
+                  )}
+                </div>
                 <span
                   className={`mt-0.5 text-xs ${
-                    isSelected ? "text-sand/90" : "text-muted"
+                    isSelected ? "text-sand" : "text-muted"
                   }`}
                 >
                   {pairedText ? `→ ${pairedText}` : "Chưa ghép"}
                 </span>
-              </button>
+              </motion.button>
             );
           })}
         </div>
@@ -123,21 +181,43 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
           </h3>
           {rightOptions.map((option) => {
             const isUsed = usedRightIds.has(option.id);
+            const pairedLeftId = leftByRightId.get(option.id);
+            const isLocked = checked && pairedLeftId === option.id;
+
             return (
-              <button
+              <motion.button
                 key={option.id}
                 type="button"
                 disabled={!selectedLeftId}
                 onClick={() => handleSelectRight(option.id)}
-                className="flex min-h-11 w-full items-center justify-between gap-2 rounded-md border border-ink/20 bg-white px-3 py-2 text-left text-sm text-ink transition-colors hover:border-river hover:bg-sand/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-60"
+                animate={reduced ? undefined : { x: isLocked ? -6 : 0 }}
+                transition={
+                  reduced
+                    ? { duration: 0.15 }
+                    : { type: "spring", stiffness: 380, damping: 30 }
+                }
+                className={`flex min-h-11 w-full items-center justify-between gap-2 rounded-md border px-3 py-2 text-left text-sm text-ink transition-colors hover:border-river hover:bg-sand/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-60 ${
+                  isLocked
+                    ? "border-river bg-river/10"
+                    : isUsed
+                      ? "border-river bg-white ring-1 ring-river"
+                      : "border-ink/20 bg-white"
+                }`}
               >
                 <span>{option.right}</span>
-                {isUsed && (
-                  <span className="shrink-0 text-xs font-medium text-muted">
-                    Đã ghép
-                  </span>
-                )}
-              </button>
+                <span className="flex shrink-0 items-center gap-1.5">
+                  {isLocked && (
+                    <span aria-hidden="true" className="font-bold text-river">
+                      ✓
+                    </span>
+                  )}
+                  {isUsed && (
+                    <span className="shrink-0 text-xs font-medium text-muted">
+                      Đã ghép
+                    </span>
+                  )}
+                </span>
+              </motion.button>
             );
           })}
         </div>
@@ -150,13 +230,13 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
       )}
 
       <div className="mt-4">
-        <button
+        <GlowButton
           type="button"
           onClick={handleCheck}
           className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Kiểm tra
-        </button>
+        </GlowButton>
       </div>
 
       <HintBox

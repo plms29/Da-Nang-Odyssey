@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" fill="none">
+  <defs>
+    <linearGradient id="tau-buom-wake" x1="480" y1="120" x2="480" y2="620" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFF9EB" stop-opacity="0.72" />
+      <stop offset="55%" stop-color="#9BD0E6" stop-opacity="0.36" />
+      <stop offset="100%" stop-color="#9BD0E6" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="tau-buom-deck" x1="360" y1="100" x2="600" y2="520" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#CFA472" />
+      <stop offset="55%" stop-color="#9E7144" />
+      <stop offset="100%" stop-color="#6F4C2B" />
+    </linearGradient>
+    <linearGradient id="tau-buom-sail-lit" x1="200" y1="220" x2="760" y2="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FCF7EE" />
+      <stop offset="52%" stop-color="#EFE2CA" />
+      <stop offset="100%" stop-color="#C8B18E" />
+    </linearGradient>
+    <linearGradient id="tau-buom-sail-rear" x1="260" y1="420" x2="700" y2="520" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EFE2CA" />
+      <stop offset="60%" stop-color="#D4BF9D" />
+      <stop offset="100%" stop-color="#A8906C" />
+    </linearGradient>
+    <pattern id="tau-buom-plank-pat" width="18" height="28" patternUnits="userSpaceOnUse">
+      <line x1="9" y1="0" x2="9" y2="28" stroke="#3D2715" stroke-opacity="0.22" stroke-width="1.5" />
+    </pattern>
+  </defs>
+
+  <!-- Hull & water wake group (animated with animate="waves") -->
+  <g id="tau-buom-hull-wake">
+    <!-- Layered V-wake behind the ship -->
+    <path d="M480 86 L185 612 L315 612 L480 260 L645 612 L775 612 Z" fill="url(#tau-buom-wake)" />
+    <path d="M480 96 L245 588 M480 96 L715 588" stroke="#FFF9EB" stroke-opacity="0.55" stroke-width="8" stroke-linecap="round" />
+    <path d="M480 124 L315 560 M480 124 L645 560" stroke="#B6DFEE" stroke-opacity="0.4" stroke-width="5" stroke-linecap="round" />
+
+    <!-- Cast shadow of hull & sails onto the water to bottom-right -->
+    <path d="M510 105 C625 190, 668 345, 628 540 L435 540 C395 345, 425 190, 510 105 Z" fill="#0D2638" fill-opacity="0.34" />
+
+    <!-- Bowsprit spar -->
+    <line x1="480" y1="22" x2="480" y2="128" stroke="#D1A249" stroke-width="14" stroke-linecap="round" />
+    <line x1="477" y1="22" x2="477" y2="128" stroke="#FAF2E1" stroke-opacity="0.65" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Sculpted hull: dark shaded starboard vs lit port gunwale -->
+    <path d="M480 76 C598 165, 636 318, 596 525 L364 525 C324 318, 362 165, 480 76 Z" fill="#362820" />
+    <path d="M480 76 C362 165, 324 318, 364 525 L480 525 Z" fill="#5E4637" />
+
+    <!-- Recessed wooden deck with plank pattern -->
+    <path d="M480 104 C568 182, 598 318, 566 498 L394 498 C362 318, 392 182, 480 104 Z" fill="url(#tau-buom-deck)" />
+    <path d="M480 104 C568 182, 598 318, 566 498 L394 498 C362 318, 392 182, 480 104 Z" fill="url(#tau-buom-plank-pat)" />
+    <!-- Port gunwale sunlit rim -->
+    <path d="M480 86 C375 168, 338 318, 376 514" stroke="#E5C8A0" stroke-opacity="0.72" stroke-width="4" stroke-linecap="round" />
+
+    <!-- Raised quarterdeck at stern -->
+    <rect x="404" y="422" width="152" height="72" rx="8" fill="#8C623B" />
+    <rect x="404" y="422" width="76" height="72" rx="8" fill="#B58756" />
+  </g>
+
+  <!-- Fore sail (billowing forward with bamboo battens) -->
+  <g>
+    <path d="M262 214 C385 162, 575 162, 698 214 C650 264, 310 264, 262 214 Z" fill="#182D3B" fill-opacity="0.22" transform="translate(14 18)" />
+    <path d="M262 204 C385 152, 575 152, 698 204 C650 254, 310 254, 262 204 Z" fill="url(#tau-buom-sail-lit)" />
+    <path d="M298 192 C398 164, 562 164, 662 192" stroke="#7A5A3A" stroke-opacity="0.45" stroke-width="4" />
+    <path d="M286 218 C398 194, 562 194, 674 218" stroke="#7A5A3A" stroke-opacity="0.45" stroke-width="4" />
+    <path d="M268 202 C386 154, 540 152, 660 186" stroke="#FFFFFF" stroke-opacity="0.8" stroke-width="3" stroke-linecap="round" />
+    <circle cx="480" cy="204" r="16" fill="#463529" />
+    <circle cx="477" cy="201" r="7" fill="#C99A2E" />
+  </g>
+
+  <!-- Main central sail (largest, soft-3D canvas curvature) -->
+  <g>
+    <path d="M198 346 C360 280, 600 280, 762 346 C698 412, 262 412, 198 346 Z" fill="#182D3B" fill-opacity="0.24" transform="translate(16 20)" />
+    <path d="M198 334 C360 268, 600 268, 762 334 C698 400, 262 400, 198 334 Z" fill="url(#tau-buom-sail-lit)" />
+    <path d="M242 320 C376 280, 584 280, 718 320" stroke="#7A5A3A" stroke-opacity="0.45" stroke-width="4.5" />
+    <path d="M228 352 C376 318, 584 318, 732 352" stroke="#7A5A3A" stroke-opacity="0.45" stroke-width="4.5" />
+    <path d="M208 332 C362 270, 565 268, 715 314" stroke="#FFFFFF" stroke-opacity="0.85" stroke-width="3.5" stroke-linecap="round" />
+    <circle cx="480" cy="334" r="20" fill="#463529" />
+    <circle cx="476" cy="330" r="8" fill="#C99A2E" />
+    <!-- Terracotta masthead pennant -->
+    <path d="M480 314 L568 294 L548 314 L572 330 L480 326 Z" fill="#B84E29" />
+  </g>
+
+  <!-- Mizzen rear sail -->
+  <g>
+    <path d="M286 462 C396 420, 564 420, 674 462 C628 504, 332 504, 286 462 Z" fill="url(#tau-buom-sail-rear)" />
+    <path d="M312 456 C404 432, 556 432, 648 456" stroke="#7A5A3A" stroke-opacity="0.42" stroke-width="3.5" />
+    <path d="M294 460 C398 422, 540 420, 636 446" stroke="#FAF2E4" stroke-opacity="0.72" stroke-width="2.5" stroke-linecap="round" />
+    <circle cx="480" cy="462" r="14" fill="#463529" />
+    <circle cx="477" cy="459" r="6" fill="#C99A2E" />
+  </g>
+</svg>

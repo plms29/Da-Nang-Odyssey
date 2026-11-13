@@ -20,7 +20,10 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { GlowButton } from "@/components/fx/GlowButton";
+import { useAnimate, useReducedMotion } from "motion/react";
 import { checkOrder } from "@/lib/activities/scoring";
+import { haptic } from "@/lib/haptics";
 import type { OrderStation as OrderStationType, StationResult } from "@/lib/types";
 import { deterministicShuffle } from "../shuffle";
 import { useAttempt } from "../useAttempt";
@@ -141,6 +144,9 @@ function SortableOrderRow({
 }
 
 export function OrderStation({ station, onDone }: OrderStationProps) {
+  const prefersReducedMotion = useReducedMotion();
+  const reduced = Boolean(prefersReducedMotion);
+  const [scope, animate] = useAnimate();
   const [items, setItems] = useState(() =>
     deterministicShuffle(station.items, station.id, (arr) =>
       checkOrder(
@@ -151,6 +157,8 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
   );
   const [revealedHints, setRevealedHints] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [lastMovedId, setLastMovedId] = useState<string | null>(null);
+  const [correctPop, setCorrectPop] = useState(false);
   const { hintsUsed, nextHint, addWrong, result } = useAttempt(station.hints);
   const reducedMotion = usePrefersReducedMotion();
 
@@ -218,7 +226,9 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
   function moveItem(index: number, delta: -1 | 1) {
     const target = index + delta;
     if (target < 0 || target >= items.length) return;
+    haptic("tap");
     setFeedback(null);
+    setLastMovedId(items[index].id);
     setItems((prev) => {
       const next = prev.slice();
       const tmp = next[index];
@@ -231,10 +241,19 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
   function handleCheck() {
     if (checkOrder(station, items.map((item) => item.id))) {
       setFeedback(null);
+      setCorrectPop(true);
+      haptic("success");
+      if (!reduced && scope.current) {
+        animate(scope.current, { scale: [1, 1.03, 1] }, { duration: 0.35 });
+      }
       onDone(result(true));
       return;
     }
     addWrong();
+    haptic("error");
+    if (!reduced && scope.current) {
+      animate(scope.current, { x: [0, -8, 8, -6, 6, 0] }, { duration: 0.3 });
+    }
     setFeedback("Thứ tự chưa đúng, hãy sắp xếp lại nhé.");
   }
 
@@ -246,7 +265,13 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
   }
 
   return (
-    <section className="rounded-lg border border-ink/15 bg-white/80 p-4">
+    <section
+      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
+        correctPop
+          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+          : ""
+      }`}
+    >
       <p className="text-base font-medium leading-relaxed text-ink">
         {station.instruction}
       </p>
@@ -266,7 +291,7 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
         onDragCancel={handleDragCancel}
       >
         <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
-          <ul className="mt-4 space-y-2">
+          <ul ref={scope} className="mt-4 space-y-2">
             {items.map((item, index) => (
               <SortableOrderRow
                 key={item.id}
@@ -288,13 +313,13 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
       )}
 
       <div className="mt-4">
-        <button
+        <GlowButton
           type="button"
           onClick={handleCheck}
           className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity motion-reduce:transition-none hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Kiểm tra
-        </button>
+        </GlowButton>
       </div>
 
       <HintBox
