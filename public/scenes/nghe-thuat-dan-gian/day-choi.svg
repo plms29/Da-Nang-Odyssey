@@ -1,84 +1,138 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" fill="none">
   <defs>
-    <linearGradient id="hutGlow" x1="480" y1="120" x2="480" y2="280" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#F6EFE4" />
-      <stop offset="45%" stop-color="#C99A2E" />
-      <stop offset="100%" stop-color="#A84825" />
+    <radialGradient id="day-choi-spill" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#F6CE6B" stop-opacity="0.55" />
+      <stop offset="48%" stop-color="#C98A2E" stop-opacity="0.28" />
+      <stop offset="100%" stop-color="#A84825" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="day-choi-window" cx="0.5" cy="0.55" r="0.55">
+      <stop offset="0%" stop-color="#FFF8E2" />
+      <stop offset="42%" stop-color="#F0BC4D" />
+      <stop offset="85%" stop-color="#C4582B" />
+      <stop offset="100%" stop-color="#752C14" />
+    </radialGradient>
+    <linearGradient id="day-choi-roof" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#B0844D" />
+      <stop offset="52%" stop-color="#7D5933" />
+      <stop offset="100%" stop-color="#4A341E" />
     </linearGradient>
-    <linearGradient id="thatchRoof" x1="480" y1="80" x2="480" y2="220" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#C99A2E" />
-      <stop offset="100%" stop-color="#5E5148" />
+    <linearGradient id="day-choi-roof-center" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C79657" />
+      <stop offset="52%" stop-color="#8C6438" />
+      <stop offset="100%" stop-color="#553B22" />
     </linearGradient>
+    <pattern id="day-choi-thatch-pat" width="14" height="14" patternUnits="userSpaceOnUse">
+      <path d="M3 0 L0 14 M10 0 L7 14" stroke="#2D1E10" stroke-opacity="0.28" stroke-width="1.5" />
+    </pattern>
   </defs>
 
-  <!-- Night foliage silhouette behind the arc of 5 raised Bai Choi bamboo huts -->
-  <path
-    d="M0 340 C130 275, 290 250, 480 245 C670 250, 830 275, 960 340 L960 420 L0 420 Z"
-    fill="#1F1A17"
-    fill-opacity="0.78"
-  />
+  <!-- Soft dark hillside ground shadow beneath the arc of huts -->
+  <path d="M0 378 C210 330, 400 315, 480 314 C560 315, 750 330, 960 378 L960 440 L0 440 Z" fill="#14181D" fill-opacity="0.82" />
 
-  <!-- Festive string line connecting the 5 huts -->
-  <path
-    d="M80 185 Q270 155 480 135 Q690 155 880 185"
-    stroke="#C99A2E"
-    stroke-width="3"
-    stroke-opacity="0.65"
-  />
+  <!-- Radial light spills on the ground beneath each of the 7 raised bamboo huts -->
+  <ellipse cx="78" cy="396" rx="68" ry="24" fill="url(#day-choi-spill)" />
+  <ellipse cx="206" cy="368" rx="70" ry="24" fill="url(#day-choi-spill)" />
+  <ellipse cx="340" cy="346" rx="74" ry="25" fill="url(#day-choi-spill)" />
+  <ellipse cx="480" cy="336" rx="88" ry="28" fill="url(#day-choi-spill)" />
+  <ellipse cx="620" cy="346" rx="74" ry="25" fill="url(#day-choi-spill)" />
+  <ellipse cx="754" cy="368" rx="70" ry="24" fill="url(#day-choi-spill)" />
+  <ellipse cx="882" cy="396" rx="68" ry="24" fill="url(#day-choi-spill)" />
+
+  <!-- Festive warm cord linking the 7 huts along the arc -->
+  <path d="M80 232 Q270 175, 480 154 Q690 175, 880 232" stroke="#D9A642" stroke-opacity="0.58" stroke-width="2.5" />
 
   <!-- HUT 1 (far left) -->
-  <g transform="translate(38, 175)">
-    <!-- Bamboo stilts + ladder -->
-    <rect x="24" y="105" width="8" height="95" fill="#5E5148" />
-    <rect x="108" y="105" width="8" height="95" fill="#5E5148" />
-    <line x1="28" y1="145" x2="112" y2="145" stroke="#C99A2E" stroke-width="4" />
-    <!-- Warm golden interior -->
-    <rect x="22" y="48" width="96" height="60" rx="3" fill="url(#hutGlow)" />
-    <!-- Bamboo balustrade -->
-    <rect x="18" y="88" width="104" height="20" fill="#5E5148" />
-    <!-- Thatched gable roof -->
-    <polygon points="4,52 70,8 136,52" fill="url(#thatchRoof)" />
+  <g transform="translate(22, 198)">
+    <rect x="20" y="96" width="7" height="104" rx="3" fill="#463526" />
+    <rect x="85" y="96" width="7" height="104" rx="3" fill="#32251A" />
+    <rect x="20" y="96" width="2.5" height="104" fill="#8A765E" fill-opacity="0.55" />
+    <line x1="25" y1="140" x2="88" y2="140" stroke="#9C7A49" stroke-width="4" />
+    <line x1="38" y1="100" x2="29" y2="196" stroke="#7A5D39" stroke-width="3.5" />
+    <rect x="18" y="42" width="76" height="56" rx="3" fill="url(#day-choi-window)" />
+    <rect x="14" y="80" width="84" height="18" rx="2" fill="#4E3824" />
+    <polygon points="0,46 56,6 112,46" fill="url(#day-choi-roof)" />
+    <polygon points="0,46 56,6 112,46" fill="url(#day-choi-thatch-pat)" />
+    <path d="M2 45 L56 7" stroke="#A6C4D8" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round" />
   </g>
 
-  <!-- HUT 2 (mid left) -->
-  <g transform="translate(216, 142)">
-    <rect x="26" y="112" width="8" height="105" fill="#5E5148" />
-    <rect x="116" y="112" width="8" height="105" fill="#5E5148" />
-    <line x1="30" y1="155" x2="120" y2="155" stroke="#C99A2E" stroke-width="4" />
-    <rect x="24" y="52" width="102" height="64" rx="3" fill="url(#hutGlow)" />
-    <rect x="20" y="94" width="110" height="22" fill="#5E5148" />
-    <polygon points="4,56 75,8 146,56" fill="url(#thatchRoof)" />
+  <!-- HUT 2 (left) -->
+  <g transform="translate(150, 170)">
+    <rect x="20" y="96" width="7" height="104" rx="3" fill="#463526" />
+    <rect x="85" y="96" width="7" height="104" rx="3" fill="#32251A" />
+    <rect x="20" y="96" width="2.5" height="104" fill="#8A765E" fill-opacity="0.55" />
+    <line x1="25" y1="140" x2="88" y2="140" stroke="#9C7A49" stroke-width="4" />
+    <rect x="18" y="42" width="76" height="56" rx="3" fill="url(#day-choi-window)" />
+    <rect x="14" y="80" width="84" height="18" rx="2" fill="#5A3F27" />
+    <polygon points="0,46 56,6 112,46" fill="url(#day-choi-roof)" />
+    <polygon points="0,46 56,6 112,46" fill="url(#day-choi-thatch-pat)" />
+    <path d="M2 45 L56 7" stroke="#A6C4D8" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round" />
   </g>
 
-  <!-- HUT 3 (center main hut - slightly higher in the arc) -->
-  <g transform="translate(398, 118)">
-    <rect x="28" y="122" width="10" height="115" fill="#5E5148" />
-    <rect x="126" y="122" width="10" height="115" fill="#5E5148" />
-    <line x1="33" y1="168" x2="131" y2="168" stroke="#C99A2E" stroke-width="5" />
-    <line x1="58" y1="122" x2="50" y2="235" stroke="#C99A2E" stroke-width="4" />
-    <line x1="106" y1="122" x2="114" y2="235" stroke="#C99A2E" stroke-width="4" />
-    <rect x="26" y="56" width="112" height="70" rx="4" fill="url(#hutGlow)" />
-    <rect x="22" y="102" width="120" height="24" fill="#A84825" />
-    <polygon points="4,60 82,6 160,60" fill="url(#thatchRoof)" />
+  <!-- HUT 3 (mid-left) -->
+  <g transform="translate(282, 146)">
+    <rect x="21" y="98" width="7.5" height="104" rx="3" fill="#463526" />
+    <rect x="87" y="98" width="7.5" height="104" rx="3" fill="#32251A" />
+    <rect x="21" y="98" width="2.5" height="104" fill="#8A765E" fill-opacity="0.55" />
+    <line x1="26" y1="144" x2="90" y2="144" stroke="#A8824C" stroke-width="4" />
+    <rect x="19" y="44" width="78" height="56" rx="3" fill="url(#day-choi-window)" />
+    <rect x="15" y="82" width="86" height="18" rx="2" fill="#634227" />
+    <polygon points="0,48 58,6 116,48" fill="url(#day-choi-roof)" />
+    <polygon points="0,48 58,6 116,48" fill="url(#day-choi-thatch-pat)" />
+    <path d="M2 47 L58 7" stroke="#A6C4D8" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round" />
   </g>
 
-  <!-- HUT 4 (mid right) -->
-  <g transform="translate(594, 142)">
-    <rect x="26" y="112" width="8" height="105" fill="#5E5148" />
-    <rect x="116" y="112" width="8" height="105" fill="#5E5148" />
-    <line x1="30" y1="155" x2="120" y2="155" stroke="#C99A2E" stroke-width="4" />
-    <rect x="24" y="52" width="102" height="64" rx="3" fill="url(#hutGlow)" />
-    <rect x="20" y="94" width="110" height="22" fill="#5E5148" />
-    <polygon points="4,56 75,8 146,56" fill="url(#thatchRoof)" />
+  <!-- HUT 4 (center main chòi, taller & warmer) -->
+  <g transform="translate(414, 122)">
+    <rect x="24" y="106" width="9" height="112" rx="3.5" fill="#523D2B" />
+    <rect x="99" y="106" width="9" height="112" rx="3.5" fill="#37281C" />
+    <rect x="24" y="106" width="3" height="112" fill="#9BB6C7" fill-opacity="0.48" />
+    <line x1="29" y1="154" x2="103" y2="154" stroke="#C99A2E" stroke-width="4.5" />
+    <line x1="50" y1="108" x2="40" y2="216" stroke="#A87E45" stroke-width="4" />
+    <line x1="82" y1="108" x2="92" y2="216" stroke="#8C6635" stroke-width="4" />
+    <rect x="22" y="46" width="88" height="62" rx="4" fill="url(#day-choi-window)" />
+    <rect x="18" y="88" width="96" height="20" rx="2" fill="#8C3D21" />
+    <polygon points="0,50 66,4 132,50" fill="url(#day-choi-roof-center)" />
+    <polygon points="0,50 66,4 132,50" fill="url(#day-choi-thatch-pat)" />
+    <path d="M2 49 L66 5" stroke="#B4D2E4" stroke-opacity="0.52" stroke-width="2.5" stroke-linecap="round" />
   </g>
 
-  <!-- HUT 5 (far right) -->
-  <g transform="translate(782, 175)">
-    <rect x="24" y="105" width="8" height="95" fill="#5E5148" />
-    <rect x="108" y="105" width="8" height="95" fill="#5E5148" />
-    <line x1="28" y1="145" x2="112" y2="145" stroke="#C99A2E" stroke-width="4" />
-    <rect x="22" y="48" width="96" height="60" rx="3" fill="url(#hutGlow)" />
-    <rect x="18" y="88" width="104" height="20" fill="#5E5148" />
-    <polygon points="4,52 70,8 136,52" fill="url(#thatchRoof)" />
+  <!-- HUT 5 (mid-right) -->
+  <g transform="translate(562, 146)">
+    <rect x="21" y="98" width="7.5" height="104" rx="3" fill="#463526" />
+    <rect x="87" y="98" width="7.5" height="104" rx="3" fill="#32251A" />
+    <rect x="21" y="98" width="2.5" height="104" fill="#8A765E" fill-opacity="0.55" />
+    <line x1="26" y1="144" x2="90" y2="144" stroke="#A8824C" stroke-width="4" />
+    <rect x="19" y="44" width="78" height="56" rx="3" fill="url(#day-choi-window)" />
+    <rect x="15" y="82" width="86" height="18" rx="2" fill="#634227" />
+    <polygon points="0,48 58,6 116,48" fill="url(#day-choi-roof)" />
+    <polygon points="0,48 58,6 116,48" fill="url(#day-choi-thatch-pat)" />
+    <path d="M2 47 L58 7" stroke="#A6C4D8" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round" />
+  </g>
+
+  <!-- HUT 6 (right) -->
+  <g transform="translate(698, 170)">
+    <rect x="20" y="96" width="7" height="104" rx="3" fill="#463526" />
+    <rect x="85" y="96" width="7" height="104" rx="3" fill="#32251A" />
+    <rect x="20" y="96" width="2.5" height="104" fill="#8A765E" fill-opacity="0.55" />
+    <line x1="25" y1="140" x2="88" y2="140" stroke="#9C7A49" stroke-width="4" />
+    <rect x="18" y="42" width="76" height="56" rx="3" fill="url(#day-choi-window)" />
+    <rect x="14" y="80" width="84" height="18" rx="2" fill="#5A3F27" />
+    <polygon points="0,46 56,6 112,46" fill="url(#day-choi-roof)" />
+    <polygon points="0,46 56,6 112,46" fill="url(#day-choi-thatch-pat)" />
+    <path d="M2 45 L56 7" stroke="#A6C4D8" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round" />
+  </g>
+
+  <!-- HUT 7 (far right) -->
+  <g transform="translate(826, 198)">
+    <rect x="20" y="96" width="7" height="104" rx="3" fill="#463526" />
+    <rect x="85" y="96" width="7" height="104" rx="3" fill="#32251A" />
+    <rect x="20" y="96" width="2.5" height="104" fill="#8A765E" fill-opacity="0.55" />
+    <line x1="25" y1="140" x2="88" y2="140" stroke="#9C7A49" stroke-width="4" />
+    <line x1="74" y1="100" x2="83" y2="196" stroke="#7A5D39" stroke-width="3.5" />
+    <rect x="18" y="42" width="76" height="56" rx="3" fill="url(#day-choi-window)" />
+    <rect x="14" y="80" width="84" height="18" rx="2" fill="#4E3824" />
+    <polygon points="0,46 56,6 112,46" fill="url(#day-choi-roof)" />
+    <polygon points="0,46 56,6 112,46" fill="url(#day-choi-thatch-pat)" />
+    <path d="M2 45 L56 7" stroke="#A6C4D8" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round" />
   </g>
 </svg>

@@ -1,38 +1,79 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 960" fill="none">
   <defs>
-    <linearGradient id="bambooCulm" x1="600" y1="0" x2="900" y2="960" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#1F4E6B" />
-      <stop offset="60%" stop-color="#1F1A17" />
-      <stop offset="100%" stop-color="#1F1A17" />
+    <linearGradient id="tre-stalk-main" x1="650" y1="80" x2="880" y2="960" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#29485E" />
+      <stop offset="48%" stop-color="#142129" />
+      <stop offset="100%" stop-color="#0D1316" />
+    </linearGradient>
+    <linearGradient id="tre-stalk-sec" x1="500" y1="140" x2="770" y2="960" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#223C4F" />
+      <stop offset="55%" stop-color="#121B21" />
+      <stop offset="100%" stop-color="#0B0F12" />
+    </linearGradient>
+    <linearGradient id="tre-leaf-lit" x1="300" y1="80" x2="720" y2="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5884A0" />
+      <stop offset="55%" stop-color="#223D50" />
+      <stop offset="100%" stop-color="#121D24" />
     </linearGradient>
   </defs>
-  <!-- Tall curving bamboo stalks rising from bottom-right corner -->
-  <g stroke="url(#bambooCulm)" stroke-linecap="round">
-    <path d="M860 960 C835 680, 775 390, 665 45" stroke-width="34" />
-    <path d="M755 960 C720 710, 645 450, 515 140" stroke-width="26" />
-    <path d="M925 960 C905 740, 865 510, 795 220" stroke-width="28" />
+
+  <!-- Tall foreground curving bamboo culms (dark silhouettes) -->
+  <g stroke-linecap="round">
+    <path d="M865 960 C838 680, 778 390, 668 42" stroke="url(#tre-stalk-main)" stroke-width="34" />
+    <path d="M758 960 C722 710, 646 450, 514 136" stroke="url(#tre-stalk-sec)" stroke-width="26" />
+    <path d="M928 960 C908 740, 868 510, 798 214" stroke="url(#tre-stalk-main)" stroke-width="28" />
   </g>
-  <!-- Golden rim-light nodes along the bamboo joints -->
-  <g fill="#C99A2E" fill-opacity="0.65">
-    <rect x="692" y="210" width="42" height="8" rx="4" transform="rotate(-16 713 214)" />
-    <rect x="748" y="420" width="42" height="8" rx="4" transform="rotate(-12 769 424)" />
-    <rect x="795" y="640" width="42" height="8" rx="4" transform="rotate(-8 816 644)" />
-    <rect x="558" y="285" width="34" height="7" rx="3.5" transform="rotate(-20 575 288)" />
-    <rect x="630" y="510" width="34" height="7" rx="3.5" transform="rotate(-14 647 513)" />
-    <rect x="692" y="730" width="34" height="7" rx="3.5" transform="rotate(-10 709 733)" />
+
+  <!-- Crisp moonlit rim-light along the left (moon-facing) side of each stalk -->
+  <g stroke="#8BB5CF" stroke-opacity="0.62" stroke-linecap="round">
+    <path d="M849 956 C822 678, 762 390, 653 45" stroke-width="4" />
+    <path d="M746 956 C710 708, 634 450, 503 140" stroke-width="3.5" />
+    <path d="M915 956 C895 738, 855 510, 786 218" stroke-width="3.5" />
   </g>
-  <!-- Sweeping bamboo leaf clusters -->
-  <g fill="#1F1A17">
-    <path d="M665 95 C565 105, 485 145, 425 205 C515 178, 595 142, 665 95 Z" />
-    <path d="M655 105 C570 72, 490 78, 415 112 C505 108, 585 106, 655 105 Z" />
-    <path d="M535 190 C435 205, 355 248, 295 312 C385 282, 465 240, 535 190 Z" />
-    <path d="M525 202 C440 168, 360 175, 285 212 C375 206, 455 204, 525 202 Z" />
-    <path d="M742 360 C642 375, 562 418, 502 482 C592 452, 672 410, 742 360 Z" />
-    <path d="M810 260 C725 235, 650 245, 580 282 C660 274, 735 268, 810 260 Z" />
+
+  <!-- Sculpted bamboo node rings (collar ridge + moonlit & warm-bounce accents) -->
+  <g>
+    <g transform="rotate(-15 714 214)">
+      <rect x="692" y="210" width="44" height="9" rx="4.5" fill="#1F3444" />
+      <rect x="692" y="210" width="22" height="4" rx="2" fill="#9BC3DC" fill-opacity="0.72" />
+    </g>
+    <g transform="rotate(-12 770 424)">
+      <rect x="748" y="420" width="44" height="9" rx="4.5" fill="#1F3444" />
+      <rect x="748" y="420" width="22" height="4" rx="2" fill="#9BC3DC" fill-opacity="0.68" />
+    </g>
+    <g transform="rotate(-8 816 644)">
+      <rect x="794" y="640" width="44" height="9" rx="4.5" fill="#2A2722" />
+      <rect x="794" y="640" width="22" height="4" rx="2" fill="#D4A448" fill-opacity="0.62" />
+    </g>
+
+    <g transform="rotate(-20 574 288)">
+      <rect x="556" y="284" width="36" height="8" rx="4" fill="#1F3444" />
+      <rect x="556" y="284" width="18" height="3.5" rx="1.8" fill="#9BC3DC" fill-opacity="0.65" />
+    </g>
+    <g transform="rotate(-14 648 512)">
+      <rect x="630" y="508" width="36" height="8" rx="4" fill="#2A2722" />
+      <rect x="630" y="508" width="18" height="3.5" rx="1.8" fill="#D4A448" fill-opacity="0.58" />
+    </g>
+    <g transform="rotate(-10 708 732)">
+      <rect x="690" y="728" width="36" height="8" rx="4" fill="#2A2722" />
+      <rect x="690" y="728" width="18" height="3.5" rx="1.8" fill="#C99A2E" fill-opacity="0.52" />
+    </g>
   </g>
-  <!-- Subtle blue-gold night highlight on select leaves -->
-  <g fill="#1F4E6B" fill-opacity="0.75">
-    <path d="M660 100 C575 112, 505 145, 450 192 C525 168, 598 136, 660 100 Z" />
-    <path d="M530 195 C445 210, 375 245, 320 298 C398 270, 468 235, 530 195 Z" />
+
+  <!-- Foreground dark bamboo leaf clusters -->
+  <g fill="#0E1418">
+    <path d="M668 92 C568 102, 488 142, 426 204 C518 176, 598 140, 668 92 Z" />
+    <path d="M658 102 C572 68, 492 74, 416 110 C506 106, 588 104, 658 102 Z" />
+    <path d="M536 188 C436 204, 356 246, 294 312 C386 282, 466 240, 536 188 Z" />
+    <path d="M526 200 C440 166, 360 174, 284 210 C376 204, 456 202, 526 200 Z" />
+    <path d="M744 358 C644 374, 564 416, 502 482 C594 452, 674 410, 744 358 Z" />
+    <path d="M812 258 C726 232, 650 242, 580 280 C662 272, 738 266, 812 258 Z" />
+  </g>
+
+  <!-- Moonlit upper leaf planes & rim edges -->
+  <g fill="url(#tre-leaf-lit)" fill-opacity="0.72">
+    <path d="M664 96 C578 108, 508 142, 452 188 C528 164, 600 132, 664 96 Z" />
+    <path d="M532 192 C446 208, 376 242, 320 296 C398 268, 468 232, 532 192 Z" />
+    <path d="M740 362 C654 378, 584 412, 528 466 C606 438, 676 402, 740 362 Z" />
   </g>
 </svg>

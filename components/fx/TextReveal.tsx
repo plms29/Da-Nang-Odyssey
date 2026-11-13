@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState, type CSSProperties, type JSX } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
 
-// Chữ hiện theo 4 kiểu, mỗi kiểu chạy một lần khi vào khung nhìn (plan-ui-dong.md mục 2).
+// Chữ hiện theo 4 kiểu: fade-up/blur chạy ngay bằng CSS, scramble/glitch chạy một lần khi vào khung nhìn.
 
 type Tag = "h1" | "h2" | "h3" | "p" | "span";
 type Inner = { text: string; tag: Tag; delay: number; className?: string };
@@ -13,9 +13,6 @@ const SCRAMBLE_CHARS =
 const SCRAMBLE_POOL = Array.from(SCRAMBLE_CHARS + SCRAMBLE_CHARS.toUpperCase());
 const SCRAMBLE_MS = 800;
 const GLITCH_MAX_CHARS = 30;
-const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
-
-const MOTION_TAG = { h1: motion.h1, h2: motion.h2, h3: motion.h3, p: motion.p, span: motion.span };
 
 /** True khi phần tử vào khung nhìn lần đầu (ngưỡng 40%, giống motion amount 0.4). Ref là callback để chạy được với mọi tag. */
 function useOnceInView() {
@@ -105,21 +102,6 @@ function Glitch({ text, tag: Tag, delay, className }: Inner) {
   );
 }
 
-function Fade({ text, tag, delay, className, blur }: Inner & { blur: boolean }) {
-  const M = MOTION_TAG[tag];
-  return (
-    <M
-      className={className}
-      initial={blur ? { opacity: 0, filter: "blur(12px)" } : { opacity: 0, y: 16 }}
-      whileInView={blur ? { opacity: 1, filter: "blur(0px)" } : { opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.4 }}
-      transition={{ duration: blur ? 0.7 : 0.5, ease: EASE_OUT, delay }}
-    >
-      {text}
-    </M>
-  );
-}
-
 export function TextReveal(props: {
   mode: "fade-up" | "blur" | "scramble" | "glitch";
   delay?: number; // giây, mặc định 0
@@ -135,13 +117,25 @@ export function TextReveal(props: {
   const text = children.normalize("NFC");
   const Tag = as;
 
-  // Giảm chuyển động: chữ thẳng, không animation nào.
-  if (mounted && reduced) return <Tag className={className}>{text}</Tag>;
+  const isScramble = mode === "scramble";
+  const isGlitch = mode === "glitch" && Array.from(text).length <= GLITCH_MAX_CHARS;
+
+  // Giảm chuyển động: scramble và glitch về chữ thẳng (fade-up/blur xử lý bằng CSS).
+  if ((isScramble || isGlitch) && mounted && reduced) {
+    return <Tag className={className}>{text}</Tag>;
+  }
 
   const inner: Inner = { text, tag: as, delay, className };
-  if (mode === "scramble") return <Scramble {...inner} />;
-  if (mode === "glitch" && Array.from(text).length <= GLITCH_MAX_CHARS) {
-    return <Glitch {...inner} />;
-  }
-  return <Fade {...inner} blur={mode === "blur"} />;
+  if (isScramble) return <Scramble {...inner} />;
+  if (isGlitch) return <Glitch {...inner} />;
+
+  const revealClass = mode === "blur" ? "fx-reveal-blur" : "fx-reveal-up";
+  return (
+    <Tag
+      className={[revealClass, className].filter(Boolean).join(" ")}
+      style={{ "--fx-delay": `${delay}s` } as CSSProperties}
+    >
+      {text}
+    </Tag>
+  );
 }

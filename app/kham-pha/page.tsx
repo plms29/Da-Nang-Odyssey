@@ -16,7 +16,7 @@ export default function KhamPhaPage() {
       <ul className="space-y-3">
         {levels.map((level, index) => (
           <li key={level.id}>
-            <LevelCard level={level} delay={0.08 * index} />
+            <LevelCard level={level} delay={Math.min(0.05 * index, 0.2)} />
           </li>
         ))}
       </ul>

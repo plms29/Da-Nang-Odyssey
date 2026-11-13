@@ -1,7 +1,11 @@
-/* U1 — Ambient & layer keyframes (prefix fx-) */
+/* U1 & V7 — Ambient, god rays & layer keyframes (prefix fx-) */
 
 .fx-calm {
   --fx-speed: 1.6;
+  --fx-sway-deg: 3deg;
+  --fx-smoke-peak: 0.45;
+  --fx-pool-min: 0.22;
+  --fx-pool-max: 0.34;
   opacity: 0.5;
 }
 
@@ -38,10 +42,10 @@
 
 @keyframes fx-sway-rot {
   0% {
-    transform: rotate(-3deg);
+    transform: rotate(calc(-1 * var(--fx-sway-deg, 6deg)));
   }
   100% {
-    transform: rotate(3deg);
+    transform: rotate(var(--fx-sway-deg, 6deg));
   }
 }
 
@@ -81,7 +85,7 @@
     transform: translateY(16px) scale(0.85);
   }
   25% {
-    opacity: 0.45;
+    opacity: var(--fx-smoke-peak, 0.68);
   }
   100% {
     opacity: 0;
@@ -89,7 +93,88 @@
   }
 }
 
+/* === God rays (V7 sunlit scenes) === */
+
+.fx-ray {
+  position: absolute;
+  top: -12%;
+  height: 125%;
+  background: linear-gradient(to bottom, rgba(255, 240, 200, 0.45), transparent 70%);
+  mix-blend-mode: screen;
+  filter: blur(6px);
+  transform-origin: top center;
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: fx-ray-sway calc(var(--fx-speed, 1) * var(--fx-dur, 12s)) var(--fx-ease-in-out, ease-in-out) infinite alternate;
+  animation-delay: var(--fx-delay, 0s);
+}
+
+@keyframes fx-ray-sway {
+  0% {
+    opacity: 0.35;
+    transform: rotate(calc(var(--fx-ray-rot, 16deg) - 3deg));
+  }
+  100% {
+    opacity: 0.75;
+    transform: rotate(calc(var(--fx-ray-rot, 16deg) + 3deg));
+  }
+}
+
 /* === Ambient overlay effects === */
+
+/* Extra CSS particles for full intensity (keeps ParticleCanvas untouched) */
+.fx-mote {
+  position: absolute;
+  border-radius: 9999px;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: fx-mote-rise calc(var(--fx-speed, 1) * var(--fx-dur, 7s)) linear infinite;
+  animation-delay: var(--fx-delay, 0s);
+}
+
+@keyframes fx-mote-rise {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 12vh, 0) scale(0.85);
+  }
+  20% {
+    opacity: var(--fx-alpha, 0.75);
+  }
+  80% {
+    opacity: calc(var(--fx-alpha, 0.75) * 0.85);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--fx-dx, 14px), -45vh, 0) scale(1.1);
+  }
+}
+
+.fx-firefly-mote {
+  position: absolute;
+  border-radius: 9999px;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 0 10px 2px rgba(230, 238, 156, 0.65);
+  will-change: transform, opacity;
+  animation: fx-firefly-drift calc(var(--fx-speed, 1) * var(--fx-dur, 6s)) var(--fx-ease-in-out, ease-in-out) infinite alternate;
+  animation-delay: var(--fx-delay, 0s);
+}
+
+@keyframes fx-firefly-drift {
+  0% {
+    opacity: 0.18;
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
+  45% {
+    opacity: var(--fx-alpha, 0.92);
+    transform: translate3d(calc(var(--fx-dx, 16px) * 0.5), calc(var(--fx-dy, -14px) * 0.6), 0) scale(1.2);
+  }
+  100% {
+    opacity: 0.35;
+    transform: translate3d(var(--fx-dx, 16px), var(--fx-dy, -14px), 0) scale(0.95);
+  }
+}
 
 /* Smoke wisps rising from lower middle */
 .fx-smoke-puff {
@@ -108,10 +193,10 @@
     transform: translate3d(0, 24px, 0) scale(0.75);
   }
   30% {
-    opacity: var(--fx-alpha, 0.22);
+    opacity: var(--fx-alpha, 0.42);
   }
   70% {
-    opacity: calc(var(--fx-alpha, 0.22) * 0.6);
+    opacity: calc(var(--fx-alpha, 0.42) * 0.65);
   }
   100% {
     opacity: 0;
@@ -179,6 +264,16 @@
   will-change: transform;
 }
 
+.fx-wave-crest {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 248, 232, 0.22) 0%,
+    rgba(246, 239, 228, 0.08) 28%,
+    transparent 55%
+  );
+  border-top: 1px solid rgba(255, 248, 232, 0.28);
+}
+
 @keyframes fx-wave-slide {
   0% {
     transform: translate3d(0, 0, 0);
@@ -229,14 +324,36 @@
 
 @keyframes fx-pool-swing {
   0% {
-    opacity: 0.22;
+    opacity: var(--fx-pool-min, 0.34);
     transform: rotate(-6deg) translate3d(-10px, 0, 0) scale(0.96);
   }
   50% {
-    opacity: 0.34;
+    opacity: var(--fx-pool-max, 0.52);
   }
   100% {
-    opacity: 0.24;
+    opacity: calc(var(--fx-pool-min, 0.34) + 0.04);
     transform: rotate(6deg) translate3d(10px, 0, 0) scale(1.04);
+  }
+}
+
+/* Pause off-screen or hidden tab */
+[data-paused="true"] .fx-ray,
+[data-paused="true"] .fx-mote,
+[data-paused="true"] .fx-firefly-mote,
+[data-paused="true"] .fx-layer-sway {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-ray,
+  .fx-layer-sway,
+  .fx-mote,
+  .fx-firefly-mote {
+    animation: none;
+  }
+
+  .fx-ray {
+    opacity: 0.45;
+    transform: rotate(var(--fx-ray-rot, 16deg));
   }
 }

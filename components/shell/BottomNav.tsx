@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
+import { GlassFilterDefs, GlassPanel } from "@/components/fx/Glass";
 
 interface NavItem {
   href: string;
@@ -98,44 +99,56 @@ export function BottomNav() {
   const reduce = useReducedMotion();
 
   return (
-    <nav
-      aria-label="Điều hướng chính"
-      className="fixed bottom-0 left-1/2 z-50 w-full max-w-[480px] -translate-x-1/2 border-t border-ink/15 bg-sand/95 backdrop-blur-sm"
-    >
-      <ul className="grid grid-cols-4 px-2 py-1">
-        {navItems.map((item) => {
-          const isActive =
-            pathname === item.href || pathname.startsWith(`${item.href}/`);
+    <>
+      <GlassFilterDefs />
+      <div className="fixed bottom-[calc(12px+env(safe-area-inset-bottom))] left-1/2 z-50 w-[min(456px,calc(100%-24px))] -translate-x-1/2">
+        <GlassPanel
+          as="nav"
+          tone="light"
+          refract
+          aria-label="Điều hướng chính"
+          className="w-full rounded-[1.75rem]"
+          style={{
+            borderRadius: "1.75rem",
+            boxShadow: "0 12px 32px -10px rgba(31, 26, 23, 0.25)",
+          }}
+        >
+          <ul className="grid grid-cols-4 gap-1 px-2 py-1.5">
+            {navItems.map((item) => {
+              const isActive =
+                pathname === item.href || pathname.startsWith(`${item.href}/`);
 
-          return (
-            <li key={item.href}>
-              <MotionLink
-                href={item.href}
-                aria-current={isActive ? "page" : undefined}
-                whileTap={reduce ? undefined : { scale: 0.94 }}
-                className={`relative flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-1 rounded-md px-2 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
-                  isActive
-                    ? "text-terracotta"
-                    : "text-muted hover:text-ink"
-                }`}
-              >
-                {isActive && (
-                  <motion.span
-                    layoutId={reduce ? undefined : "nav-indicator"}
-                    transition={{ type: "spring", stiffness: 500, damping: 40 }}
-                    className="absolute inset-0 rounded-md bg-terracotta/12"
-                    aria-hidden="true"
-                  />
-                )}
-                <span className="relative flex flex-col items-center gap-1">
-                  {item.icon}
-                  <span>{item.label}</span>
-                </span>
-              </MotionLink>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
+              return (
+                <li key={item.href}>
+                  <MotionLink
+                    href={item.href}
+                    aria-current={isActive ? "page" : undefined}
+                    whileTap={reduce ? undefined : { scale: 0.94 }}
+                    className={`relative flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-1 rounded-[1.25rem] px-2 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
+                      isActive
+                        ? "text-terracotta"
+                        : "text-muted hover:text-ink"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId={reduce ? undefined : "nav-indicator"}
+                        transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                        className="absolute inset-0 rounded-[1.25rem] bg-terracotta/15 shadow-[0_0_16px_rgba(168,72,37,0.35),inset_0_1px_0_rgba(255,255,255,0.45)]"
+                        aria-hidden="true"
+                      />
+                    )}
+                    <span className="relative flex flex-col items-center gap-1">
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </span>
+                  </MotionLink>
+                </li>
+              );
+            })}
+          </ul>
+        </GlassPanel>
+      </div>
+    </>
   );
 }

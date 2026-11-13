@@ -62,6 +62,13 @@ export function PhaseTransition(props: {
   const reducedMotion = Boolean(useReducedMotion());
   const [phase, setPhase] = useState<"cover" | "reveal">("cover");
   const [done, setDone] = useState(false);
+  const [prevPlay, setPrevPlay] = useState(play);
+
+  if (play !== prevPlay) {
+    setPrevPlay(play);
+    setPhase("cover");
+    setDone(false);
+  }
 
   const onCoveredRef = useRef(onCovered);
   const onDoneRef = useRef(onDone);
@@ -80,11 +87,7 @@ export function PhaseTransition(props: {
     if (!play) {
       coveredFiredRef.current = false;
       doneFiredRef.current = false;
-      const resetTimer = window.setTimeout(() => {
-        setPhase("cover");
-        setDone(false);
-      }, 0);
-      return () => window.clearTimeout(resetTimer);
+      return;
     }
 
     if (doneFiredRef.current) {
@@ -92,11 +95,6 @@ export function PhaseTransition(props: {
     }
 
     const isReduced = reducedMotionRef.current;
-
-    const startTimer = window.setTimeout(() => {
-      setPhase("cover");
-      setDone(false);
-    }, 0);
 
     const coverDuration = isReduced ? REDUCED_FADE_MS : COVER_MS;
     const holdDuration = isReduced ? 0 : HOLD_MS;
@@ -129,7 +127,6 @@ export function PhaseTransition(props: {
     }, coverDuration + holdDuration + revealDuration);
 
     return () => {
-      window.clearTimeout(startTimer);
       window.clearTimeout(coveredTimer);
       if (revealTimer !== undefined) {
         window.clearTimeout(revealTimer);

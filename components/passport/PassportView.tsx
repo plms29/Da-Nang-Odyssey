@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
+import { GlassPanel } from "@/components/fx/Glass";
+import { KineticText } from "@/components/fx/KineticText";
 import { countStamps } from "@/lib/passport/logic";
 import { usePassport } from "@/lib/passport/store";
 import type { Level, Spot, StampKind } from "@/lib/types";
@@ -204,26 +206,26 @@ export function PassportView({ spots, levels }: PassportViewProps) {
     <div className="space-y-6">
       <section aria-label="Tổng kết hộ chiếu">
         <div className="grid grid-cols-2 gap-2.5">
-          <div className="rounded-lg border border-ink/15 bg-white/80 p-3">
+          <GlassPanel className="rounded-lg p-3">
             <p className="text-xs font-semibold text-muted">Hoàn thành màn</p>
             <p className="mt-1 text-xl font-bold text-terracotta">
               {counts.level}
             </p>
-          </div>
-          <div className="rounded-lg border border-ink/15 bg-white/80 p-3">
+          </GlassPanel>
+          <GlassPanel className="rounded-lg p-3">
             <p className="text-xs font-semibold text-muted">Đã nghe tour</p>
             <p className="mt-1 text-xl font-bold text-river">{counts.tour}</p>
-          </div>
-          <div className="rounded-lg border border-ink/15 bg-white/80 p-3">
+          </GlassPanel>
+          <GlassPanel className="rounded-lg p-3">
             <p className="text-xs font-semibold text-muted">Đã đến</p>
             <p className="mt-1 text-xl font-bold text-ink">{counts.visited}</p>
-          </div>
-          <div className="rounded-lg border border-ink/15 bg-white/80 p-3">
+          </GlassPanel>
+          <GlassPanel className="rounded-lg p-3">
             <p className="text-xs font-semibold text-muted">Điểm hoạt động</p>
             <p className="mt-1 text-xl font-bold text-river">
               <CountUp value={totalCodeScore} />
             </p>
-          </div>
+          </GlassPanel>
         </div>
       </section>
 
@@ -249,7 +251,7 @@ export function PassportView({ spots, levels }: PassportViewProps) {
 
       <section aria-labelledby="stamps-heading" className="space-y-3">
         <h2 id="stamps-heading" className="text-lg font-bold text-ink">
-          Dấu theo điểm văn hóa
+          <KineticText as="span">Dấu theo điểm văn hóa</KineticText>
         </h2>
         {reducedMotion ? (
           <div className="grid grid-cols-1 gap-3">{stampCards}</div>

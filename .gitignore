@@ -46,3 +46,4 @@ next-env.d.ts
 
 # worker briefs and logs
 .agy-tasks/
+.art-raw/

@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { StampPress } from "@/components/fx/StampPress";
+import { TiltCard } from "@/components/fx/TiltCard";
 import type { PassportState } from "@/lib/passport/logic";
 import type { Spot, StampKind } from "@/lib/types";
+import { HoloFoil } from "./HoloFoil";
 
 export interface StampCardProps {
   spot: Spot;
@@ -89,7 +91,11 @@ export function StampCard({
   ]);
 
   const card = (
-    <article className="rounded-lg border border-ink/15 bg-white/80 p-4">
+    <TiltCard
+      as="article"
+      max={10}
+      className="rounded-lg border border-ink/15 bg-white/80 p-4"
+    >
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-base font-bold text-ink">{spot.name}</h3>
         {!visitedDate && (
@@ -108,12 +114,13 @@ export function StampCard({
           aria-label={
             hasLevel ? "Hoàn thành màn: có" : "Hoàn thành màn: chưa"
           }
-          className={`flex min-h-14 flex-col items-center justify-center rounded-md px-2 py-2 text-center text-xs ${
+          className={`relative flex min-h-14 flex-col items-center justify-center overflow-hidden rounded-md px-2 py-2 text-center text-xs ${
             hasLevel
               ? "bg-terracotta font-semibold text-sand"
               : "border border-dashed border-ink/25 bg-sand/50 text-muted"
           }`}
         >
+          {hasLevel && <HoloFoil reduced={effectiveReduced} />}
           {hasLevel ? (
             <StampPress
               play={isFreshLevel && started}
@@ -135,12 +142,13 @@ export function StampCard({
         <div
           role="group"
           aria-label={hasTour ? "Đã nghe tour: có" : "Đã nghe tour: chưa"}
-          className={`flex min-h-14 flex-col items-center justify-center rounded-md px-2 py-2 text-center text-xs ${
+          className={`relative flex min-h-14 flex-col items-center justify-center overflow-hidden rounded-md px-2 py-2 text-center text-xs ${
             hasTour
               ? "bg-river font-semibold text-sand"
               : "border border-dashed border-ink/25 bg-sand/50 text-muted"
           }`}
         >
+          {hasTour && <HoloFoil reduced={effectiveReduced} />}
           {hasTour ? (
             <StampPress
               play={isFreshTour && started}
@@ -172,6 +180,7 @@ export function StampCard({
               : "border border-dashed border-ink/25 bg-sand/50 text-muted"
           }`}
         >
+          {visitedDate && <HoloFoil variant="gold" reduced={effectiveReduced} />}
           {visitedDate && !effectiveReduced && !shimmerDone && (
             <motion.span
               aria-hidden="true"
@@ -208,7 +217,7 @@ export function StampCard({
           )}
         </div>
       </div>
-    </article>
+    </TiltCard>
   );
 
   if (effectiveReduced) {

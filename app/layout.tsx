@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
 import "./globals.css";
 import { BottomNav } from "@/components/shell/BottomNav";
+import { ZoomOverlayHost } from "@/components/fx/ZoomNavigate";
 
 const beVietnamPro = Be_Vietnam_Pro({
   variable: "--font-be-vietnam-pro",
@@ -30,6 +31,7 @@ export default function RootLayout({
           <div className="flex-1 px-4 pt-5">{children}</div>
           <BottomNav />
         </div>
+        <ZoomOverlayHost />
       </body>
     </html>
   );

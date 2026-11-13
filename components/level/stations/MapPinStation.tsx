@@ -2,7 +2,9 @@
 
 import { useState, type FormEvent } from "react";
 import { motion, useAnimate, useReducedMotion } from "motion/react";
+import { GlowButton } from "@/components/fx/GlowButton";
 import { checkMapPin } from "@/lib/activities/scoring";
+import { haptic } from "@/lib/haptics";
 import type { MapPinStation as MapPinStationType, StationResult } from "@/lib/types";
 import { useAttempt } from "../useAttempt";
 import { HintBox } from "../HintBox";
@@ -30,10 +32,12 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
     if (check.correct) {
       setFeedback(null);
       setSolvedGlow(true);
+      haptic("success");
       onDone(result(true));
       return;
     }
     addWrong();
+    haptic("error");
     if (!reduced && scope.current) {
       animate(scope.current, { x: [0, -8, 8, -6, 6, 0] }, { duration: 0.3 });
     }
@@ -47,6 +51,7 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
     const lat = Number.parseFloat(latInput);
     const lng = Number.parseFloat(lngInput);
     if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+      haptic("error");
       setFeedback("Vui lòng nhập vĩ độ và kinh độ hợp lệ.");
       return;
     }
@@ -54,6 +59,7 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
   }
 
   function handleDemoPin() {
+    haptic("tap");
     submitCoordinates(station.target.lat, station.target.lng);
   }
 
@@ -68,7 +74,7 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
   const lngId = `${station.id}-lng`;
 
   return (
-    <section className="rounded-lg border border-ink/15 bg-white/80 p-4">
+    <section className="rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm">
       <p className="text-base font-medium leading-relaxed text-ink">
         {station.clue}
       </p>
@@ -77,7 +83,9 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
       <div
         aria-hidden="true"
         className={`relative mt-4 flex h-16 items-center justify-center overflow-hidden rounded-md border border-ink/10 bg-sand/40 ${
-          solvedGlow ? "ring-2 ring-gold ring-offset-2" : ""
+          solvedGlow
+            ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+            : ""
         }`}
       >
         {pinKey > 0 && (
@@ -156,12 +164,12 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
           )}
 
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            <button
+            <GlowButton
               type="submit"
               className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
             >
               Ghim
-            </button>
+            </GlowButton>
 
             <button
               type="button"

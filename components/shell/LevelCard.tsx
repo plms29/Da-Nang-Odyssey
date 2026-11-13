@@ -1,9 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { KineticText } from "@/components/fx/KineticText";
 import { SceneBackdrop } from "@/components/fx/SceneBackdrop";
+import { TiltCard } from "@/components/fx/TiltCard";
+import { ZoomNavigate } from "@/components/fx/ZoomNavigate";
 import { usePassport } from "@/lib/passport/store";
 import { getSceneKit, sceneIdForLevel } from "@/lib/scene";
 import type { Level } from "@/lib/types";
@@ -31,24 +33,47 @@ export function LevelCard({ level, delay = 0 }: LevelCardProps) {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: reduced ? 0.2 : 0.4,
+        duration: reduced ? 0.2 : 0.35,
         delay: reduced ? 0 : delay,
         ease: [0.22, 1, 0.36, 1],
       }}
     >
-      <Link
-        href={`/kham-pha/${level.id}`}
-        className="group block overflow-hidden rounded-lg border border-ink/15 bg-white/80 transition-all hover:border-terracotta hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
-      >
-        <div className="relative h-24 overflow-hidden rounded-t-lg">
-          <SceneBackdrop kit={kit} intensity="calm" />
-        </div>
-        <div className="p-4">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-bold tracking-wider text-terracotta uppercase">
+      <TiltCard as="article" max={6}>
+        <ZoomNavigate
+          href={`/kham-pha/${level.id}`}
+          sky={kit.sky}
+          label={level.title}
+          className="group block overflow-hidden rounded-lg border border-ink/15 bg-white/80 transition-colors hover:border-terracotta hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+        >
+          <div className="relative h-[140px] overflow-hidden rounded-t-lg">
+            <SceneBackdrop kit={kit} intensity="calm" />
+            <span className="absolute left-3 top-3 rounded-full border border-white/50 bg-white/60 px-2.5 py-1 text-xs font-bold tracking-wider text-ink uppercase backdrop-blur-md">
               Màn {level.order}
             </span>
-            <div className="flex items-center gap-2">
+          </div>
+          <div className="p-4">
+            <div className="flex items-center justify-between gap-2">
+              <KineticText
+                as="h2"
+                className="text-base font-bold text-ink group-hover:text-terracotta"
+                stagger={0.02}
+              >
+                {level.title}
+              </KineticText>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-terracotta"
+                aria-hidden="true"
+              >
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </div>
+            <div className="mt-2 flex items-center gap-2">
               {level.status === "draft" && (
                 <span className="rounded-sm border border-gold/60 bg-gold/20 px-2 py-0.5 text-xs font-semibold text-ink">
                   Nội dung nháp
@@ -73,25 +98,8 @@ export function LevelCard({ level, delay = 0 }: LevelCardProps) {
               )}
             </div>
           </div>
-          <div className="mt-1.5 flex items-center justify-between gap-2">
-            <h2 className="text-base font-bold text-ink group-hover:text-terracotta">
-              {level.title}
-            </h2>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-4 w-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-terracotta"
-              aria-hidden="true"
-            >
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </div>
-        </div>
-      </Link>
+        </ZoomNavigate>
+      </TiltCard>
     </motion.div>
   );
 }

@@ -2,6 +2,7 @@
 
 import {
   motion,
+  useMotionValue,
   useReducedMotion,
   useMotionValueEvent,
   useScroll,
@@ -9,9 +10,17 @@ import {
   type MotionValue,
 } from "motion/react";
 import { type JSX, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import { SceneBackdrop, SceneLayerImg } from "@/components/fx/SceneBackdrop";
+import {
+  getShaderPresetForKit,
+  isSunlitKit,
+  SceneBackdrop,
+  SceneGodRays,
+  SceneLayerImg,
+  ShaderTiltBridge,
+} from "@/components/fx/SceneBackdrop";
 import { Ambient } from "@/components/fx/Ambient";
 import { useInView } from "@/components/fx/useInView";
+import { useTilt } from "@/components/fx/useTilt";
 import type { SceneKit, SceneLayer } from "@/lib/scene";
 
 const WORLD = 1.3;
@@ -22,18 +31,34 @@ export interface ParallaxSceneProps {
   cta: ReactNode;
 }
 
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
 function ParallaxLayer({
   layer,
   progress,
+  x,
+  y,
 }: {
   layer: SceneLayer;
   progress: MotionValue<number>;
+  x: MotionValue<number>;
+  y: MotionValue<number>;
 }): JSX.Element {
-  const y = useTransform(progress, [0, 1], [`${(1 - layer.depth) * 15}%`, "0%"]);
+  const scrollPct = useTransform(progress, [0, 1], [(1 - layer.depth) * 15, 0]);
+  const tx = useTransform(x, (v) => v * layer.depth * 18);
+  const ty = useTransform(y, (v) => v * layer.depth * 10);
+  const combinedY = useTransform<number, string>(
+    [scrollPct, ty],
+    ([s, dy]) => `calc(${s}% + ${dy}px)`
+  );
+
   return (
     <motion.div
+      aria-hidden="true"
       className="absolute inset-x-0 bottom-0 h-[100dvh] pointer-events-none"
-      style={{ y }}
+      style={{ x: tx, y: combinedY }}
     >
       <SceneLayerImg layer={layer} intensity="full" />
     </motion.div>
@@ -123,6 +148,31 @@ function ScrollScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
     offset: ["start start", "end end"],
   });
 
+  const reduced = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isReduced = mounted && Boolean(reduced);
+  const { x: rawX, y: rawY } = useTilt();
+  const factorMv = useMotionValue(1);
+
+  useEffect(() => {
+    factorMv.set(isReduced ? 0 : 1);
+  }, [factorMv, isReduced]);
+
+  const tiltX = useTransform<number, number>([rawX, factorMv], ([vx, f]) =>
+    clamp(vx * f, -1, 1)
+  );
+  const tiltY = useTransform<number, number>([rawY, factorMv], ([vy, f]) =>
+    clamp(vy * f, -1, 1)
+  );
+
+  const rotateX = useTransform(tiltY, (v) => clamp(-v * 2, -2, 2));
+  const rotateY = useTransform(tiltX, (v) => clamp(v * 2, -2, 2));
+
   const worldY = useTransform(
     progress,
     [0, 1],
@@ -182,17 +232,29 @@ function ScrollScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
         className="relative"
         style={{ height: `${(n + 1) * 100}dvh` }}
       >
-        <div className="sticky top-0 h-dvh overflow-hidden">
+        <div
+          className="sticky top-0 h-dvh overflow-hidden"
+          style={{ perspective: "1000px" }}
+        >
           <motion.div
             aria-hidden="true"
             className="absolute inset-x-0 top-0 h-[130%] pointer-events-none"
-            style={{ y: worldY, background: kit.sky }}
+            style={{ y: worldY, rotateX, rotateY, background: kit.sky }}
           >
+            <ShaderTiltBridge
+              preset={getShaderPresetForKit(kit.id)}
+              x={tiltX}
+              y={tiltY}
+              className="absolute inset-0"
+            />
+            {isSunlitKit(kit.id) && <SceneGodRays />}
             {kit.layers.map((layer, index) => (
               <ParallaxLayer
                 key={`${layer.src}-${index}`}
                 layer={layer}
                 progress={progress}
+                x={tiltX}
+                y={tiltY}
               />
             ))}
           </motion.div>

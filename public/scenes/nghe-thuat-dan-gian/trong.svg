@@ -1,59 +1,80 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" fill="none">
   <defs>
-    <linearGradient id="drumBody" x1="220" y1="180" x2="740" y2="540" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#C85A30" />
-      <stop offset="50%" stop-color="#A84825" />
-      <stop offset="100%" stop-color="#6B2811" />
+    <linearGradient id="trong-body" x1="230" y1="220" x2="730" y2="540" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#D96E3F" />
+      <stop offset="32%" stop-color="#B04B26" />
+      <stop offset="72%" stop-color="#762A12" />
+      <stop offset="100%" stop-color="#4A1708" />
     </linearGradient>
-    <linearGradient id="drumHead" x1="300" y1="120" x2="660" y2="310" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#F6EFE4" />
-      <stop offset="100%" stop-color="#D9C29C" />
+    <linearGradient id="trong-head" x1="290" y1="145" x2="670" y2="290" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FAF2E2" />
+      <stop offset="55%" stop-color="#E6D0AB" />
+      <stop offset="100%" stop-color="#B79A6D" />
+    </linearGradient>
+    <linearGradient id="trong-stand" x1="240" y1="360" x2="700" y2="635" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#786352" />
+      <stop offset="55%" stop-color="#4A3C32" />
+      <stop offset="100%" stop-color="#271F1A" />
     </linearGradient>
   </defs>
 
-  <!-- Ground shadow under the drum stand -->
-  <ellipse cx="480" cy="635" rx="340" ry="48" fill="#1F1A17" fill-opacity="0.55" />
+  <!-- Soft ground shadow beneath the drum stand -->
+  <ellipse cx="488" cy="642" rx="345" ry="44" fill="#0B0908" fill-opacity="0.62" />
 
-  <!-- Crossed wooden drum stand (bronze/wood legs) -->
-  <path d="M235 630 L395 360 L445 360 L295 630 Z" fill="#5E5148" stroke="#1F1A17" stroke-width="8" />
-  <path d="M725 630 L565 360 L515 360 L665 630 Z" fill="#5E5148" stroke="#1F1A17" stroke-width="8" />
-  <rect x="275" y="515" width="410" height="28" rx="8" fill="#C99A2E" stroke="#1F1A17" stroke-width="6" />
+  <!-- Crossed wooden drum stand (no black outlines, bevel highlights) -->
+  <path d="M235 634 L392 365 L442 365 L295 634 Z" fill="url(#trong-stand)" />
+  <path d="M725 634 L568 365 L518 365 L665 634 Z" fill="url(#trong-stand)" />
+  <line x1="238" y1="630" x2="394" y2="368" stroke="#A6C4D8" stroke-opacity="0.4" stroke-width="4" stroke-linecap="round" />
+  <rect x="275" y="518" width="410" height="26" rx="8" fill="#B88827" />
+  <rect x="282" y="520" width="396" height="6" rx="3" fill="#F2D178" fill-opacity="0.6" />
 
-  <!-- Barrel-shaped Bai Choi festival drum body (terracotta lacquered wood) -->
+  <!-- Barrel-shaped lacquered festival drum body -->
   <path
-    d="M275 215 C215 330, 215 445, 295 545 C395 595, 565 595, 665 545 C745 445, 745 330, 685 215 Z"
-    fill="url(#drumBody)"
-    stroke="#1F1A17"
-    stroke-width="10"
+    d="M275 218 C212 332, 212 448, 294 548 C394 598, 566 598, 666 548 C748 448, 748 332, 685 218 Z"
+    fill="url(#trong-body)"
   />
-  <!-- Decorative gold band around the drum waist -->
+  <!-- Cool moonlit + warm lantern rim highlight along left barrel curve -->
   <path
-    d="M242 385 C385 432, 575 432, 718 385 L714 420 C575 466, 385 466, 246 420 Z"
+    d="M278 232 C226 336, 226 442, 296 534"
+    stroke="#AFCFE3"
+    stroke-opacity="0.58"
+    stroke-width="6"
+    stroke-linecap="round"
+  />
+  <!-- Decorative gold waist belt -->
+  <path
+    d="M242 386 C385 434, 575 434, 718 386 L714 420 C575 468, 385 468, 246 420 Z"
     fill="#C99A2E"
   />
+  <path d="M245 390 C385 436, 575 436, 715 390" stroke="#F8E2A0" stroke-opacity="0.55" stroke-width="3" />
 
   <!-- Top stretched leather drumhead -->
-  <ellipse cx="480" cy="215" rx="205" ry="76" fill="url(#drumHead)" stroke="#C99A2E" stroke-width="12" />
-  <!-- Traditional concentric sun/lotus ring painted on the drumhead -->
-  <ellipse cx="480" cy="215" rx="115" ry="42" stroke="#A84825" stroke-width="8" stroke-opacity="0.7" />
-  <ellipse cx="480" cy="215" rx="46" ry="18" fill="#A84825" fill-opacity="0.85" />
+  <ellipse cx="480" cy="218" rx="205" ry="74" fill="#9E7120" />
+  <ellipse cx="480" cy="214" rx="196" ry="68" fill="url(#trong-head)" />
+  <path d="M294 196 A196 68 0 0 1 654 190" stroke="#FFFFFF" stroke-opacity="0.72" stroke-width="3.5" stroke-linecap="round" />
 
-  <!-- Bronze tack studs around top rim -->
-  <g fill="#C99A2E">
-    <circle cx="305" cy="260" r="8" />
-    <circle cx="355" cy="280" r="8" />
-    <circle cx="415" cy="294" r="8" />
-    <circle cx="480" cy="298" r="8" />
-    <circle cx="545" cy="294" r="8" />
-    <circle cx="605" cy="280" r="8" />
-    <circle cx="655" cy="260" r="8" />
+  <!-- Concentric festival lotus/sun motif painted on drumhead -->
+  <ellipse cx="480" cy="214" rx="114" ry="40" stroke="#A84825" stroke-opacity="0.72" stroke-width="7" />
+  <ellipse cx="480" cy="214" rx="46" ry="17" fill="#A84825" fill-opacity="0.88" />
+
+  <!-- Brass tack studs around top rim -->
+  <g fill="#E8C266">
+    <circle cx="305" cy="260" r="7.5" />
+    <circle cx="355" cy="280" r="7.5" />
+    <circle cx="415" cy="294" r="7.5" />
+    <circle cx="480" cy="298" r="7.5" />
+    <circle cx="545" cy="294" r="7.5" />
+    <circle cx="605" cy="280" r="7.5" />
+    <circle cx="655" cy="260" r="7.5" />
   </g>
 
-  <!-- Pair of wooden drumsticks resting across the top -->
+  <!-- Crossed drumsticks resting across the top -->
   <g>
-    <line x1="330" y1="145" x2="555" y2="235" stroke="#5E5148" stroke-width="16" stroke-linecap="round" />
-    <circle cx="562" cy="238" r="18" fill="#A84825" />
-    <line x1="630" y1="150" x2="415" y2="242" stroke="#5E5148" stroke-width="16" stroke-linecap="round" />
-    <circle cx="408" cy="245" r="18" fill="#A84825" />
+    <line x1="336" y1="148" x2="554" y2="236" stroke="#6E5442" stroke-width="14" stroke-linecap="round" />
+    <line x1="338" y1="145" x2="550" y2="231" stroke="#B59378" stroke-opacity="0.5" stroke-width="3" stroke-linecap="round" />
+    <circle cx="560" cy="239" r="17" fill="#B54925" />
+
+    <line x1="624" y1="152" x2="416" y2="242" stroke="#5A4435" stroke-width="14" stroke-linecap="round" />
+    <circle cx="409" cy="245" r="17" fill="#B54925" />
   </g>
 </svg>

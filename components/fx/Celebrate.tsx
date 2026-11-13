@@ -1,35 +1,224 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useReducedMotion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import type { CelebrateKind } from "@/lib/scene/types";
 import { ParticleCanvas } from "@/components/fx/ParticleCanvas";
+import { haptic } from "@/lib/haptics";
 
-const CELEBRATE_DURATION_MS = 2000;
+const CELEBRATE_DURATION_MS = 2200;
+const MAX_COINS = 38;
+
+interface CoinParticle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  rx: number;
+  ry: number;
+  angle: number;
+  spin: number;
+  age: number;
+  life: number;
+  bounced: boolean;
+}
+
+function rand(min: number, max: number): number {
+  return min + Math.random() * (max - min);
+}
+
+function CoinBurst(props: { play: boolean; reducedMotion: boolean }) {
+  const { play, reducedMotion } = props;
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    if (!play || reducedMotion) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let width = Math.max(1, canvas.clientWidth || 320);
+    let height = Math.max(1, canvas.clientHeight || 240);
+
+    const updateSize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = Math.max(1, canvas.clientWidth || 320);
+      height = Math.max(1, canvas.clientHeight || 240);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    updateSize();
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(() => updateSize());
+      ro.observe(canvas);
+    }
+
+    const coins: CoinParticle[] = [];
+    for (let i = 0; i < MAX_COINS; i++) {
+      const radius = rand(5.5, 9.5);
+      coins.push({
+        x: width * 0.5 + rand(-32, 32),
+        y: height - rand(4, 18),
+        vx: rand(-185, 185),
+        vy: -rand(320, 560),
+        rx: radius,
+        ry: radius * 0.78,
+        angle: rand(0, Math.PI * 2),
+        spin: rand(6, 13) * (Math.random() < 0.5 ? -1 : 1),
+        age: 0,
+        life: rand(1.55, 2.15),
+        bounced: false,
+      });
+    }
+
+    let rafId = 0;
+    let elapsed = 0;
+    let lastTime = performance.now();
+
+    const step = (now: number) => {
+      const dt = Math.min(0.05, Math.max(0.001, (now - lastTime) / 1000));
+      lastTime = now;
+      elapsed += dt;
+
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = coins.length - 1; i >= 0; i--) {
+        const coin = coins[i];
+        coin.age += dt;
+        if (coin.age >= coin.life) {
+          coins.splice(i, 1);
+          continue;
+        }
+
+        coin.vy += 690 * dt;
+        coin.vx *= Math.pow(0.99, dt * 60);
+        coin.x += coin.vx * dt;
+        coin.y += coin.vy * dt;
+        coin.angle += coin.spin * dt;
+
+        const floorY = height - coin.ry - 2;
+        if (!coin.bounced && coin.y >= floorY && coin.vy > 0) {
+          coin.y = floorY;
+          coin.vy = -coin.vy * 0.46;
+          coin.vx *= 0.82;
+          coin.bounced = true;
+        }
+
+        const t = coin.age / coin.life;
+        const alpha = t > 0.7 ? Math.max(0, (1 - t) / 0.3) : 1;
+        const scaleX = Math.max(0.2, Math.abs(Math.cos(coin.angle)));
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.translate(coin.x, coin.y);
+        ctx.scale(scaleX, 1);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, coin.rx, coin.ry, 0, 0, Math.PI * 2);
+        ctx.fillStyle = "#C99A2E";
+        ctx.fill();
+        ctx.strokeStyle = "#F6EFE4";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      if (elapsed >= CELEBRATE_DURATION_MS / 1000 || coins.length === 0) {
+        ctx.clearRect(0, 0, width, height);
+        return;
+      }
+
+      rafId = window.requestAnimationFrame(step);
+    };
+
+    rafId = window.requestAnimationFrame(step);
+
+    return () => {
+      if (rafId) window.cancelAnimationFrame(rafId);
+      if (ro) ro.disconnect();
+    };
+  }, [play, reducedMotion]);
+
+  if (!play || reducedMotion) {
+    return null;
+  }
+
+  return (
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 h-full w-full"
+    />
+  );
+}
+
+function GoldStar() {
+  return (
+    <motion.div
+      className="pointer-events-none absolute inset-0 flex items-center justify-center"
+      initial={{ scale: 0, opacity: 0, rotate: -16 }}
+      animate={{
+        scale: [0, 1.25, 1, 1.04, 0.88],
+        opacity: [0, 1, 1, 0.95, 0],
+        rotate: [-16, 6, 0, 0, 8],
+      }}
+      transition={{
+        duration: 2.1,
+        times: [0, 0.22, 0.38, 0.78, 1],
+        ease: "easeOut",
+      }}
+    >
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 120 120"
+        className="h-28 w-28 overflow-visible"
+        style={{ filter: "drop-shadow(0 0 18px rgba(201, 154, 46, 0.85))" }}
+      >
+        <polygon
+          points="60,12 71.8,43.8 105.6,45.2 79,66.2 88.2,98.8 60,80 31.8,98.8 41,66.2 14.4,45.2 48.2,43.8"
+          fill="#C99A2E"
+          stroke="#F6EFE4"
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </motion.div>
+  );
+}
 
 export function Celebrate(props: { kind: CelebrateKind; play: boolean }) {
   const { kind, play } = props;
   const reducedMotion = Boolean(useReducedMotion());
   const [done, setDone] = useState(false);
+  const [prevPlay, setPrevPlay] = useState(play);
+  if (play !== prevPlay) {
+    setPrevPlay(play);
+    if (play) setDone(false);
+  }
+  const wasPlayingRef = useRef(false);
+
+  useEffect(() => {
+    if (play && !wasPlayingRef.current && !reducedMotion) {
+      haptic("success");
+    }
+    wasPlayingRef.current = play;
+  }, [play, reducedMotion]);
 
   useEffect(() => {
     if (!play || reducedMotion) {
-      const resetTimer = window.setTimeout(() => {
-        setDone(false);
-      }, 0);
-      return () => window.clearTimeout(resetTimer);
+      return;
     }
-
-    const startTimer = window.setTimeout(() => {
-      setDone(false);
-    }, 0);
 
     const endTimer = window.setTimeout(() => {
       setDone(true);
     }, CELEBRATE_DURATION_MS);
 
     return () => {
-      window.clearTimeout(startTimer);
       window.clearTimeout(endTimer);
     };
   }, [play, reducedMotion]);
@@ -44,22 +233,46 @@ export function Celebrate(props: { kind: CelebrateKind; play: boolean }) {
       aria-hidden="true"
       className="absolute inset-0 pointer-events-none overflow-hidden"
     >
-      {kind === "gold-burst" && (
-        <>
-          <div
-            className="pointer-events-none absolute inset-0 fx-celebrate-gold-burst"
-            style={{
-              background:
-                "radial-gradient(circle at 50% 45%, rgba(201, 154, 46, 0.65) 0%, rgba(201, 154, 46, 0.28) 34%, rgba(246, 239, 228, 0) 70%)",
-            }}
-          />
-          <ParticleCanvas
-            preset="burst"
-            play={play}
-            className="pointer-events-none absolute inset-0"
-          />
-        </>
-      )}
+      {/* Layer a: rotating light-ray burst */}
+      <motion.div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "repeating-conic-gradient(from 0deg at 50% 50%, rgba(201, 154, 46, 0.45) 0deg 12deg, transparent 12deg 24deg)",
+        }}
+        initial={{ scale: 0.6, rotate: 0, opacity: 0 }}
+        animate={{ scale: 1.2, rotate: 25, opacity: [0, 0.9, 0.6, 0] }}
+        transition={{ duration: 2.2, ease: "easeOut" }}
+      />
+
+      {/* Layer b: soft radial bloom */}
+      <motion.div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, rgba(201, 154, 46, 0.62) 0%, rgba(201, 154, 46, 0.26) 36%, rgba(246, 239, 228, 0) 70%)",
+        }}
+        initial={{ opacity: 0, scale: 0.85 }}
+        animate={{ opacity: [0, 0.95, 0.7, 0], scale: [0.85, 1.05, 1.15, 1.22] }}
+        transition={{ duration: 2.2, ease: "easeOut" }}
+      />
+
+      {/* Layer c: warm screen flash */}
+      <motion.div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: "linear-gradient(180deg, #F6EFE4 0%, #C99A2E 100%)",
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 0.35, 0] }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+      />
+
+      {/* Layer d: dedicated canvas coin burst */}
+      <CoinBurst play={play} reducedMotion={reducedMotion} />
+
+      {/* Layer e: kind-specific hero element */}
+      {kind === "gold-burst" && <GoldStar />}
 
       {kind === "flag-raise" && (
         <div className="pointer-events-none absolute bottom-6 right-5 h-60 w-36 fx-celebrate-flag-pole">

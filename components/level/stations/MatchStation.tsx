@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { motion, useAnimate, useReducedMotion } from "motion/react";
+import { GlowButton } from "@/components/fx/GlowButton";
 import { checkMatch } from "@/lib/activities/scoring";
+import { haptic } from "@/lib/haptics";
 import type { MatchStation as MatchStationType, StationResult } from "@/lib/types";
 import { deterministicShuffle } from "../shuffle";
 import { useAttempt } from "../useAttempt";
@@ -33,12 +35,14 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
   const { hintsUsed, nextHint, addWrong, result } = useAttempt(station.hints);
 
   function handleSelectLeft(leftId: string) {
+    haptic("tap");
     setFeedback(null);
     setSelectedLeftId((prev) => (prev === leftId ? null : leftId));
   }
 
   function handleSelectRight(rightId: string) {
     if (!selectedLeftId) return;
+    haptic("tap");
     setFeedback(null);
     setMapping((prev) => {
       const next: Record<string, string> = {};
@@ -55,6 +59,7 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
 
   function handleCheck() {
     if (Object.keys(mapping).length < station.pairs.length) {
+      haptic("error");
       setFeedback("Hãy ghép đủ các cặp");
       return;
     }
@@ -62,10 +67,12 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
       setFeedback(null);
       setChecked(true);
       setSolvedGlow(true);
+      haptic("success");
       onDone(result(true));
       return;
     }
     addWrong();
+    haptic("error");
     if (!reduced && scope.current) {
       animate(scope.current, { x: [0, -8, 8, -6, 6, 0] }, { duration: 0.3 });
     }
@@ -87,8 +94,10 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
 
   return (
     <section
-      className={`rounded-lg border border-ink/15 bg-white/80 p-4 ${
-        solvedGlow ? "ring-2 ring-gold ring-offset-2" : ""
+      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
+        solvedGlow
+          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+          : ""
       }`}
     >
       <p className="text-base font-medium leading-relaxed text-ink">
@@ -133,7 +142,7 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
                 }
                 className={`flex min-h-11 w-full flex-col items-start rounded-md border px-3 py-2 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
                   isSelected
-                    ? "border-terracotta bg-terracotta text-sand ring-2 ring-gold"
+                    ? "border-terracotta bg-terracotta text-sand ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
                     : isLocked
                       ? "border-river bg-river/10 text-ink"
                       : isPaired
@@ -221,13 +230,13 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
       )}
 
       <div className="mt-4">
-        <button
+        <GlowButton
           type="button"
           onClick={handleCheck}
           className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Kiểm tra
-        </button>
+        </GlowButton>
       </div>
 
       <HintBox

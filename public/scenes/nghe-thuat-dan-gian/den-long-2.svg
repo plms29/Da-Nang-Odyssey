@@ -1,45 +1,61 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1120" fill="none">
   <defs>
-    <linearGradient id="lanternSilk2" x1="480" y1="210" x2="480" y2="660" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#E5B94E" />
-      <stop offset="45%" stop-color="#C99A2E" />
-      <stop offset="100%" stop-color="#A84825" />
-    </linearGradient>
-    <radialGradient id="lanternCore2" cx="0.5" cy="0.48" r="0.48">
-      <stop offset="0%" stop-color="#F6EFE4" stop-opacity="0.95" />
-      <stop offset="55%" stop-color="#C99A2E" stop-opacity="0.65" />
+    <radialGradient id="den-long-2-halo" cx="0.5" cy="0.44" r="0.5">
+      <stop offset="0%" stop-color="#FCE49C" stop-opacity="0.52" />
+      <stop offset="48%" stop-color="#C98A2E" stop-opacity="0.24" />
       <stop offset="100%" stop-color="#A84825" stop-opacity="0" />
     </radialGradient>
+    <linearGradient id="den-long-2-silk" x1="250" y1="220" x2="710" y2="640" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F0C258" />
+      <stop offset="48%" stop-color="#D47435" />
+      <stop offset="100%" stop-color="#8A2F13" />
+    </linearGradient>
+    <radialGradient id="den-long-2-core" cx="0.46" cy="0.46" r="0.48">
+      <stop offset="0%" stop-color="#FFFDF0" stop-opacity="0.96" />
+      <stop offset="42%" stop-color="#F2C252" stop-opacity="0.72" />
+      <stop offset="100%" stop-color="#C25227" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="den-long-2-gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7D5614" />
+      <stop offset="40%" stop-color="#F6D884" />
+      <stop offset="100%" stop-color="#8A6118" />
+    </linearGradient>
   </defs>
-  <!-- Soft outer night halo -->
-  <circle cx="480" cy="440" r="360" fill="#C99A2E" fill-opacity="0.16" />
 
-  <!-- Hanging cord anchored at top-center (x=480, y=0) for animate="sway" -->
-  <rect x="468" y="0" width="24" height="195" fill="#C99A2E" />
-  <circle cx="480" cy="115" r="24" fill="#A84825" stroke="#C99A2E" stroke-width="8" />
+  <!-- Soft outer night glow -->
+  <circle cx="480" cy="445" r="390" fill="url(#den-long-2-halo)" />
 
-  <!-- Upper wooden/gold collar -->
-  <rect x="360" y="185" width="240" height="36" rx="10" fill="#1F1A17" stroke="#C99A2E" stroke-width="8" />
+  <!-- Hanging cord anchored strictly to TOP edge (y=0) for animate="sway" -->
+  <rect x="470" y="0" width="20" height="205" fill="url(#den-long-2-gold)" />
+  <circle cx="480" cy="118" r="20" fill="#B54A24" />
+  <circle cx="476" cy="114" r="9" fill="#F6D884" fill-opacity="0.75" />
 
-  <!-- Round-octagonal silk lantern body -->
-  <ellipse cx="480" cy="425" rx="275" ry="225" fill="url(#lanternSilk2)" />
-  <ellipse cx="480" cy="425" rx="215" ry="185" fill="url(#lanternCore2)" />
+  <!-- Upper gold-trimmed collar -->
+  <rect x="372" y="196" width="216" height="34" rx="10" fill="#2A1C16" />
+  <rect x="380" y="200" width="200" height="9" rx="4.5" fill="url(#den-long-2-gold)" />
 
-  <!-- Curved bamboo ribs -->
-  <ellipse cx="480" cy="425" rx="145" ry="222" stroke="#A84825" stroke-width="10" stroke-opacity="0.55" />
-  <line x1="480" y1="203" x2="480" y2="647" stroke="#A84825" stroke-width="10" stroke-opacity="0.55" />
+  <!-- Round-oval silk lantern body -->
+  <ellipse cx="480" cy="432" rx="258" ry="214" fill="url(#den-long-2-silk)" />
+  <ellipse cx="476" cy="428" rx="204" ry="178" fill="url(#den-long-2-core)" />
 
-  <!-- Lower wooden/gold collar -->
-  <rect x="365" y="635" width="230" height="36" rx="10" fill="#1F1A17" stroke="#C99A2E" stroke-width="8" />
+  <!-- Delicate curved bamboo ribs -->
+  <ellipse cx="480" cy="432" rx="136" ry="212" stroke="#6B240E" stroke-opacity="0.4" stroke-width="6.5" />
+  <line x1="480" y1="220" x2="480" y2="644" stroke="#6B240E" stroke-opacity="0.4" stroke-width="6.5" />
+  <!-- Rim light along left arc -->
+  <path d="M364 252 C226 322, 226 538, 364 612" stroke="#FFF1C2" stroke-opacity="0.52" stroke-width="4" stroke-linecap="round" />
+
+  <!-- Lower collar -->
+  <rect x="376" y="632" width="208" height="32" rx="10" fill="#2A1C16" />
+  <rect x="384" y="636" width="192" height="8" rx="4" fill="url(#den-long-2-gold)" />
 
   <!-- Terracotta & gold silk tassel -->
-  <line x1="480" y1="671" x2="480" y2="735" stroke="#C99A2E" stroke-width="16" />
-  <circle cx="480" cy="735" r="26" fill="#C99A2E" stroke="#1F1A17" stroke-width="6" />
-  <path
-    d="M454 755 L420 1015 L540 1015 L506 755 Z"
-    fill="#A84825"
-  />
-  <line x1="462" y1="765" x2="448" y2="1015" stroke="#C99A2E" stroke-width="6" stroke-opacity="0.7" />
-  <line x1="480" y1="765" x2="480" y2="1015" stroke="#C99A2E" stroke-width="6" stroke-opacity="0.7" />
-  <line x1="498" y1="765" x2="512" y2="1015" stroke="#C99A2E" stroke-width="6" stroke-opacity="0.7" />
+  <rect x="474" y="664" width="12" height="64" fill="url(#den-long-2-gold)" />
+  <circle cx="480" cy="732" r="22" fill="#D49A2A" />
+  <circle cx="476" cy="728" r="9" fill="#FFF1C2" />
+  <path d="M456 752 L422 1018 L538 1018 L504 752 Z" fill="#9E3B1B" />
+  <g stroke="#E5B94E" stroke-opacity="0.68" stroke-width="4">
+    <line x1="464" y1="762" x2="448" y2="1018" />
+    <line x1="480" y1="762" x2="480" y2="1018" />
+    <line x1="496" y1="762" x2="512" y2="1018" />
+  </g>
 </svg>

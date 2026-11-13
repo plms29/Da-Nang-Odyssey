@@ -21,7 +21,7 @@ export function HintBox({
   const exhausted = revealedHints.length >= maxHints || hintsUsed >= maxHints;
 
   return (
-    <div className="mt-4 rounded-lg border border-ink/15 bg-sand/60 p-3">
+    <div className="mt-4 rounded-lg border border-ink/15 bg-sand/60 p-3 transition-shadow hover:shadow-sm">
       <button
         type="button"
         onClick={onRequestHint}

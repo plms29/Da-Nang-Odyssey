@@ -1,47 +1,86 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1600" preserveAspectRatio="xMidYMid slice" fill="none">
   <defs>
-    <linearGradient id="groundMapGrad" x1="0" y1="0" x2="960" y2="1600" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#F6EFE4" />
-      <stop offset="50%" stop-color="#DCE2C6" />
-      <stop offset="100%" stop-color="#BAC79D" />
+    <linearGradient id="dat-co-base" x1="0" y1="0" x2="960" y2="1600" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EDE8D8" />
+      <stop offset="32%" stop-color="#DCE2C7" />
+      <stop offset="70%" stop-color="#C6D0A7" />
+      <stop offset="100%" stop-color="#AAB88A" />
     </linearGradient>
+    <linearGradient id="dat-co-terrace-a" x1="120" y1="180" x2="840" y2="760" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E4DFC6" stop-opacity="0.72" />
+      <stop offset="100%" stop-color="#B9C598" stop-opacity="0.55" />
+    </linearGradient>
+    <linearGradient id="dat-co-terrace-b" x1="80" y1="880" x2="880" y2="1500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#CBD5AE" stop-opacity="0.68" />
+      <stop offset="100%" stop-color="#9CAD7B" stop-opacity="0.6" />
+    </linearGradient>
+    <linearGradient id="dat-co-path" x1="0" y1="900" x2="520" y2="1480" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E7CE9B" />
+      <stop offset="55%" stop-color="#D4B274" />
+      <stop offset="100%" stop-color="#B88E4A" />
+    </linearGradient>
+    <linearGradient id="dat-co-haze" x1="480" y1="0" x2="480" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F6EFE4" stop-opacity="0.55" />
+      <stop offset="100%" stop-color="#F6EFE4" stop-opacity="0" />
+    </linearGradient>
+    <pattern id="dat-co-grass-pat" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M12 22 L16 14 M18 23 L23 16 M46 48 L49 40 M52 50 L57 43" stroke="#5E5148" stroke-opacity="0.1" stroke-width="2" stroke-linecap="round" />
+      <circle cx="34" cy="18" r="1.5" fill="#5E5148" fill-opacity="0.09" />
+      <circle cx="14" cy="52" r="1.8" fill="#8C734B" fill-opacity="0.09" />
+    </pattern>
   </defs>
-  <!-- Opaque full-cover map ground -->
-  <rect x="0" y="0" width="960" height="1600" fill="url(#groundMapGrad)" />
-  <!-- Topographic contour patches (soft grass & sandy earth zones) -->
-  <path
-    d="M0 180 C240 140, 460 240, 720 190 L960 220 L960 620 C700 680, 380 560, 0 640 Z"
-    fill="#C7D2AC"
-    fill-opacity="0.55"
-  />
-  <path
-    d="M0 880 C310 820, 590 960, 960 890 L960 1320 C640 1390, 320 1250, 0 1340 Z"
-    fill="#C7D2AC"
-    fill-opacity="0.5"
-  />
-  <!-- Earthen cart paths leading toward the citadel -->
-  <path
-    d="M0 740 C160 720, 260 640, 380 540"
-    stroke="#C99A2E"
-    stroke-opacity="0.32"
-    stroke-width="26"
-    stroke-linecap="round"
-  />
-  <path
-    d="M180 1600 C240 1320, 300 1080, 390 820"
-    stroke="#C99A2E"
-    stroke-opacity="0.28"
-    stroke-width="22"
-    stroke-linecap="round"
-  />
-  <!-- Subtle grass tuft dots seen from above -->
-  <g fill="#5E5148" fill-opacity="0.18">
-    <circle cx="140" cy="260" r="18" />
-    <circle cx="165" cy="272" r="12" />
-    <circle cx="220" cy="480" r="16" />
-    <circle cx="110" cy="960" r="22" />
-    <circle cx="138" cy="975" r="14" />
-    <circle cx="290" cy="1180" r="18" />
-    <circle cx="460" cy="1380" r="20" />
+
+  <!-- Full-cover sunlit terrain base -->
+  <rect x="0" y="0" width="960" height="1600" fill="url(#dat-co-base)" />
+  <rect x="0" y="0" width="960" height="1600" fill="url(#dat-co-grass-pat)" />
+
+  <!-- Soft terraced fields (far upper plain & lower meadows) -->
+  <path d="M0 140 C240 95, 510 190, 760 135 L960 165 L960 540 C680 605, 360 490, 0 565 Z" fill="url(#dat-co-terrace-a)" />
+  <path d="M0 140 C240 95, 510 190, 760 135 L960 165" stroke="#F6EFE4" stroke-opacity="0.48" stroke-width="3" />
+
+  <path d="M0 640 C290 595, 620 710, 960 635 L960 1120 C670 1195, 330 1075, 0 1150 Z" fill="#C2CE9F" fill-opacity="0.48" />
+  <path d="M0 910 C310 855, 610 985, 960 915 L960 1600 L0 1600 Z" fill="url(#dat-co-terrace-b)" />
+  <path d="M0 910 C310 855, 610 985, 960 915" stroke="#EEF3DF" stroke-opacity="0.4" stroke-width="3" />
+
+  <!-- Subtle paddy bund ridges -->
+  <g stroke="#8E9E6E" stroke-opacity="0.35" stroke-width="4" stroke-linecap="round">
+    <path d="M40 430 C210 410, 340 450, 520 432" />
+    <path d="M620 480 C740 462, 850 488, 960 475" />
+    <path d="M0 1220 C190 1190, 390 1255, 580 1225" />
+    <path d="M640 1330 C760 1305, 860 1345, 960 1325" />
   </g>
+
+  <!-- Winding earthen paths with shaded lower shoulder and lit upper rim -->
+  <path d="M-20 820 C130 795, 225 715, 335 615" stroke="#7A6542" stroke-opacity="0.22" stroke-width="36" stroke-linecap="round" />
+  <path d="M-20 812 C130 787, 225 707, 335 607" stroke="url(#dat-co-path)" stroke-opacity="0.72" stroke-width="26" stroke-linecap="round" />
+
+  <path d="M210 1620 C275 1355, 345 1135, 455 915" stroke="#7A6542" stroke-opacity="0.22" stroke-width="40" stroke-linecap="round" />
+  <path d="M204 1620 C269 1355, 339 1135, 449 915" stroke="url(#dat-co-path)" stroke-opacity="0.76" stroke-width="28" stroke-linecap="round" />
+  <path d="M198 1618 C263 1353, 333 1133, 443 913" stroke="#F6EFE4" stroke-opacity="0.38" stroke-width="3" stroke-linecap="round" />
+
+  <path d="M980 1260 C820 1180, 670 1075, 535 920" stroke="#7A6542" stroke-opacity="0.18" stroke-width="30" stroke-linecap="round" />
+  <path d="M980 1254 C820 1174, 670 1069, 535 914" stroke="url(#dat-co-path)" stroke-opacity="0.65" stroke-width="20" stroke-linecap="round" />
+
+  <!-- Top-down sculpted tree/shrub clusters with soft cast shadows -->
+  <g>
+    <ellipse cx="132" cy="495" rx="34" ry="22" fill="#464E35" fill-opacity="0.22" />
+    <circle cx="118" cy="482" r="24" fill="#7D915E" />
+    <circle cx="110" cy="474" r="16" fill="#9BB077" />
+
+    <ellipse cx="835" cy="560" rx="38" ry="24" fill="#464E35" fill-opacity="0.22" />
+    <circle cx="820" cy="546" r="27" fill="#758A57" />
+    <circle cx="810" cy="537" r="18" fill="#95AA71" />
+
+    <ellipse cx="148" cy="1070" rx="44" ry="28" fill="#464E35" fill-opacity="0.24" />
+    <circle cx="130" cy="1054" r="30" fill="#6F8452" />
+    <circle cx="118" cy="1043" r="20" fill="#8FA66B" />
+    <circle cx="164" cy="1068" r="18" fill="#7D915E" />
+
+    <ellipse cx="808" cy="1395" rx="46" ry="28" fill="#464E35" fill-opacity="0.24" />
+    <circle cx="790" cy="1378" r="32" fill="#6D8250" />
+    <circle cx="778" cy="1366" r="21" fill="#8EA569" />
+  </g>
+
+  <!-- Subtle atmospheric haze at the far top -->
+  <rect x="0" y="0" width="960" height="420" fill="url(#dat-co-haze)" />
 </svg>

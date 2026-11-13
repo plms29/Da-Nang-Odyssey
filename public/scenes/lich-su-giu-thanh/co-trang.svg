@@ -1,23 +1,71 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" fill="none">
   <defs>
-    <linearGradient id="bannerRed" x1="20" y1="80" x2="900" y2="360" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#A84825" />
-      <stop offset="60%" stop-color="#C2562D" />
-      <stop offset="100%" stop-color="#A84825" />
+    <linearGradient id="co-trang-pole" x1="20" y1="40" x2="54" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#8A6E4E" />
+      <stop offset="38%" stop-color="#3B2E26" />
+      <stop offset="100%" stop-color="#1A1512" />
     </linearGradient>
+    <radialGradient id="co-trang-finial" cx="0.38" cy="0.32" r="0.65">
+      <stop offset="0%" stop-color="#FFF2C2" />
+      <stop offset="45%" stop-color="#D7A73B" />
+      <stop offset="100%" stop-color="#7B5614" />
+    </radialGradient>
+    <linearGradient id="co-trang-gold-trim" x1="46" y1="60" x2="900" y2="380" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EFC965" />
+      <stop offset="45%" stop-color="#C99A2E" />
+      <stop offset="75%" stop-color="#8F6717" />
+      <stop offset="100%" stop-color="#DFB64E" />
+    </linearGradient>
+    <linearGradient id="co-trang-silk" x1="56" y1="80" x2="880" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#C8552E" />
+      <stop offset="28%" stop-color="#DC673B" />
+      <stop offset="52%" stop-color="#9A3618" />
+      <stop offset="76%" stop-color="#CC5830" />
+      <stop offset="100%" stop-color="#8E3015" />
+    </linearGradient>
+    <pattern id="co-trang-weave-pat" width="16" height="16" patternUnits="userSpaceOnUse">
+      <path d="M0 8 H16 M8 0 V16" stroke="#FFF4DF" stroke-opacity="0.09" stroke-width="1" />
+    </pattern>
   </defs>
-  <!-- Flagpole along the left edge (the pivot side for animate="flag") -->
-  <rect x="8" y="40" width="28" height="580" rx="14" fill="#1F1A17" />
-  <circle cx="22" cy="36" r="24" fill="#C99A2E" />
-  <!-- Waving traditional battle flag with gold border and scalloped flame edge -->
+
+  <!-- Soft shadow cast by banner onto courtyard below-right -->
+  <path d="M54 440 C240 420, 480 480, 860 440 L790 500 C480 530, 240 475, 54 510 Z" fill="#2D241E" fill-opacity="0.18" />
+
+  <!-- Flagpole anchored cleanly on the LEFT edge (pivot side for animate="flag") -->
+  <rect x="20" y="54" width="30" height="492" rx="15" fill="url(#co-trang-pole)" />
+  <rect x="24" y="64" width="5" height="472" rx="2.5" fill="#DFC9A8" fill-opacity="0.4" />
+  <circle cx="35" cy="40" r="24" fill="url(#co-trang-finial)" />
+
+  <!-- Outer fluttering banner with sculpted gold brocade border -->
   <path
-    d="M34 76 C260 32, 480 148, 860 88 L790 165 L885 232 L785 300 L865 372 C485 425, 260 315, 34 364 Z"
-    fill="#C99A2E"
+    d="M46 82 C250 42, 470 144, 885 88 L816 168 L905 228 L808 292 L882 362 C475 412, 250 314, 46 356 Z"
+    fill="url(#co-trang-gold-trim)"
+  />
+  <!-- Rim light along upper fluttering edge -->
+  <path
+    d="M46 82 C250 42, 470 144, 885 88"
+    stroke="#FFF3CF"
+    stroke-opacity="0.72"
+    stroke-width="3.5"
+    stroke-linecap="round"
+  />
+
+  <!-- Inner crimson-terracotta silk field -->
+  <path
+    d="M62 108 C255 72, 465 168, 825 118 L770 174 L842 228 L766 282 L828 336 C465 380, 255 288, 62 328 Z"
+    fill="url(#co-trang-silk)"
   />
   <path
-    d="M52 104 C260 68, 470 172, 800 120 L745 175 L820 232 L742 288 L805 344 C470 390, 260 286, 52 332 Z"
-    fill="url(#bannerRed)"
+    d="M62 108 C255 72, 465 168, 825 118 L770 174 L842 228 L766 282 L828 336 C465 380, 255 288, 62 328 Z"
+    fill="url(#co-trang-weave-pat)"
   />
-  <!-- Central gold emblem disc -->
-  <circle cx="395" cy="222" r="56" fill="#C99A2E" />
+
+  <!-- Soft 3D cloth fold highlights and shadow valleys -->
+  <path d="M210 96 C265 92, 315 112, 355 128 L330 330 C285 314, 235 298, 195 304 Z" fill="#F8E7CA" fill-opacity="0.14" />
+  <path d="M495 136 C545 142, 595 142, 645 134 L625 344 C575 354, 525 352, 475 344 Z" fill="#3B1408" fill-opacity="0.22" />
+
+  <!-- Central gold emblem disc with inner sun-ring -->
+  <circle cx="408" cy="222" r="56" fill="url(#co-trang-finial)" />
+  <circle cx="408" cy="222" r="42" stroke="#9B3819" stroke-opacity="0.55" stroke-width="5" />
+  <circle cx="408" cy="222" r="20" fill="#B54A24" />
 </svg>

@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { motion, useAnimate, useReducedMotion } from "motion/react";
+import { GlowButton } from "@/components/fx/GlowButton";
 import { checkOrder } from "@/lib/activities/scoring";
+import { haptic } from "@/lib/haptics";
 import type { OrderStation as OrderStationType, StationResult } from "@/lib/types";
 import { deterministicShuffle } from "../shuffle";
 import { useAttempt } from "../useAttempt";
@@ -34,6 +36,7 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
   function moveItem(index: number, delta: -1 | 1) {
     const target = index + delta;
     if (target < 0 || target >= items.length) return;
+    haptic("tap");
     setFeedback(null);
     setLastMovedId(items[index].id);
     setItems((prev) => {
@@ -49,6 +52,7 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
     if (checkOrder(station, items.map((item) => item.id))) {
       setFeedback(null);
       setCorrectPop(true);
+      haptic("success");
       if (!reduced && scope.current) {
         animate(scope.current, { scale: [1, 1.03, 1] }, { duration: 0.35 });
       }
@@ -56,6 +60,7 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
       return;
     }
     addWrong();
+    haptic("error");
     if (!reduced && scope.current) {
       animate(scope.current, { x: [0, -8, 8, -6, 6, 0] }, { duration: 0.3 });
     }
@@ -71,8 +76,10 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
 
   return (
     <section
-      className={`rounded-lg border border-ink/15 bg-white/80 p-4 ${
-        correctPop ? "ring-2 ring-gold ring-offset-2" : ""
+      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
+        correctPop
+          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+          : ""
       }`}
     >
       <p className="text-base font-medium leading-relaxed text-ink">
@@ -93,7 +100,9 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
                   : { type: "spring", stiffness: 420, damping: 34 }
               }
               className={`flex items-center justify-between gap-2 rounded-md border border-ink/15 bg-sand/60 px-3 py-2 ${
-                isLastMoved ? "shadow-md" : ""
+                isLastMoved
+                  ? "ring-1 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+                  : ""
               }`}
             >
               <span className="text-sm font-medium text-ink">
@@ -134,13 +143,13 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
       )}
 
       <div className="mt-4">
-        <button
+        <GlowButton
           type="button"
           onClick={handleCheck}
           className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Kiểm tra
-        </button>
+        </GlowButton>
       </div>
 
       <HintBox

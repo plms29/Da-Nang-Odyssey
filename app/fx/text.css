@@ -55,3 +55,31 @@
   90% { opacity: 1; clip-path: inset(70% 0 5% 0); transform: translate(2px, 0); }
   100% { opacity: 0; clip-path: inset(100% 0 0 0); transform: translate(0, 0); }
 }
+
+/* V0b — Fade-up & blur chạy ngay bằng CSS khi paint, không đợi hydrate/IO. */
+.fx-reveal-up {
+  animation: fx-reveal-up 380ms var(--fx-ease-out) both;
+  animation-delay: var(--fx-delay, 0s);
+}
+
+.fx-reveal-blur {
+  animation: fx-reveal-blur 380ms var(--fx-ease-out) both;
+  animation-delay: var(--fx-delay, 0s);
+}
+
+@keyframes fx-reveal-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes fx-reveal-blur {
+  from { opacity: 0; filter: blur(8px); }
+  to { opacity: 1; filter: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-reveal-up,
+  .fx-reveal-blur {
+    animation-delay: 0s;
+  }
+}

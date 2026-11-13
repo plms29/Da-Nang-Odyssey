@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
-import { TextReveal } from "@/components/fx/TextReveal";
+import { KineticText } from "@/components/fx/KineticText";
 
 export interface PageHeaderProps {
   title: string;
@@ -18,9 +19,41 @@ export function PageHeader({
   backLabel = "Trang chủ",
 }: PageHeaderProps) {
   const reduce = useReducedMotion();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const next = window.scrollY > 8;
+      setScrolled((prev) => (prev === next ? prev : next));
+    };
+
+    const onScroll = () => {
+      if (!frame) {
+        frame = window.requestAnimationFrame(update);
+      }
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+    };
+  }, []);
 
   return (
-    <header className="mb-6">
+    <header
+      className={`-mx-4 mb-6 px-4 py-2 transition-[background-color,box-shadow,border-color] duration-200 ${
+        scrolled
+          ? "sticky top-0 z-30 rounded-b-2xl border-b border-white/50 bg-sand/65 shadow-sm backdrop-blur-[18px] backdrop-saturate-[1.6]"
+          : "border-b border-transparent"
+      }`}
+    >
       {backHref && (
         <Link
           href={backHref}
@@ -41,9 +74,9 @@ export function PageHeader({
           <span>{backLabel}</span>
         </Link>
       )}
-      <TextReveal mode="fade-up" as="h1" className="text-2xl font-bold tracking-tight text-ink">
+      <KineticText as="h1" className="text-2xl font-bold tracking-tight text-ink">
         {title}
-      </TextReveal>
+      </KineticText>
       {subtitle && (
         <motion.p
           initial={{ opacity: 0 }}

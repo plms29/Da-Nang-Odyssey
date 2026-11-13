@@ -2,6 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { GlowButton } from "@/components/fx/GlowButton";
+import { haptic } from "@/lib/haptics";
 import type {
   ExpressStation as ExpressStationType,
   JudgeResult,
@@ -54,17 +56,21 @@ export function ExpressStation({
           typeof data?.error === "string"
             ? data.error
             : "Không chấm được bài, thử lại nhé.";
+        haptic("error");
         setError(message);
         return;
       }
 
       if (!Array.isArray(data?.criteria)) {
+        haptic("error");
         setError("Không chấm được bài, thử lại nhé.");
         return;
       }
 
+      haptic("success");
       setJudgeResult(data as JudgeResult);
     } catch {
+      haptic("error");
       setError("Lỗi kết nối mạng");
     } finally {
       setLoading(false);
@@ -73,8 +79,10 @@ export function ExpressStation({
 
   return (
     <section
-      className={`rounded-lg border border-ink/15 bg-white/80 p-4 ${
-        solvedGlow ? "ring-2 ring-gold ring-offset-2" : ""
+      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
+        solvedGlow
+          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+          : ""
       }`}
     >
       <p className="text-base font-medium leading-relaxed text-ink">
@@ -127,13 +135,13 @@ export function ExpressStation({
           )}
 
           <div className="flex flex-wrap items-center gap-3">
-            <button
+            <GlowButton
               type="submit"
               disabled={loading || text.trim().length === 0}
               className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? "Đang chấm…" : "Nộp bài"}
-            </button>
+            </GlowButton>
 
             {loading && (
               <div
@@ -259,6 +267,7 @@ export function ExpressStation({
           <button
             type="button"
             onClick={() => {
+              haptic("tap");
               setSolvedGlow(true);
               onDone(judgeResult);
             }}
