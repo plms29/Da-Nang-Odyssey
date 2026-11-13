@@ -129,12 +129,17 @@ export interface JudgeResult {
   praise: string;
   addition: string;
   graded_by: "gemini" | "fallback";
+  /** Gemini's transcript of a voice answer, when one was sent. */
+  transcript?: string;
 }
 
 export interface JudgeRequest {
   level_id: string;
   station_id: string;
+  /** May be empty when `audio` is sent. */
   text: string;
+  /** Voice answer (KH mục 7). Never stored or logged; forwarded to Gemini then dropped. */
+  audio?: { mime: string; data_base64: string };
 }
 
 export type StampKind = "level" | "tour" | "visited";
