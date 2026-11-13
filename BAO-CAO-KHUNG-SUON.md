@@ -1,4 +1,27 @@
-# Báo cáo giai đoạn A: Khung sườn sản phẩm
+# Báo cáo tiến độ
+
+## Đợt B1: Photobooth check-in, hộ chiếu, hạ tầng
+
+**Kết quả phải có của giai đoạn 2 (KH mục 11):** "Ảnh check-in có khung và dấu, tải về được". Code đã đủ: chạy được trên trình duyệt đến bước mở camera. Chưa chụp thử thật vì khung trình duyệt trong app chặn camera; **cần thử trên điện thoại qua HTTPS** (URL Cloud Run).
+
+| Task | Worker | Review | Vòng sửa | Đã kiểm tra |
+| --- | --- | --- | --- | --- |
+| T6 trang hộ chiếu (F9) | `ui-hydrogen` | Duyệt kèm 3 mục nên sửa | 1 | Đọc đúng dữ liệu trên máy (dấu màn 1, 2 sao, 200 điểm), không lệch hydration |
+| T7 photobooth (F7) | `ui-argon-high` | Yêu cầu sửa 6 mục (iOS `videoWidth`, nạp phông đậm cho canvas, đọc đếm ngược, dấu "Ghé thăm trực tuyến" quá nhỏ, rò rỉ URL) | 1 (worker lỗi mạng lúc kết thúc; Claude kiểm từng mục trong code, đủ cả 7) | tsc, lint; mở được bước xin quyền camera |
+| T8 luồng check-in (F8) | `ui-hydrogen-high` | Duyệt kèm 3 mục nên sửa | 1 | `?demo=bao-tang-cham` → "Bạn đang ở Bảo tàng Điêu khắc Chăm" → PhotoBooth; từ chối camera hiện đúng lời nhắc |
+| T9 Dockerfile, CI, hướng dẫn Cloud Run (I1) | Claude (main) | — | — | `npm run build` với `output: "standalone"`; **chưa build được Docker image** vì Docker Desktop trên máy chưa chạy |
+
+Kiểm tra chung: 44 test qua, tsc, lint, build sạch.
+
+**Đã sửa thêm:** Vitest từng chạy cả test trong `.claude/worktrees/` của một phiên khác (86 test thay vì 44); đã loại thư mục này.
+
+**Việc của bạn sau đợt B1:**
+1. Deploy theo [DEPLOY.md](DEPLOY.md) (cần `PROJECT_ID` và quyền Google Cloud của bạn), rồi mở `https://<URL>/photobooth?demo=bao-tang-cham` trên iPhone và Android để chụp thử.
+2. Khung ảnh hiện vẽ bằng code theo chủ đề (CK-04 dạng tạm); đội nội dung vẽ khung PNG thật sau.
+
+---
+
+# Giai đoạn A: Khung sườn sản phẩm
 
 Ngày 13/11/2026 · Repo: https://github.com/plms29/Da-Nang-Odyssey (nhánh `main`)
 
