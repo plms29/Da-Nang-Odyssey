@@ -1,0 +1,47 @@
+[
+  {
+    "id": "bao-tang-cham",
+    "name": "Bảo tàng Điêu khắc Chăm",
+    "theme": "di-san-cham",
+    "checkin": { "lat": 0.0, "lng": 0.0, "radius_m": 200 },
+    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về bảo tàng: lịch sử hình thành, hiện vật tiêu biểu. Đội nội dung điền sau khi đối chiếu hai nguồn.",
+    "tour_seconds": 60,
+    "route_order": 1,
+    "image": "images/bao-tang-cham.jpg",
+    "frame": "frames/bao-tang-cham.png",
+    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho Bảo tàng Điêu khắc Chăm.",
+    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho Bảo tàng Điêu khắc Chăm.",
+    "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }],
+    "status": "draft"
+  },
+  {
+    "id": "thanh-dien-hai",
+    "name": "Thành Điện Hải",
+    "theme": "lich-su-giu-thanh",
+    "checkin": { "lat": 0.0, "lng": 0.0, "radius_m": 200 },
+    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về thành Điện Hải. Đội nội dung điền sau khi đối chiếu hai nguồn.",
+    "tour_seconds": 60,
+    "route_order": 2,
+    "image": "images/thanh-dien-hai.jpg",
+    "frame": "frames/thanh-dien-hai.png",
+    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho Thành Điện Hải.",
+    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho Thành Điện Hải.",
+    "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }],
+    "status": "draft"
+  },
+  {
+    "id": "diem-bai-choi",
+    "name": "[Địa điểm diễn bài chòi — đội xác minh]",
+    "theme": "nghe-thuat-dan-gian",
+    "checkin": { "lat": 0.0, "lng": 0.0, "radius_m": 200 },
+    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về nghệ thuật bài chòi và nơi diễn. Đội nội dung điền sau khi xác minh địa điểm và lịch diễn.",
+    "tour_seconds": 60,
+    "route_order": 3,
+    "image": "images/diem-bai-choi.jpg",
+    "frame": "frames/diem-bai-choi.png",
+    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho điểm bài chòi.",
+    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho điểm bài chòi.",
+    "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }],
+    "status": "draft"
+  }
+]

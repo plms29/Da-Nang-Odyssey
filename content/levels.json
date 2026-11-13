@@ -1,0 +1,111 @@
+[
+  {
+    "id": "man-1-dau-an-cham",
+    "order": 1,
+    "title": "Dấu ấn Chăm",
+    "spot_ids": ["bao-tang-cham"],
+    "intro": { "text": "[CHỜ KIỂM CHỨNG] Truyện dẫn cố định khoảng 30 giây cho màn Dấu ấn Chăm.", "audio": "audio/man-1-intro.mp3" },
+    "stations": [
+      {
+        "id": "tim", "type": "map_pin",
+        "clue": "[CHỜ KIỂM CHỨNG] Manh mối dẫn tới Bảo tàng Điêu khắc Chăm.",
+        "target": { "lat": 0.0, "lng": 0.0, "radius_m": 150 },
+        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+      },
+      {
+        "id": "lam", "type": "jigsaw",
+        "instruction": "Ghép các mảnh để hoàn thiện phù điêu.",
+        "image": "images/man-1-phu-dieu.jpg", "grid": [3, 3],
+        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+      },
+      {
+        "id": "the-hien", "type": "open_text_or_voice",
+        "prompt": "Thuyết minh viên 30 giây: giới thiệu hiện vật vừa ghép cho một du khách.",
+        "max_seconds": 30, "max_chars": 600,
+        "rubric": [
+          { "id": "dung", "desc": "Không trái với kho tri thức" },
+          { "id": "du-y", "desc": "Nêu đủ ba ý bắt buộc", "must_include": ["[ý 1]", "[ý 2]", "[ý 3]"] },
+          { "id": "de-hieu", "desc": "Diễn đạt dễ hiểu với người chưa biết" }
+        ]
+      }
+    ],
+    "reveal": { "text": "[CHỜ KIỂM CHỨNG] Phần mở khóa tri thức của màn 1.", "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }] },
+    "status": "draft"
+  },
+  {
+    "id": "man-2-giu-thanh",
+    "order": 2,
+    "title": "Giữ thành",
+    "spot_ids": ["thanh-dien-hai"],
+    "intro": { "text": "[CHỜ KIỂM CHỨNG] Truyện dẫn cố định cho màn Giữ thành.", "audio": "audio/man-2-intro.mp3" },
+    "stations": [
+      {
+        "id": "tim", "type": "map_pin",
+        "clue": "[CHỜ KIỂM CHỨNG] Manh mối dẫn tới thành bên sông Hàn.",
+        "target": { "lat": 0.0, "lng": 0.0, "radius_m": 150 },
+        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+      },
+      {
+        "id": "lam", "type": "order",
+        "instruction": "Xếp các sự kiện vào đúng dòng thời gian.",
+        "items": [
+          { "id": "su-kien-1", "label": "[Sự kiện 1 — chờ kiểm chứng]" },
+          { "id": "su-kien-2", "label": "[Sự kiện 2 — chờ kiểm chứng]" },
+          { "id": "su-kien-3", "label": "[Sự kiện 3 — chờ kiểm chứng]" },
+          { "id": "su-kien-4", "label": "[Sự kiện 4 — chờ kiểm chứng]" }
+        ],
+        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+      },
+      {
+        "id": "the-hien", "type": "open_text_or_voice",
+        "prompt": "Lá thư từ thành: viết 3 đến 4 câu trong vai một người giữ thành.",
+        "max_chars": 600,
+        "rubric": [
+          { "id": "dung", "desc": "Không trái với kho tri thức" },
+          { "id": "du-y", "desc": "Nhắc đủ các ý bắt buộc", "must_include": ["[ý 1]", "[ý 2]"] },
+          { "id": "nhap-vai", "desc": "Giữ đúng vai người giữ thành" }
+        ]
+      }
+    ],
+    "reveal": { "text": "[CHỜ KIỂM CHỨNG] Phần mở khóa tri thức của màn 2.", "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }] },
+    "status": "draft"
+  },
+  {
+    "id": "man-3-ho-bai-choi",
+    "order": 3,
+    "title": "Hô bài chòi",
+    "spot_ids": ["diem-bai-choi"],
+    "intro": { "text": "[CHỜ KIỂM CHỨNG] Truyện dẫn cố định cho màn Hô bài chòi.", "audio": "audio/man-3-intro.mp3" },
+    "stations": [
+      {
+        "id": "tim", "type": "map_pin",
+        "clue": "[CHỜ KIỂM CHỨNG] Manh mối dẫn tới nơi diễn bài chòi.",
+        "target": { "lat": 0.0, "lng": 0.0, "radius_m": 150 },
+        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+      },
+      {
+        "id": "lam", "type": "match",
+        "instruction": "Ghép mỗi con bài với câu hô của nó.",
+        "pairs": [
+          { "id": "con-bai-1", "left": "[Con bài 1]", "right": "[Câu hô 1 — chờ kiểm chứng]" },
+          { "id": "con-bai-2", "left": "[Con bài 2]", "right": "[Câu hô 2 — chờ kiểm chứng]" },
+          { "id": "con-bai-3", "left": "[Con bài 3]", "right": "[Câu hô 3 — chờ kiểm chứng]" }
+        ],
+        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+      },
+      {
+        "id": "the-hien", "type": "open_text_or_voice",
+        "prompt": "Hô một câu bài chòi theo câu mẫu (ghi âm tối đa 20 giây, hoặc gõ chữ).",
+        "sample": "[Câu mẫu — chờ kiểm chứng]",
+        "max_seconds": 20, "max_chars": 300,
+        "rubric": [
+          { "id": "dung-loi", "desc": "Đúng lời câu mẫu" },
+          { "id": "ro-tieng", "desc": "Rõ tiếng, nghe được từng chữ" },
+          { "id": "ngat-nhip", "desc": "Có ngắt nhịp theo câu hô" }
+        ]
+      }
+    ],
+    "reveal": { "text": "[CHỜ KIỂM CHỨNG] Phần mở khóa tri thức của màn 3.", "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }] },
+    "status": "draft"
+  }
+]
