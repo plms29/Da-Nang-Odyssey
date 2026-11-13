@@ -103,3 +103,21 @@ Công cụ có sẵn trong phiên: Higgsfield (tạo ảnh, xóa nền), Canva. 
 - Con quay trên iOS cần HTTPS. Thử qua `localhost` trên máy tính không kiểm được phần này.
 - Khúc xạ kính chỉ có trên Chromium. Safari thấy kính mờ thường.
 - Worker Gemini dễ bị chặn quyền khi tự chạy lệnh. Đã có cách tránh (mục 5).
+
+## 8. Kết quả thực hiện (cập nhật cuối phiên)
+
+Đã xong và qua `tsc`, `eslint`, 61 test, `next build` (JS dùng chung 103KB, trang màn chơi 191KB First Load):
+V0b, V0c, V1 (shader WebGL), V2 (nghiêng), V3 (kính + nút phát sáng), V4 (chữ động học), V5 (ăn mừng 2.0 + rung), V7 (cảnh 2.0: trời shader, parallax nghiêng, tia sáng, hiệu ứng nền đậm hơn), V8 (trang chủ), V9 (thẻ phóng to khi vào màn), V10a, V10b, V11 (hộ chiếu ánh kim), V12 (thanh điều hướng kính), K1 (ghép kit bằng tranh AI).
+
+Tranh AI đã có (Gemini, gói của chủ máy): `di-san-cham` đủ 5 lớp, `nghe-thuat-dan-gian` đủ 5 lớp, `home` 3/5 lớp (trời, núi Sơn Trà, thành phố). Còn thiếu: `home` cầu Rồng + bờ sông, `lich-su-giu-thanh` bản đồ + đại bác + cờ. Hạn mức tạo ảnh hết lúc 10:55 UTC (17:55 giờ Việt Nam). Tạo lại: xem mục dưới.
+
+Bỏ: V6a (vẽ lại SVG home + Chăm): tranh AI thay thế.
+
+### Chưa kiểm chứng (cần xem trên trình duyệt thật hoặc điện thoại)
+- Khung Browser trong app bị ẩn nên animation bị trình duyệt làm chậm, không đo được tốc độ thật và hiệu ứng phóng to thẻ.
+- Khi tab bị ẩn giữa lúc phóng to, lớp phủ có thể kẹt (không chặn bấm, chỉ hiện sai chỗ): dọn bằng requestAnimationFrame nên tạm dừng khi tab ẩn. Nên sửa bằng setTimeout.
+- Con quay iOS cần HTTPS; rung chỉ có trên Android.
+- Hiệu năng trên máy yếu (WebGL + backdrop-filter): chưa đo.
+
+### Cách tạo nốt ảnh còn thiếu
+Khi hạn mức hồi: gọi lại worker tạo ảnh cho `home` (cau-rong, bo-song) và `lich-su-giu-thanh` (map, dai-bao, co), lưu JPG vào `.art-raw/<kit>/<layer>.jpg`, rồi `node scripts/gen-scene-art.mjs --kit <kit>` để tách nền magenta và đổi sang WebP. Sau đó cập nhật `lib/scene/kits/*.ts` dùng các file `ai-*.webp` mới.
