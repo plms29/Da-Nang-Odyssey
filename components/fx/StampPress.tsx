@@ -23,7 +23,7 @@ export function StampPress(props: {
       <span
         className={
           shouldAnimate
-            ? "relative inline-block -rotate-3 fx-stamp-press-active"
+            ? "relative inline-block fx-stamp-press-active"
             : "relative inline-block -rotate-3"
         }
       >

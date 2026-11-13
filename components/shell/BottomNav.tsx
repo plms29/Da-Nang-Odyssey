@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
 
 interface NavItem {
@@ -9,6 +10,8 @@ interface NavItem {
   label: string;
   icon: ReactNode;
 }
+
+const MotionLink = motion.create(Link);
 
 const navItems: NavItem[] = [
   {
@@ -92,6 +95,7 @@ const navItems: NavItem[] = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const reduce = useReducedMotion();
 
   return (
     <nav
@@ -105,18 +109,29 @@ export function BottomNav() {
 
           return (
             <li key={item.href}>
-              <Link
+              <MotionLink
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
-                className={`flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-1 rounded-md px-2 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
+                whileTap={reduce ? undefined : { scale: 0.94 }}
+                className={`relative flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-1 rounded-md px-2 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
                   isActive
                     ? "text-terracotta"
                     : "text-muted hover:text-ink"
                 }`}
               >
-                {item.icon}
-                <span>{item.label}</span>
-              </Link>
+                {isActive && (
+                  <motion.span
+                    layoutId={reduce ? undefined : "nav-indicator"}
+                    transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                    className="absolute inset-0 rounded-md bg-terracotta/12"
+                    aria-hidden="true"
+                  />
+                )}
+                <span className="relative flex flex-col items-center gap-1">
+                  {item.icon}
+                  <span>{item.label}</span>
+                </span>
+              </MotionLink>
             </li>
           );
         })}

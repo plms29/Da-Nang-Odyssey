@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { motion, useReducedMotion } from "motion/react";
 import { countStamps } from "@/lib/passport/logic";
 import { usePassport } from "@/lib/passport/store";
-import type { Level, Spot } from "@/lib/types";
+import type { Level, Spot, StampKind } from "@/lib/types";
+import { CountUp } from "./CountUp";
 import { StampCard } from "./StampCard";
 
 export interface PassportViewProps {
@@ -12,8 +14,47 @@ export interface PassportViewProps {
   levels: Level[];
 }
 
+const SEEN_STORAGE_KEY = "passport-seen";
+
+const gridVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.06,
+    },
+  },
+};
+
+function readSeenSet(): Set<string> {
+  try {
+    const raw = sessionStorage.getItem(SEEN_STORAGE_KEY);
+    if (!raw) return new Set();
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return new Set();
+    return new Set(
+      parsed.filter((item): item is string => typeof item === "string"),
+    );
+  } catch {
+    return new Set();
+  }
+}
+
+function writeSeenSet(seen: Set<string>): void {
+  try {
+    sessionStorage.setItem(SEEN_STORAGE_KEY, JSON.stringify(Array.from(seen)));
+  } catch {
+    // Ignore storage errors (blocked or quota exceeded).
+  }
+}
+
 export function PassportView({ spots, levels }: PassportViewProps) {
   const [hydrated, setHydrated] = useState(false);
+  const reducedMotion = Boolean(useReducedMotion());
+  const [freshBySpot, setFreshBySpot] = useState<
+    Record<string, Partial<Record<StampKind, boolean>>>
+  >({});
+  const computedFreshRef = useRef(false);
+  const seenSetRef = useRef<Set<string>>(new Set());
 
   const stamps = usePassport((s) => s.stamps);
   const levelProgress = usePassport((s) => s.levels);
@@ -23,6 +64,61 @@ export function PassportView({ spots, levels }: PassportViewProps) {
     const done = () => setHydrated(true);
     if (usePassport.persist.hasHydrated()) done();
     return usePassport.persist.onFinishHydration(done);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated || computedFreshRef.current) return;
+    computedFreshRef.current = true;
+
+    const seen = readSeenSet();
+    seenSetRef.current = seen;
+
+    const nextFresh: Record<string, Partial<Record<StampKind, boolean>>> = {};
+    const freshKeys: string[] = [];
+
+    for (const spot of spots) {
+      const stamp = stamps[spot.id];
+      if (!stamp) continue;
+
+      const spotFresh: Partial<Record<StampKind, boolean>> = {};
+      const kinds: StampKind[] = [];
+      if (stamp.level) kinds.push("level");
+      if (stamp.tour) kinds.push("tour");
+      if (stamp.visited) kinds.push("visited");
+
+      for (const kind of kinds) {
+        const key = `${spot.id}:${kind}`;
+        if (!seen.has(key)) {
+          spotFresh[kind] = true;
+          freshKeys.push(key);
+        }
+      }
+
+      if (Object.keys(spotFresh).length > 0) {
+        nextFresh[spot.id] = spotFresh;
+      }
+    }
+
+    if (reducedMotion) {
+      if (freshKeys.length > 0) {
+        for (const key of freshKeys) {
+          seen.add(key);
+        }
+        writeSeenSet(seen);
+      }
+      return;
+    }
+
+    if (freshKeys.length > 0) {
+      setFreshBySpot(nextFresh);
+    }
+  }, [hydrated, reducedMotion, spots, stamps]);
+
+  const markSeen = useCallback((spotId: string, kind: StampKind) => {
+    const key = `${spotId}:${kind}`;
+    if (seenSetRef.current.has(key)) return;
+    seenSetRef.current.add(key);
+    writeSeenSet(seenSetRef.current);
   }, []);
 
   if (!hydrated) {
@@ -68,6 +164,42 @@ export function PassportView({ spots, levels }: PassportViewProps) {
     }
   };
 
+  const emptyStateContent = (
+    <>
+      <p className="font-bold">Hộ chiếu của bạn chưa có con dấu nào.</p>
+      <p className="mt-1 leading-relaxed text-muted">
+        Hãy thử một màn khám phá hoặc ghé điểm di sản để sưu tầm những con dấu
+        đầu tiên trên hành trình Đà Nẵng.
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2.5">
+        <Link
+          href="/kham-pha"
+          className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-4 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+        >
+          Khám phá ngay
+        </Link>
+        <Link
+          href="/photobooth"
+          className="inline-flex min-h-11 items-center justify-center rounded-md bg-river px-4 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+        >
+          Check-in tại điểm
+        </Link>
+      </div>
+    </>
+  );
+
+  const stampCards = spots.map((spot, index) => (
+    <StampCard
+      key={spot.id}
+      spot={spot}
+      stamp={stamps[spot.id]}
+      index={index}
+      fresh={freshBySpot[spot.id]}
+      reduced={reducedMotion}
+      onPressed={(kind) => markSeen(spot.id, kind)}
+    />
+  ));
+
   return (
     <div className="space-y-6">
       <section aria-label="Tổng kết hộ chiếu">
@@ -89,52 +221,48 @@ export function PassportView({ spots, levels }: PassportViewProps) {
           <div className="rounded-lg border border-ink/15 bg-white/80 p-3">
             <p className="text-xs font-semibold text-muted">Điểm hoạt động</p>
             <p className="mt-1 text-xl font-bold text-river">
-              {totalCodeScore}
+              <CountUp value={totalCodeScore} />
             </p>
           </div>
         </div>
       </section>
 
-      {!hasAnyStamp && (
-        <section
-          aria-label="Hộ chiếu chưa có dấu"
-          className="rounded-lg border border-dashed border-gold/80 bg-gold/15 p-4 text-sm text-ink"
-        >
-          <p className="font-bold">Hộ chiếu của bạn chưa có con dấu nào.</p>
-          <p className="mt-1 leading-relaxed text-muted">
-            Hãy thử một màn khám phá hoặc ghé điểm di sản để sưu tầm những con
-            dấu đầu tiên trên hành trình Đà Nẵng.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2.5">
-            <Link
-              href="/kham-pha"
-              className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-4 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
-            >
-              Khám phá ngay
-            </Link>
-            <Link
-              href="/photobooth"
-              className="inline-flex min-h-11 items-center justify-center rounded-md bg-river px-4 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
-            >
-              Check-in tại điểm
-            </Link>
-          </div>
-        </section>
-      )}
+      {!hasAnyStamp &&
+        (reducedMotion ? (
+          <section
+            aria-label="Hộ chiếu chưa có dấu"
+            className="rounded-lg border border-dashed border-gold/80 bg-gold/15 p-4 text-sm text-ink"
+          >
+            {emptyStateContent}
+          </section>
+        ) : (
+          <motion.section
+            aria-label="Hộ chiếu chưa có dấu"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="rounded-lg border border-dashed border-gold/80 bg-gold/15 p-4 text-sm text-ink"
+          >
+            {emptyStateContent}
+          </motion.section>
+        ))}
 
       <section aria-labelledby="stamps-heading" className="space-y-3">
         <h2 id="stamps-heading" className="text-lg font-bold text-ink">
           Dấu theo điểm văn hóa
         </h2>
-        <div className="grid grid-cols-1 gap-3">
-          {spots.map((spot) => (
-            <StampCard
-              key={spot.id}
-              spot={spot}
-              stamp={stamps[spot.id]}
-            />
-          ))}
-        </div>
+        {reducedMotion ? (
+          <div className="grid grid-cols-1 gap-3">{stampCards}</div>
+        ) : (
+          <motion.div
+            className="grid grid-cols-1 gap-3"
+            variants={gridVariants}
+            initial="hidden"
+            animate="show"
+          >
+            {stampCards}
+          </motion.div>
+        )}
       </section>
 
       <section aria-labelledby="levels-heading" className="space-y-3">

@@ -3,17 +3,18 @@
 import {
   motion,
   useReducedMotion,
+  useMotionValueEvent,
   useScroll,
   useTransform,
   type MotionValue,
 } from "motion/react";
-import { type JSX, type ReactNode, useEffect, useState } from "react";
+import { type JSX, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { SceneBackdrop, SceneLayerImg } from "@/components/fx/SceneBackdrop";
 import { Ambient } from "@/components/fx/Ambient";
 import { useInView } from "@/components/fx/useInView";
 import type { SceneKit, SceneLayer } from "@/lib/scene";
 
-const WORLD = 1.7;
+const WORLD = 1.3;
 
 export interface ParallaxSceneProps {
   kit: SceneKit;
@@ -50,20 +51,45 @@ function PanelCard({
   progress: MotionValue<number>;
   children: ReactNode;
 }): JSX.Element {
-  const a = index / (total + 1);
-  const b = (index + 1) / (total + 1);
-  const f = 0.25 / (total + 1);
-  const opacity = useTransform(progress, [a, a + f, b - f, b], [0, 1, 1, 0]);
-  const y = useTransform(progress, [a, a + f], [16, 0]);
+  const s = 1 / (total + 1);
+  const a = index * s;
+  const b = (index + 1) * s;
+  const opacity = useTransform(
+    progress,
+    [a, a + 0.15 * s, b - 0.15 * s, b],
+    // panel 0 is already visible when the intro opens
+    index === 0 ? [1, 1, 1, 0] : [0, 1, 1, 0]
+  );
+  const y = useTransform(
+    progress,
+    [a, a + 0.15 * s],
+    index === 0 ? [0, 0] : [16, 0]
+  );
+  // Write straight to the node: bound via motion `style`, panel 0 stopped receiving updates
+  // (its MotionValue reached 0 while the DOM stayed at 1).
+  const ref = useRef<HTMLDivElement>(null);
+  const apply = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    const o = opacity.get();
+    el.style.opacity = String(o);
+    el.style.transform = `translateY(${y.get()}px)`;
+    el.style.visibility = o > 0.02 ? "visible" : "hidden";
+  }, [opacity, y]);
+  useMotionValueEvent(opacity, "change", apply);
+  useMotionValueEvent(y, "change", apply);
+  useEffect(apply, [apply]);
 
   return (
-    <motion.div
+    <div
+      ref={ref}
       aria-hidden="true"
-      style={{ opacity, y }}
-      className="absolute inset-x-4 bottom-24 rounded-lg bg-sand/85 backdrop-blur-sm p-4 shadow-sm text-ink pointer-events-none"
+      style={{ opacity: index === 0 ? 1 : 0 }}
+      // top-anchored: before the stage sticks it starts below the page header, so a bottom anchor hides under the nav
+      className="absolute inset-x-4 top-[40%] rounded-lg bg-sand/85 backdrop-blur-sm p-4 shadow-sm text-ink pointer-events-none"
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -90,6 +116,7 @@ function StaticScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
 
 function ScrollScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
   const n = panels.length;
+  const s = 1 / (n + 1);
   const [trackRef, active] = useInView<HTMLDivElement>();
   const { scrollYProgress: progress } = useScroll({
     target: trackRef,
@@ -102,13 +129,15 @@ function ScrollScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
     ["0%", `${-((WORLD - 1) / WORLD) * 100}%`]
   );
 
-  const hintOpacity = useTransform(progress, [0, 0.2 / (n + 1)], [1, 0]);
+  const hintOpacity = useTransform(progress, [0, 0.2 * s], [1, 0]);
+  const hintVisibility = useTransform(hintOpacity, (v) =>
+    v > 0.05 ? "visible" : "hidden"
+  );
 
   const ctaStart = n / (n + 1);
-  const ctaFade = 0.25 / (n + 1);
   const ctaOpacity = useTransform(
     progress,
-    [ctaStart, ctaStart + ctaFade, 1],
+    [ctaStart, ctaStart + 0.25 * s, 1],
     [0, 1, 1]
   );
   const ctaPointer = useTransform(ctaOpacity, (v) => (v > 0.5 ? "auto" : "none"));
@@ -156,7 +185,7 @@ function ScrollScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
         <div className="sticky top-0 h-dvh overflow-hidden">
           <motion.div
             aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-[170%] pointer-events-none"
+            className="absolute inset-x-0 top-0 h-[130%] pointer-events-none"
             style={{ y: worldY, background: kit.sky }}
           >
             {kit.layers.map((layer, index) => (
@@ -184,20 +213,22 @@ function ScrollScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
           ))}
 
           <motion.div
-            className="absolute inset-x-4 bottom-24"
+            className="absolute inset-x-4 top-[62%] flex justify-center"
             style={{
               opacity: ctaOpacity,
               pointerEvents: ctaPointer,
               visibility: ctaVisibility,
             }}
           >
-            {cta}
+            <div className="w-full max-w-[400px] rounded-lg bg-sand/85 backdrop-blur-sm p-4 shadow-sm text-ink text-center">
+              {cta}
+            </div>
           </motion.div>
 
           <motion.div
             aria-hidden="true"
-            style={{ opacity: hintOpacity }}
-            className="absolute inset-x-0 bottom-24 flex justify-center pointer-events-none"
+            style={{ opacity: hintOpacity, visibility: hintVisibility }}
+            className="absolute inset-x-0 top-16 flex justify-center pointer-events-none"
           >
             <div className="flex items-center gap-1.5 bg-sand/85 rounded-full px-3 py-1 text-sm text-ink backdrop-blur-sm">
               <span>Cuộn để khám phá</span>

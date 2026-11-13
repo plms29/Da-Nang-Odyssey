@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import type {
   ExpressStation as ExpressStationType,
   JudgeResult,
@@ -17,10 +18,13 @@ export function ExpressStation({
   levelId,
   onDone,
 }: ExpressStationProps) {
+  const prefersReducedMotion = useReducedMotion();
+  const reduced = Boolean(prefersReducedMotion);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [judgeResult, setJudgeResult] = useState<JudgeResult | null>(null);
+  const [solvedGlow, setSolvedGlow] = useState(false);
 
   const textareaId = `${station.id}-answer`;
   const rubricDescById = new Map(
@@ -68,7 +72,11 @@ export function ExpressStation({
   }
 
   return (
-    <section className="rounded-lg border border-ink/15 bg-white/80 p-4">
+    <section
+      className={`rounded-lg border border-ink/15 bg-white/80 p-4 ${
+        solvedGlow ? "ring-2 ring-gold ring-offset-2" : ""
+      }`}
+    >
       <p className="text-base font-medium leading-relaxed text-ink">
         {station.prompt}
       </p>
@@ -118,13 +126,35 @@ export function ExpressStation({
             </p>
           )}
 
-          <button
-            type="submit"
-            disabled={loading || text.trim().length === 0}
-            className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {loading ? "Đang chấm…" : "Nộp bài"}
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="submit"
+              disabled={loading || text.trim().length === 0}
+              className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading ? "Đang chấm…" : "Nộp bài"}
+            </button>
+
+            {loading && (
+              <div
+                aria-hidden="true"
+                className="flex items-center gap-2 text-xs font-medium text-muted"
+              >
+                <motion.span
+                  className="inline-block h-2 w-2 rounded-full bg-gold"
+                  animate={
+                    reduced ? { opacity: 1 } : { opacity: [0.35, 1, 0.35] }
+                  }
+                  transition={
+                    reduced
+                      ? { duration: 0.15 }
+                      : { duration: 1.4, repeat: Infinity, ease: "easeInOut" }
+                  }
+                />
+                <span>Đang chấm…</span>
+              </div>
+            )}
+          </div>
 
           <p aria-live="polite" className="sr-only">
             {loading ? "Đang chấm…" : ""}
@@ -133,36 +163,92 @@ export function ExpressStation({
       ) : (
         <div className="mt-4 space-y-4">
           <ul className="space-y-2">
-            {judgeResult.criteria.map((criterion) => (
-              <li
+            {judgeResult.criteria.map((criterion, index) => (
+              <motion.li
                 key={criterion.id}
+                initial={reduced ? { opacity: 0 } : { opacity: 0, y: 8 }}
+                animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                transition={
+                  reduced
+                    ? { duration: 0.15 }
+                    : { duration: 0.25, delay: index * 0.12 }
+                }
                 className="rounded-md border border-ink/15 bg-sand/60 p-3 text-sm"
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-semibold text-ink">
                     {rubricDescById.get(criterion.id) ?? criterion.id}
                   </span>
-                  <span className="shrink-0 font-bold text-river">
-                    {criterion.score}/3
-                  </span>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <span
+                      aria-hidden="true"
+                      className="flex items-center gap-0.5 text-sm leading-none"
+                    >
+                      {[0, 1, 2].map((starIndex) => {
+                        const filled = starIndex < criterion.score;
+                        return (
+                          <motion.span
+                            key={starIndex}
+                            initial={
+                              reduced
+                                ? { opacity: 0 }
+                                : { scale: 0, opacity: 0 }
+                            }
+                            animate={
+                              reduced
+                                ? { opacity: 1 }
+                                : { scale: 1, opacity: 1 }
+                            }
+                            transition={
+                              reduced
+                                ? { duration: 0.15 }
+                                : {
+                                    type: "spring",
+                                    stiffness: 380,
+                                    damping: 30,
+                                    delay: index * 0.12 + starIndex * 0.08,
+                                  }
+                            }
+                            className={filled ? "text-gold" : "text-ink/25"}
+                          >
+                            {filled ? "★" : "☆"}
+                          </motion.span>
+                        );
+                      })}
+                    </span>
+                    <span className="shrink-0 font-bold text-river">
+                      {criterion.score}/3
+                    </span>
+                  </div>
                 </div>
                 {criterion.evidence && (
                   <p className="mt-1 text-xs text-muted">{criterion.evidence}</p>
                 )}
-              </li>
+              </motion.li>
             ))}
           </ul>
 
-          <div className="space-y-2 rounded-md border border-river/25 bg-white p-3 text-sm">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={
+              reduced
+                ? { duration: 0.15 }
+                : { duration: 0.3, delay: judgeResult.criteria.length * 0.12 }
+            }
+            className="space-y-2 rounded-md border border-river/25 bg-white p-3 text-sm"
+          >
             <p className="text-ink">
               <span className="font-semibold text-river">Nhận xét: </span>
               {judgeResult.praise}
             </p>
             <p className="text-ink">
-              <span className="font-semibold text-terracotta">Gợi mở thêm: </span>
+              <span className="font-semibold text-terracotta">
+                Gợi mở thêm:{" "}
+              </span>
               {judgeResult.addition}
             </p>
-          </div>
+          </motion.div>
 
           {judgeResult.graded_by === "fallback" && (
             <p className="text-xs text-muted">
@@ -172,7 +258,10 @@ export function ExpressStation({
 
           <button
             type="button"
-            onClick={() => onDone(judgeResult)}
+            onClick={() => {
+              setSolvedGlow(true);
+              onDone(judgeResult);
+            }}
             className="inline-flex min-h-11 items-center justify-center rounded-md bg-river px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
           >
             Tiếp tục

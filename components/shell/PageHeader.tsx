@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { motion, useReducedMotion } from "motion/react";
+import { TextReveal } from "@/components/fx/TextReveal";
 
 export interface PageHeaderProps {
   title: string;
@@ -13,6 +17,8 @@ export function PageHeader({
   backHref,
   backLabel = "Trang chủ",
 }: PageHeaderProps) {
+  const reduce = useReducedMotion();
+
   return (
     <header className="mb-6">
       {backHref && (
@@ -35,9 +41,18 @@ export function PageHeader({
           <span>{backLabel}</span>
         </Link>
       )}
-      <h1 className="text-2xl font-bold tracking-tight text-ink">{title}</h1>
+      <TextReveal mode="fade-up" as="h1" className="text-2xl font-bold tracking-tight text-ink">
+        {title}
+      </TextReveal>
       {subtitle && (
-        <p className="mt-1 text-sm leading-relaxed text-muted">{subtitle}</p>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2, delay: reduce ? 0 : 0.08 }}
+          className="mt-1 text-sm leading-relaxed text-muted"
+        >
+          {subtitle}
+        </motion.p>
       )}
     </header>
   );

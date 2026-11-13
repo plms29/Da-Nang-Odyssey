@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, useAnimate, useReducedMotion } from "motion/react";
 import { checkJigsaw } from "@/lib/activities/scoring";
 import type { JigsawStation as JigsawStationType, StationResult } from "@/lib/types";
 import { deterministicShuffle } from "../shuffle";
@@ -13,6 +14,9 @@ export interface JigsawStationProps {
 }
 
 export function JigsawStation({ station, onDone }: JigsawStationProps) {
+  const prefersReducedMotion = useReducedMotion();
+  const reduced = Boolean(prefersReducedMotion);
+  const [scope, animate] = useAnimate();
   const [rows, cols] = station.grid;
   const total = rows * cols;
   const [placement, setPlacement] = useState<number[]>(() =>
@@ -25,6 +29,8 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [revealedHints, setRevealedHints] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [checked, setChecked] = useState(false);
+  const [correctPop, setCorrectPop] = useState(false);
   const { hintsUsed, nextHint, addWrong, result } = useAttempt(station.hints);
 
   function handleTileTap(slotIndex: number) {
@@ -51,10 +57,18 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
   function handleCheck() {
     if (checkJigsaw(placement, station.grid)) {
       setFeedback(null);
+      setChecked(true);
+      setCorrectPop(true);
+      if (!reduced && scope.current) {
+        animate(scope.current, { scale: [1, 1.03, 1] }, { duration: 0.35 });
+      }
       onDone(result(true));
       return;
     }
     addWrong();
+    if (!reduced && scope.current) {
+      animate(scope.current, { x: [0, -8, 8, -6, 6, 0] }, { duration: 0.3 });
+    }
     setFeedback("Chưa đúng thứ tự, hãy chạm hai mảnh để đổi chỗ.");
   }
 
@@ -66,7 +80,11 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
   }
 
   return (
-    <section className="rounded-lg border border-ink/15 bg-white/80 p-4">
+    <section
+      className={`rounded-lg border border-ink/15 bg-white/80 p-4 ${
+        correctPop ? "ring-2 ring-gold ring-offset-2" : ""
+      }`}
+    >
       <p className="text-base font-medium leading-relaxed text-ink">
         {station.instruction}
       </p>
@@ -74,30 +92,54 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
         Chạm một mảnh rồi chạm mảnh khác để đổi chỗ.
       </p>
 
-      <div
-        className="mt-4 grid gap-2"
-        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
-      >
-        {placement.map((pieceIndex, slotIndex) => {
-          const pieceNumber = pieceIndex + 1;
-          const isSelected = selectedSlot === slotIndex;
-          return (
-            <button
-              key={slotIndex}
-              type="button"
-              onClick={() => handleTileTap(slotIndex)}
-              aria-label={`Mảnh ${pieceNumber}`}
-              aria-pressed={isSelected}
-              className={`flex min-h-14 items-center justify-center rounded-md border text-lg font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
-                isSelected
-                  ? "border-terracotta bg-terracotta text-sand"
-                  : "border-ink/20 bg-sand text-ink hover:border-terracotta"
-              }`}
-            >
-              {pieceNumber}
-            </button>
-          );
-        })}
+      <div className="relative mt-4">
+        <motion.div
+          ref={scope}
+          className={`grid ${checked ? "gap-0" : "gap-2"}`}
+          style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+        >
+          {placement.map((pieceIndex, slotIndex) => {
+            const pieceNumber = pieceIndex + 1;
+            const isSelected = selectedSlot === slotIndex;
+            return (
+              <motion.button
+                key={pieceIndex}
+                type="button"
+                layout={!reduced}
+                animate={
+                  reduced ? undefined : { scale: isSelected ? 1.05 : 1 }
+                }
+                transition={
+                  reduced
+                    ? { duration: 0.15 }
+                    : { type: "spring", stiffness: 420, damping: 34 }
+                }
+                onClick={() => handleTileTap(slotIndex)}
+                aria-label={`Mảnh ${pieceNumber}`}
+                aria-pressed={isSelected}
+                className={`flex min-h-14 items-center justify-center rounded-md border text-lg font-bold transition-[color,background-color,border-color,opacity] duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
+                  isSelected
+                    ? "border-terracotta bg-terracotta text-sand shadow-md"
+                    : checked
+                      ? "border-transparent bg-sand text-ink"
+                      : "border-ink/20 bg-sand text-ink hover:border-terracotta"
+                }`}
+              >
+                {pieceNumber}
+              </motion.button>
+            );
+          })}
+        </motion.div>
+
+        {checked && (
+          <motion.div
+            aria-hidden="true"
+            initial={reduced ? { opacity: 0 } : { opacity: 0.35 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: reduced ? 0.15 : 0.35 }}
+            className="pointer-events-none absolute inset-0 rounded-md bg-gradient-to-br from-gold/25 via-transparent to-river/25"
+          />
+        )}
       </div>
 
       {feedback && (
