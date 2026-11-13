@@ -1,3 +1,41 @@
+# Kế hoạch: làm đẹp /tour + bản máy tính (mục 3.3 báo cáo)
+
+Mẫu phong cách: trang chủ/màn chơi hiện có (`components/fx/*`: Glass, GlowButton, TiltCard, KineticText, PhaseTransition, StampPress, Celebrate, ShaderBackdrop; `components/level/LevelPlayer.tsx` cho bố cục máy tính `lg:` 2 cột, cảnh trái sticky).
+Quy tắc chung: không đổi logic (`tourReducer`, `useSpeech`, fetch kế hoạch, đóng dấu hộ chiếu, link); tôn trọng reduced-motion; điện thoại giữ bố cục 1 cột, máy tính từ `lg:`.
+Chấp nhận: tsc, eslint, vitest qua; reviewer duyệt.
+
+| Task | File (chỉ sửa) | Worker |
+|---|---|---|
+| T5 Bản đồ sông Hàn vẽ tay (SVG): thuyền chạy dọc sông giữa các điểm, điểm đang nghe sáng lên; dùng khi không có khóa Maps (thay thanh tiến độ) | `components/tour/TourRiverMap.tsx` (mới), `components/tour/TourMap.tsx` | ui-hydrogen-high |
+| T6 Màn chọn tour: kính, chip chủ đề phát sáng, nút GlowButton; trang + TourApp rộng ra ở máy tính | `components/tour/TourSetup.tsx`, `components/tour/TourApp.tsx`, `app/tour/page.tsx` | ui-hydrogen |
+| T7 Trình phát: panel kính, phụ đề câu đang đọc nổi bật (KineticText), chuyển cảnh giữa điểm (PhaseTransition); máy tính 2 cột (bản đồ trái sticky, phụ đề phải) | `components/tour/TourPlayer.tsx`, `components/tour/TourStopStation.tsx` | ui-hydrogen-high |
+| T8 Kết tour: con dấu StampPress cho mỗi điểm đã nghe + Celebrate | `components/tour/TourEnd.tsx` | ui-hydrogen |
+
+T5–T8 không chung file → chạy song song. /photobooth làm đợt sau.
+
+---
+
+# Kế hoạch tiếp nối (từ BAO-CAO-TIEP-NOI.md)
+
+Mẫu tham chiếu chung: `components/level/stations/MatchStation.tsx` và `HintBox` (đã có đủ hiệu ứng).
+Quy tắc chung cho T1–T4: đúng/sai chỉ hiện sau khi bấm "Kiểm tra"; rung bằng `useAnimate` (không đổi `key`);
+không đổi cách tính điểm, đếm gợi ý, payload `onDone`; nút kiểm tra là `GlowButton`; gọi `haptic()`; vòng sáng vàng khi chọn.
+Chấp nhận: `npx tsc --noEmit`, `npx eslint components`, `npx vitest run` đều qua.
+
+| Task | File (chỉ sửa file này) | Worker |
+|---|---|---|
+| T1 Hiệu ứng ExpressStation | `components/level/stations/ExpressStation.tsx` | ui-hydrogen |
+| T2 Hiệu ứng JigsawStation (dnd-kit) | `components/level/stations/JigsawStation.tsx` | ui-hydrogen-high |
+| T3 Hiệu ứng MapPinStation (bản đồ thật) | `components/level/stations/MapPinStation.tsx` | ui-hydrogen-high |
+| T4 Hiệu ứng OrderStation | `components/level/stations/OrderStation.tsx` | ui-hydrogen |
+
+T1–T4 chạy song song (không chung file). Sau mỗi task: `reviewer`, tối đa 2 vòng sửa.
+
+Giai đoạn sau (xin duyệt riêng khi tới): T5 làm đẹp `/tour` + bản máy tính, T6 `/photobooth`, T7 dọn nit nhỏ, kiểm trình duyệt 375px/1440px.
+(argon hết hạn mức → dùng hydrogen/flash.)
+
+---
+
 # plan.md
 
 ## Giai đoạn B, đợt B3: Tour 5 phút + chú thích ảnh (KH mục 5, mục 6 CK-08, mục 11 giai đoạn 3)

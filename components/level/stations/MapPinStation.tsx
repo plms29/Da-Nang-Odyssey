@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { motion, useAnimate, useReducedMotion } from "motion/react";
+import { GlowButton } from "@/components/fx/GlowButton";
 import { checkMapPin } from "@/lib/activities/scoring";
+import { haptic } from "@/lib/haptics";
 import type {
   LatLng,
   MapPinStation as MapPinStationType,
@@ -55,7 +58,7 @@ function CoordForm({
             value={latInput}
             onChange={(e) => onLatChange(e.target.value)}
             placeholder="Ví dụ: 16.06"
-            className="mt-1 min-h-11 w-full rounded-md border border-ink/20 bg-white px-3 py-2 text-sm text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            className="mt-1 min-h-11 w-full rounded-md border border-ink/20 bg-white px-3 py-2 text-sm text-ink transition-shadow focus:border-terracotta focus:ring-2 focus:ring-gold focus:shadow-[0_0_16px_rgba(201,154,46,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
           />
         </div>
 
@@ -73,43 +76,64 @@ function CoordForm({
             value={lngInput}
             onChange={(e) => onLngChange(e.target.value)}
             placeholder="Ví dụ: 108.22"
-            className="mt-1 min-h-11 w-full rounded-md border border-ink/20 bg-white px-3 py-2 text-sm text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            className="mt-1 min-h-11 w-full rounded-md border border-ink/20 bg-white px-3 py-2 text-sm text-ink transition-shadow focus:border-terracotta focus:ring-2 focus:ring-gold focus:shadow-[0_0_16px_rgba(201,154,46,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
           />
         </div>
       </div>
 
       <div>
-        <button
+        <GlowButton
           type="submit"
           className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Ghim
-        </button>
+        </GlowButton>
       </div>
     </form>
   );
 }
 
 export function MapPinStation({ station, onDone }: MapPinStationProps) {
+  const prefersReducedMotion = useReducedMotion();
+  const reduced = Boolean(prefersReducedMotion);
+  const [scope, animate] = useAnimate();
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY?.trim() ?? "";
   const [pin, setPin] = useState<LatLng | null>(null);
   const [latInput, setLatInput] = useState("");
   const [lngInput, setLngInput] = useState("");
   const [revealedHints, setRevealedHints] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [solvedGlow, setSolvedGlow] = useState(false);
   const [mapFailed, setMapFailed] = useState(false);
   const { hintsUsed, nextHint, addWrong, result } = useAttempt(station.hints);
 
   const showMap = apiKey.length > 0 && !mapFailed;
 
+  function triggerShake() {
+    haptic("error");
+    if (!reduced && scope.current) {
+      animate(scope.current, { x: [0, -8, 8, -6, 6, 0] }, { duration: 0.3 });
+    }
+  }
+
   function submitPin(candidate: LatLng) {
     const check = checkMapPin(station, candidate);
     if (check.correct) {
       setFeedback(null);
+      setSolvedGlow(true);
+      haptic("success");
+      if (!reduced && scope.current) {
+        animate(
+          scope.current,
+          { scale: [1, 1.03, 1] },
+          { duration: 0.35, ease: "easeOut" },
+        );
+      }
       onDone(result(true));
       return;
     }
     addWrong();
+    triggerShake();
     const roundedDistance = Math.round(check.distance_m / 10) * 10;
     setFeedback(`Chưa đúng, còn cách khoảng ${roundedDistance} m`);
   }
@@ -120,6 +144,7 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
   }
 
   function handleMapPick(picked: LatLng) {
+    haptic("tap");
     setPin(picked);
     setFeedback(null);
   }
@@ -129,6 +154,7 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
     const lat = Number.parseFloat(latInput);
     const lng = Number.parseFloat(lngInput);
     if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+      triggerShake();
       setFeedback("Vui lòng nhập vĩ độ và kinh độ hợp lệ.");
       return;
     }
@@ -179,7 +205,14 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
   );
 
   return (
-    <section className="rounded-lg border border-ink/15 bg-white/80 p-4">
+    <section
+      ref={scope}
+      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
+        solvedGlow
+          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+          : ""
+      }`}
+    >
       <p className="text-base font-medium leading-relaxed text-ink">
         {station.clue}
       </p>
@@ -195,7 +228,19 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
       )}
 
       {showMap && (
-        <div className="mt-3">
+        <motion.div
+          animate={reduced ? undefined : { y: pin ? -2 : 0 }}
+          transition={
+            reduced
+              ? { duration: 0.15 }
+              : { type: "spring", stiffness: 380, damping: 30 }
+          }
+          className={`mt-3 rounded-lg transition-shadow ${
+            pin
+              ? "ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+              : ""
+          }`}
+        >
           <MapView
             center={DA_NANG_CENTER}
             zoom={DA_NANG_ZOOM}
@@ -204,7 +249,7 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
             apiKey={apiKey}
             onError={() => setMapFailed(true)}
           />
-        </div>
+        </motion.div>
       )}
 
       {feedback && (
@@ -216,14 +261,14 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
       {showMap ? (
         <>
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <button
+            <GlowButton
               type="button"
               onClick={handleConfirmPin}
               disabled={!pin}
               className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-50"
             >
               Xác nhận ghim
-            </button>
+            </GlowButton>
             {demoButton}
           </div>
 

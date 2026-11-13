@@ -1,6 +1,7 @@
 "use client";
 
 import { useReducer, useState } from "react";
+import { GlassPanel } from "@/components/fx/Glass";
 import { initialTour, tourReducer } from "@/lib/tour/player";
 import type { Spot } from "@/lib/types";
 import { TourEnd } from "./TourEnd";
@@ -29,9 +30,11 @@ export function TourApp({ spots }: TourAppProps) {
 
   if (state.phase === "loading") {
     return (
-      <section
+      <GlassPanel
+        as="section"
+        tone="light"
         role="status"
-        className="flex flex-col items-center gap-3 rounded-lg border border-ink/15 bg-white/80 p-6 text-center"
+        className="flex flex-col items-center gap-3 rounded-2xl p-6 text-center lg:mx-auto lg:max-w-xl lg:p-10"
       >
         <svg
           viewBox="0 0 24 24"
@@ -45,7 +48,7 @@ export function TourApp({ spots }: TourAppProps) {
           <path d="M21 12a9 9 0 0 0-9-9" strokeLinecap="round" />
         </svg>
         <p className="text-base font-semibold text-ink">Đang chuẩn bị tour…</p>
-      </section>
+      </GlassPanel>
     );
   }
 
