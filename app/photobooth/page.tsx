@@ -1,31 +1,32 @@
+import { Suspense } from "react";
+import { CheckinFlow } from "@/components/checkin/CheckinFlow";
 import { PageHeader } from "@/components/shell/PageHeader";
+import { getSpots } from "@/lib/content";
 
 export default function PhotoboothPage() {
+  const spots = getSpots();
+
   return (
-    <main className="space-y-4 pb-4">
+    <main className="space-y-4 pb-6">
       <PageHeader
-        title="Check-in điểm di sản"
-        subtitle="Chụp ảnh lưu niệm với khung hình văn hóa tại điểm tham quan thực tế."
+        title="Check-in"
+        subtitle="Chụp ảnh tại điểm tham quan, nhận dấu đã đến"
         backHref="/"
       />
 
-      <section className="rounded-lg border border-ink/15 bg-white/75 p-4 text-sm leading-relaxed text-ink">
-        <p>
-          Khi bạn có mặt trong bán kính điểm văn hóa tại Đà Nẵng, ứng dụng sẽ
-          xác thực vị trí, ghép khung ảnh chủ đề và đóng dấu{" "}
-          <strong>đã đến</strong> vào hộ chiếu của bạn.
-        </p>
-      </section>
-
-      <section
-        aria-label="Trạng thái tính năng"
-        className="rounded-lg border border-dashed border-terracotta/50 bg-terracotta/5 p-6 text-center"
+      <Suspense
+        fallback={
+          <div
+            role="status"
+            aria-live="polite"
+            className="rounded-lg border border-ink/15 bg-white/80 p-5 text-sm text-muted"
+          >
+            Đang tải trình check-in…
+          </div>
+        }
       >
-        <p className="text-sm font-bold text-terracotta">Đang xây dựng</p>
-        <p className="mt-1 text-xs text-muted">
-          Máy ảnh, khung hình di sản và kiểm tra tọa độ GPS đang được hoàn thiện.
-        </p>
-      </section>
+        <CheckinFlow spots={spots} />
+      </Suspense>
     </main>
   );
 }
