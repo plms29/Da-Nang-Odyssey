@@ -111,7 +111,7 @@ function PanelCard({
       aria-hidden="true"
       style={{ opacity: index === 0 ? 1 : 0 }}
       // top-anchored: before the stage sticks it starts below the page header, so a bottom anchor hides under the nav
-      className="absolute inset-x-4 top-[40%] rounded-lg bg-sand/85 backdrop-blur-sm p-4 shadow-sm text-ink pointer-events-none"
+      className="absolute inset-x-4 top-[40%] rounded-lg bg-sand/85 backdrop-blur-sm p-4 shadow-sm text-ink pointer-events-none lg:inset-x-auto lg:left-[8%] lg:top-[34%] lg:w-[min(520px,40vw)]"
     >
       {children}
     </div>
@@ -120,21 +120,21 @@ function PanelCard({
 
 function StaticScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
   return (
-    <div className="-mx-4 -mt-5">
+    <div className="-mx-4 -mt-5 lg:-mx-8 lg:-mt-24">
       <div className="relative h-[55dvh] overflow-hidden">
         <SceneBackdrop kit={kit} intensity="calm" />
       </div>
-      <div className="mt-4 space-y-3 px-4">
+      <div className="mt-4 space-y-3 px-4 lg:px-8">
         {panels.map((panel, index) => (
           <div
             key={index}
-            className="rounded-lg bg-sand/85 backdrop-blur-sm p-4 shadow-sm text-ink"
+            className="rounded-lg bg-sand/85 backdrop-blur-sm p-4 shadow-sm text-ink lg:max-w-[520px]"
           >
             {panel}
           </div>
         ))}
       </div>
-      <div className="mt-4 px-4">{cta}</div>
+      <div className="mt-4 px-4 lg:px-8">{cta}</div>
     </div>
   );
 }
@@ -219,7 +219,7 @@ function ScrollScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
   };
 
   return (
-    <div className="-mx-4 -mt-5">
+    <div className="-mx-4 -mt-5 lg:-mx-8 lg:-mt-24">
       <div className="sr-only">
         {panels.map((panel, index) => (
           <div key={index}>{panel}</div>
@@ -275,14 +275,14 @@ function ScrollScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
           ))}
 
           <motion.div
-            className="absolute inset-x-4 top-[62%] flex justify-center"
+            className="absolute inset-x-4 top-[62%] flex justify-center lg:inset-x-auto lg:left-[8%] lg:w-[min(520px,40vw)] lg:justify-start"
             style={{
               opacity: ctaOpacity,
               pointerEvents: ctaPointer,
               visibility: ctaVisibility,
             }}
           >
-            <div className="w-full max-w-[400px] rounded-lg bg-sand/85 backdrop-blur-sm p-4 shadow-sm text-ink text-center">
+            <div className="w-full max-w-[400px] rounded-lg bg-sand/85 backdrop-blur-sm p-4 shadow-sm text-ink text-center lg:max-w-none">
               {cta}
             </div>
           </motion.div>
@@ -290,7 +290,7 @@ function ScrollScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
           <motion.div
             aria-hidden="true"
             style={{ opacity: hintOpacity, visibility: hintVisibility }}
-            className="absolute inset-x-0 top-16 flex justify-center pointer-events-none"
+            className="absolute inset-x-0 top-16 flex justify-center pointer-events-none lg:top-auto lg:bottom-8"
           >
             <div className="flex items-center gap-1.5 bg-sand/85 rounded-full px-3 py-1 text-sm text-ink backdrop-blur-sm">
               <span>Cuộn để khám phá</span>
@@ -316,7 +316,7 @@ function ScrollScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
               pointerEvents: skipPointer,
               visibility: skipVisibility,
             }}
-            className="absolute right-3 top-3 min-h-11 min-w-11 rounded-full bg-sand/85 px-4 text-sm text-ink backdrop-blur-sm"
+            className="absolute right-3 top-3 min-h-11 min-w-11 rounded-full bg-sand/85 px-4 text-sm text-ink backdrop-blur-sm lg:left-auto lg:right-8 lg:top-24"
           >
             Bỏ qua
           </motion.button>

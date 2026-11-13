@@ -47,6 +47,8 @@ export interface ZoomTransform {
 const ANIMATION_MS = 420;
 const NAVIGATE_DELAY_MS = 300;
 const FADE_OUT_MS = 150;
+const TEARDOWN_DELAY_MS = 50;
+const CLEAR_AFTER_FADE_MS = 180;
 const SAFETY_TIMEOUT_MS = 2000;
 
 let current: ZoomPayload | null = null;
@@ -154,8 +156,9 @@ export function ZoomOverlayHost(): JSX.Element | null {
   const labelRef = useRef<HTMLDivElement | null>(null);
   const navTimerRef = useRef<number | null>(null);
   const safetyTimerRef = useRef<number | null>(null);
+  const teardownTimerRef = useRef<number | null>(null);
+  const fadeTimerRef = useRef<number | null>(null);
   const animRafRef = useRef<number>(0);
-  const fadeRafRef = useRef<number>(0);
   const fadingRef = useRef<boolean>(false);
 
   const clearScheduled = useCallback((): void => {
@@ -167,13 +170,17 @@ export function ZoomOverlayHost(): JSX.Element | null {
       window.clearTimeout(safetyTimerRef.current);
       safetyTimerRef.current = null;
     }
+    if (teardownTimerRef.current !== null) {
+      window.clearTimeout(teardownTimerRef.current);
+      teardownTimerRef.current = null;
+    }
+    if (fadeTimerRef.current !== null) {
+      window.clearTimeout(fadeTimerRef.current);
+      fadeTimerRef.current = null;
+    }
     if (animRafRef.current) {
       window.cancelAnimationFrame(animRafRef.current);
       animRafRef.current = 0;
-    }
-    if (fadeRafRef.current) {
-      window.cancelAnimationFrame(fadeRafRef.current);
-      fadeRafRef.current = 0;
     }
   }, []);
 
@@ -189,6 +196,10 @@ export function ZoomOverlayHost(): JSX.Element | null {
       window.clearTimeout(safetyTimerRef.current);
       safetyTimerRef.current = null;
     }
+    if (teardownTimerRef.current !== null) {
+      window.clearTimeout(teardownTimerRef.current);
+      teardownTimerRef.current = null;
+    }
 
     const el = overlayRef.current;
     if (!el) {
@@ -196,21 +207,13 @@ export function ZoomOverlayHost(): JSX.Element | null {
       return;
     }
 
-    let fadeStart: number | null = null;
-    const fadeTick = (now: number): void => {
-      if (fadeStart === null) fadeStart = now;
-      const progress = Math.min(1, (now - fadeStart) / FADE_OUT_MS);
-      el.style.opacity = String(1 - progress);
+    el.style.transition = `opacity ${FADE_OUT_MS}ms ease-out`;
+    el.style.opacity = "0";
 
-      if (progress < 1) {
-        fadeRafRef.current = window.requestAnimationFrame(fadeTick);
-      } else {
-        fadeRafRef.current = 0;
-        clearZoom();
-      }
-    };
-
-    fadeRafRef.current = window.requestAnimationFrame(fadeTick);
+    fadeTimerRef.current = window.setTimeout(() => {
+      fadeTimerRef.current = null;
+      clearZoom();
+    }, CLEAR_AFTER_FADE_MS);
   }, []);
 
   useEffect(() => {
@@ -281,17 +284,33 @@ export function ZoomOverlayHost(): JSX.Element | null {
   useEffect(() => {
     if (!payload || pathname !== payload.href) return;
 
-    let raf1 = 0;
-    let raf2 = 0;
-    raf1 = window.requestAnimationFrame(() => {
-      raf2 = window.requestAnimationFrame(() => {
-        startFadeOut();
-      });
-    });
+    teardownTimerRef.current = window.setTimeout(() => {
+      teardownTimerRef.current = null;
+      startFadeOut();
+    }, TEARDOWN_DELAY_MS);
 
     return () => {
-      window.cancelAnimationFrame(raf1);
-      if (raf2) window.cancelAnimationFrame(raf2);
+      if (teardownTimerRef.current !== null) {
+        window.clearTimeout(teardownTimerRef.current);
+        teardownTimerRef.current = null;
+      }
+    };
+  }, [payload, pathname, startFadeOut]);
+
+  useEffect(() => {
+    const handleVisibilityChange = (): void => {
+      if (
+        document.visibilityState === "visible" &&
+        payload &&
+        pathname === payload.href
+      ) {
+        startFadeOut();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [payload, pathname, startFadeOut]);
 

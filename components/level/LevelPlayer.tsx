@@ -185,70 +185,88 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
     };
     const station = currentStation(level, shownState);
 
+    const renderProgressNav = (navClassName?: string) => (
+      <nav aria-label="Tiến trình màn chơi" className={navClassName}>
+        <ol className="grid grid-cols-3 gap-2">
+          {STEPS.map((label, index) => {
+            const isCurrent = index === shown.stationIndex;
+            const isDone = index < shown.stationIndex;
+            return (
+              <li
+                key={label}
+                aria-current={isCurrent ? "step" : undefined}
+                className={`relative overflow-hidden rounded-md border px-2 py-2 text-center text-xs font-bold backdrop-blur-sm ${
+                  isCurrent
+                    ? "border-gold bg-gold text-ink shadow-[0_0_18px_rgba(201,154,46,0.7)]"
+                    : isDone
+                      ? "border-river/40 bg-river/15 text-river"
+                      : "border-ink/15 bg-white/40 text-muted"
+                }`}
+              >
+                {isDone && (
+                  <span aria-hidden="true" className="mr-1">
+                    ✓
+                  </span>
+                )}
+                {index + 1}. {label}
+                {isCurrent && (
+                  <motion.span
+                    aria-hidden="true"
+                    className="absolute inset-x-0 bottom-0 h-1 bg-gold"
+                    style={{ originX: 0 }}
+                    initial={
+                      prefersReducedMotion
+                        ? { scaleX: 1 }
+                        : { scaleX: 0 }
+                    }
+                    animate={{ scaleX: 1 }}
+                    transition={{
+                      duration: prefersReducedMotion ? 0 : 0.5,
+                      ease: "easeOut",
+                    }}
+                  />
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
+    );
+
     content = (
-      <div className="relative isolate -mx-4 overflow-hidden">
-        <SceneBackdrop kit={kit} intensity="calm" />
+      <div className="relative isolate -mx-4 overflow-hidden lg:mx-0 lg:overflow-visible lg:flex lg:items-start lg:gap-8">
+        <SceneBackdrop kit={kit} intensity="calm" className="lg:hidden" />
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-b from-sand/70 via-sand/85 to-sand"
+          className="absolute inset-0 bg-gradient-to-b from-sand/70 via-sand/85 to-sand lg:hidden"
         />
-        <div className="relative z-10 px-4 py-2">
-          <GlassPanel tone="light" className="min-w-0 space-y-4 p-4">
+        <div className="hidden lg:sticky lg:top-24 lg:flex lg:w-[42%] lg:flex-col lg:gap-4">
+          <div className="space-y-1">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted">
+              Màn {level.order}
+            </p>
+            <p className="break-words text-2xl font-bold text-ink">
+              {level.title}
+            </p>
+          </div>
+          {renderProgressNav()}
+          <div className="relative h-[60vh] overflow-hidden rounded-3xl border border-ink/10 shadow-sm">
+            <SceneBackdrop kit={kit} intensity="calm" />
+          </div>
+        </div>
+        <div className="relative z-10 px-4 py-2 lg:w-[58%] lg:min-w-0 lg:px-0 lg:py-0">
+          <GlassPanel tone="light" className="min-w-0 space-y-4 p-4 lg:p-10">
             <h2
               ref={headingRef}
               tabIndex={-1}
-              className="text-lg font-bold text-ink focus:outline-none"
+              className="text-lg font-bold text-ink focus:outline-none lg:text-xl"
             >
               <KineticText key={shown.stationIndex} as="span">
                 {`Chặng ${shown.stationIndex + 1}: ${STEPS[shown.stationIndex] ?? ""}`}
               </KineticText>
             </h2>
-            <div className="space-y-4 rounded-md bg-white/70 p-3">
-              <nav aria-label="Tiến trình màn chơi">
-                <ol className="grid grid-cols-3 gap-2">
-                  {STEPS.map((label, index) => {
-                    const isCurrent = index === shown.stationIndex;
-                    const isDone = index < shown.stationIndex;
-                    return (
-                      <li
-                        key={label}
-                        aria-current={isCurrent ? "step" : undefined}
-                        className={`relative overflow-hidden rounded-md border px-2 py-2 text-center text-xs font-bold backdrop-blur-sm ${
-                          isCurrent
-                            ? "border-gold bg-gold text-ink shadow-[0_0_18px_rgba(201,154,46,0.7)]"
-                            : isDone
-                              ? "border-river/40 bg-river/15 text-river"
-                              : "border-ink/15 bg-white/40 text-muted"
-                        }`}
-                      >
-                        {isDone && (
-                          <span aria-hidden="true" className="mr-1">
-                            ✓
-                          </span>
-                        )}
-                        {index + 1}. {label}
-                        {isCurrent && (
-                          <motion.span
-                            aria-hidden="true"
-                            className="absolute inset-x-0 bottom-0 h-1 bg-gold"
-                            style={{ originX: 0 }}
-                            initial={
-                              prefersReducedMotion
-                                ? { scaleX: 1 }
-                                : { scaleX: 0 }
-                            }
-                            animate={{ scaleX: 1 }}
-                            transition={{
-                              duration: prefersReducedMotion ? 0 : 0.5,
-                              ease: "easeOut",
-                            }}
-                          />
-                        )}
-                      </li>
-                    );
-                  })}
-                </ol>
-              </nav>
+            <div className="space-y-4 rounded-md bg-white/70 p-3 lg:space-y-0 lg:p-5">
+              {renderProgressNav("lg:hidden")}
 
               {station && renderStation(station, level.id, guarded)}
             </div>
@@ -260,18 +278,18 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
     const starCount = stars ?? 0;
 
     content = (
-      <TiltCard max={6} className="rounded-lg">
+      <TiltCard max={6} className="rounded-lg lg:mx-auto lg:max-w-3xl">
         <GlassPanel
           as="section"
           tone="light"
-          className="relative space-y-4 overflow-hidden p-5"
+          className="relative space-y-4 overflow-hidden p-5 lg:space-y-6 lg:p-10"
         >
           <Celebrate kind={kit.celebrate} play={true} />
 
           <h2
             ref={headingRef}
             tabIndex={-1}
-            className="text-lg font-bold text-ink focus:outline-none"
+            className="text-lg font-bold text-ink focus:outline-none lg:text-xl"
           >
             Hoàn thành màn chơi
           </h2>
@@ -283,7 +301,7 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
               <p
                 role="img"
                 aria-label={`${starCount} trên 3 sao`}
-                className="mt-1 text-2xl leading-none tracking-widest text-gold"
+                className="mt-1 text-2xl leading-none tracking-widest text-gold lg:text-5xl"
               >
                 <span aria-hidden="true" className="inline-flex gap-0.5">
                   {[0, 1, 2].map((i) => {
@@ -459,7 +477,7 @@ function RevealScore({
   }, [score, reducedMotion]);
 
   return (
-    <p className="mt-1 text-xl font-bold text-river">
+    <p className="mt-1 text-xl font-bold text-river lg:text-6xl">
       {reducedMotion ? score : display}
     </p>
   );
