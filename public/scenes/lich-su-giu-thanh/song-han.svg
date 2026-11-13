@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1600" preserveAspectRatio="none" fill="none">
+  <defs>
+    <linearGradient id="hanRiverMap" x1="200" y1="0" x2="960" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1F4E6B" stop-opacity="0.88" />
+      <stop offset="100%" stop-color="#14354A" stop-opacity="0.96" />
+    </linearGradient>
+  </defs>
+  <!-- Sandy riverbank beach strip along the left edge of the river -->
+  <path
+    d="M280 0 C180 280, 340 560, 210 860 C90 1140, 270 1380, 190 1600 L960 1600 L960 0 Z"
+    fill="#C99A2E"
+    fill-opacity="0.42"
+  />
+  <!-- Main Han River channel along right side -->
+  <path
+    d="M340 0 C240 280, 400 560, 270 860 C150 1140, 330 1380, 250 1600 L960 1600 L960 0 Z"
+    fill="url(#hanRiverMap)"
+  />
+  <!-- Soft lighter water current bands -->
+  <path
+    d="M470 0 C380 280, 520 560, 400 860 C290 1140, 450 1380, 380 1600"
+    stroke="#F6EFE4"
+    stroke-opacity="0.22"
+    stroke-width="36"
+    stroke-linecap="round"
+  />
+  <path
+    d="M660 0 C580 300, 710 600, 600 900 C500 1180, 650 1400, 580 1600"
+    stroke="#F6EFE4"
+    stroke-opacity="0.15"
+    stroke-width="54"
+    stroke-linecap="round"
+  />
+</svg>

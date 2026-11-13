@@ -1,1 +1,242 @@
-/* U1 — Ambient keyframes */
+/* U1 — Ambient & layer keyframes (prefix fx-) */
+
+.fx-calm {
+  --fx-speed: 1.6;
+  opacity: 0.5;
+}
+
+/* === Layer animation classes (returned by layerAnimClass) === */
+
+.fx-layer-sway {
+  transform-origin: top center;
+  animation: fx-sway-rot calc(var(--fx-speed, 1) * 3.5s) var(--fx-ease-in-out, ease-in-out) infinite alternate;
+  will-change: transform;
+}
+
+.fx-layer-flag {
+  transform-origin: left center;
+  animation: fx-flag-wave calc(var(--fx-speed, 1) * 2.4s) var(--fx-ease-in-out, ease-in-out) infinite alternate;
+  will-change: transform;
+}
+
+.fx-layer-drift {
+  animation: fx-drift-x calc(var(--fx-speed, 1) * 20s) var(--fx-ease-in-out, ease-in-out) infinite alternate;
+  will-change: transform;
+}
+
+.fx-layer-waves {
+  transform-origin: center bottom;
+  animation: fx-wave-bob calc(var(--fx-speed, 1) * 4s) var(--fx-ease-in-out, ease-in-out) infinite alternate;
+  will-change: transform;
+}
+
+.fx-layer-smoke {
+  transform-origin: bottom center;
+  animation: fx-smoke-rise calc(var(--fx-speed, 1) * 7s) ease-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes fx-sway-rot {
+  0% {
+    transform: rotate(-3deg);
+  }
+  100% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes fx-flag-wave {
+  0% {
+    transform: skewY(-2deg) scaleX(0.98);
+  }
+  50% {
+    transform: skewY(1.5deg) scaleX(1.02);
+  }
+  100% {
+    transform: skewY(3deg) scaleX(0.97);
+  }
+}
+
+@keyframes fx-drift-x {
+  0% {
+    transform: translateX(-12px);
+  }
+  100% {
+    transform: translateX(12px);
+  }
+}
+
+@keyframes fx-wave-bob {
+  0% {
+    transform: translateY(-4px) rotate(-1.5deg);
+  }
+  100% {
+    transform: translateY(4px) rotate(1.5deg);
+  }
+}
+
+@keyframes fx-smoke-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.85);
+  }
+  25% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-72px) translateX(14px) scale(1.35);
+  }
+}
+
+/* === Ambient overlay effects === */
+
+/* Smoke wisps rising from lower middle */
+.fx-smoke-puff {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(22px);
+  opacity: 0;
+  animation: fx-smoke-puff-anim calc(var(--fx-speed, 1) * var(--fx-dur, 8s)) ease-out infinite;
+  animation-delay: var(--fx-delay, 0s);
+  will-change: transform, opacity;
+}
+
+@keyframes fx-smoke-puff-anim {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0) scale(0.75);
+  }
+  30% {
+    opacity: var(--fx-alpha, 0.22);
+  }
+  70% {
+    opacity: calc(var(--fx-alpha, 0.22) * 0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--fx-dx, 18px), -140px, 0) scale(1.45);
+  }
+}
+
+/* Falling water streaks (flow) */
+.fx-flow-streaks {
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 14px,
+      rgba(246, 239, 228, 0.22) 14px,
+      rgba(246, 239, 228, 0.22) 16px,
+      transparent 16px,
+      transparent 34px,
+      rgba(246, 239, 228, 0.14) 34px,
+      rgba(246, 239, 228, 0.14) 37px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(246, 239, 228, 0.08) 0%,
+      rgba(31, 78, 107, 0.18) 50%,
+      rgba(246, 239, 228, 0.28) 100%
+    );
+  background-size: 100% 64px, 100% 100%;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 18%,
+    black 82%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 18%,
+    black 82%,
+    transparent 100%
+  );
+  animation: fx-flow-down calc(var(--fx-speed, 1) * 1.4s) linear infinite;
+}
+
+@keyframes fx-flow-down {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: 0 64px, 0 0;
+  }
+}
+
+/* Horizontal seamless SVG wave bands */
+.fx-wave-band {
+  width: 200%;
+  animation: fx-wave-slide calc(var(--fx-speed, 1) * var(--fx-dur, 12s)) linear infinite;
+  will-change: transform;
+}
+
+.fx-wave-band-rev {
+  width: 200%;
+  animation: fx-wave-slide-rev calc(var(--fx-speed, 1) * var(--fx-dur, 16s)) linear infinite;
+  will-change: transform;
+}
+
+@keyframes fx-wave-slide {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes fx-wave-slide-rev {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Cloud / shadow horizontal drift */
+.fx-drift-cloud {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(26px);
+  animation: fx-cloud-pass calc(var(--fx-speed, 1) * var(--fx-dur, 42s)) var(--fx-ease-in-out, ease-in-out) infinite alternate;
+  animation-delay: var(--fx-delay, 0s);
+  will-change: transform;
+}
+
+@keyframes fx-cloud-pass {
+  0% {
+    transform: translate3d(-18%, 0, 0);
+  }
+  100% {
+    transform: translate3d(22%, 0, 0);
+  }
+}
+
+/* Warm lantern light pools swinging */
+.fx-sway-pool {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(28px);
+  transform-origin: top center;
+  animation: fx-pool-swing calc(var(--fx-speed, 1) * var(--fx-dur, 4.2s)) var(--fx-ease-in-out, ease-in-out) infinite alternate;
+  animation-delay: var(--fx-delay, 0s);
+  will-change: transform, opacity;
+}
+
+@keyframes fx-pool-swing {
+  0% {
+    opacity: 0.22;
+    transform: rotate(-6deg) translate3d(-10px, 0, 0) scale(0.96);
+  }
+  50% {
+    opacity: 0.34;
+  }
+  100% {
+    opacity: 0.24;
+    transform: rotate(6deg) translate3d(10px, 0, 0) scale(1.04);
+  }
+}

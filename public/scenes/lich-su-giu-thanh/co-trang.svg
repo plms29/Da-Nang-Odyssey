@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" fill="none">
+  <defs>
+    <linearGradient id="bannerRed" x1="20" y1="80" x2="900" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A84825" />
+      <stop offset="60%" stop-color="#C2562D" />
+      <stop offset="100%" stop-color="#A84825" />
+    </linearGradient>
+  </defs>
+  <!-- Flagpole along the left edge (the pivot side for animate="flag") -->
+  <rect x="8" y="40" width="28" height="580" rx="14" fill="#1F1A17" />
+  <circle cx="22" cy="36" r="24" fill="#C99A2E" />
+  <!-- Waving traditional battle flag with gold border and scalloped flame edge -->
+  <path
+    d="M34 76 C260 32, 480 148, 860 88 L790 165 L885 232 L785 300 L865 372 C485 425, 260 315, 34 364 Z"
+    fill="#C99A2E"
+  />
+  <path
+    d="M52 104 C260 68, 470 172, 800 120 L745 175 L820 232 L742 288 L805 344 C470 390, 260 286, 52 332 Z"
+    fill="url(#bannerRed)"
+  />
+  <!-- Central gold emblem disc -->
+  <circle cx="395" cy="222" r="56" fill="#C99A2E" />
+</svg>

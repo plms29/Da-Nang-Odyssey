@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" fill="none">
+  <defs>
+    <linearGradient id="boatHull" x1="480" y1="200" x2="480" y2="285" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A84825" />
+      <stop offset="100%" stop-color="#5E5148" />
+    </linearGradient>
+  </defs>
+  <!-- Water ripple rings under the boat -->
+  <ellipse cx="480" cy="285" rx="340" ry="18" fill="#F6EFE4" fill-opacity="0.22" />
+  <ellipse cx="480" cy="296" rx="240" ry="10" fill="#C99A2E" fill-opacity="0.35" />
+  <!-- Arched bamboo canopy (mui thuyen) -->
+  <path
+    d="M300 218 C355 155, 525 155, 580 218 Z"
+    fill="#C99A2E"
+  />
+  <path
+    d="M325 218 C370 172, 510 172, 555 218 Z"
+    fill="#A84825"
+    fill-opacity="0.45"
+  />
+  <!-- Wooden hull of traditional river boat -->
+  <path
+    d="M140 205 C230 222, 710 222, 820 195 L745 276 C600 294, 360 294, 215 276 Z"
+    fill="url(#boatHull)"
+  />
+  <!-- Gold trim stripe along gunwale -->
+  <path
+    d="M168 216 C260 230, 690 230, 792 208"
+    stroke="#C99A2E"
+    stroke-width="8"
+    stroke-linecap="round"
+  />
+  <!-- Dark lower hull shadow -->
+  <path
+    d="M200 258 C360 272, 600 272, 760 258 L745 276 C600 294, 360 294, 215 276 Z"
+    fill="#1F1A17"
+    fill-opacity="0.7"
+  />
+</svg>

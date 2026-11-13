@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 960" fill="none">
+  <defs>
+    <linearGradient id="bambooCulm" x1="600" y1="0" x2="900" y2="960" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1F4E6B" />
+      <stop offset="60%" stop-color="#1F1A17" />
+      <stop offset="100%" stop-color="#1F1A17" />
+    </linearGradient>
+  </defs>
+  <!-- Tall curving bamboo stalks rising from bottom-right corner -->
+  <g stroke="url(#bambooCulm)" stroke-linecap="round">
+    <path d="M860 960 C835 680, 775 390, 665 45" stroke-width="34" />
+    <path d="M755 960 C720 710, 645 450, 515 140" stroke-width="26" />
+    <path d="M925 960 C905 740, 865 510, 795 220" stroke-width="28" />
+  </g>
+  <!-- Golden rim-light nodes along the bamboo joints -->
+  <g fill="#C99A2E" fill-opacity="0.65">
+    <rect x="692" y="210" width="42" height="8" rx="4" transform="rotate(-16 713 214)" />
+    <rect x="748" y="420" width="42" height="8" rx="4" transform="rotate(-12 769 424)" />
+    <rect x="795" y="640" width="42" height="8" rx="4" transform="rotate(-8 816 644)" />
+    <rect x="558" y="285" width="34" height="7" rx="3.5" transform="rotate(-20 575 288)" />
+    <rect x="630" y="510" width="34" height="7" rx="3.5" transform="rotate(-14 647 513)" />
+    <rect x="692" y="730" width="34" height="7" rx="3.5" transform="rotate(-10 709 733)" />
+  </g>
+  <!-- Sweeping bamboo leaf clusters -->
+  <g fill="#1F1A17">
+    <path d="M665 95 C565 105, 485 145, 425 205 C515 178, 595 142, 665 95 Z" />
+    <path d="M655 105 C570 72, 490 78, 415 112 C505 108, 585 106, 655 105 Z" />
+    <path d="M535 190 C435 205, 355 248, 295 312 C385 282, 465 240, 535 190 Z" />
+    <path d="M525 202 C440 168, 360 175, 285 212 C375 206, 455 204, 525 202 Z" />
+    <path d="M742 360 C642 375, 562 418, 502 482 C592 452, 672 410, 742 360 Z" />
+    <path d="M810 260 C725 235, 650 245, 580 282 C660 274, 735 268, 810 260 Z" />
+  </g>
+  <!-- Subtle blue-gold night highlight on select leaves -->
+  <g fill="#1F4E6B" fill-opacity="0.75">
+    <path d="M660 100 C575 112, 505 145, 450 192 C525 168, 598 136, 660 100 Z" />
+    <path d="M530 195 C445 210, 375 245, 320 298 C398 270, 468 235, 530 195 Z" />
+  </g>
+</svg>

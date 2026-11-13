@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 960" fill="none">
+  <defs>
+    <linearGradient id="citadelWall" x1="180" y1="180" x2="780" y2="780" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#C25B33" />
+      <stop offset="100%" stop-color="#A84825" />
+    </linearGradient>
+  </defs>
+  <!-- Outer glacis slope (Vauban-style bastioned star earthwork) -->
+  <polygon
+    points="
+      480,55 565,165 735,145 715,315 825,400
+      715,485 735,655 565,635 480,745 395,635
+      225,655 245,485 135,400 245,315 225,145 395,165
+    "
+    fill="#5E5148"
+    fill-opacity="0.32"
+  />
+  <!-- Surrounding water moat ring -->
+  <polygon
+    points="
+      480,95 552,190 698,172 680,318 775,400
+      680,482 698,628 552,610 480,705 408,610
+      262,628 280,482 185,400 280,318 262,172 408,190
+    "
+    fill="#1F4E6B"
+    fill-opacity="0.85"
+  />
+  <!-- Brick bastioned curtain walls (Vauban star fort geometry) -->
+  <polygon
+    points="
+      480,145 538,224 654,208 638,324 716,400
+      638,476 654,592 538,576 480,655 422,576
+      306,592 322,476 244,400 322,324 306,208 422,224
+    "
+    fill="url(#citadelWall)"
+    stroke="#F6EFE4"
+    stroke-width="8"
+    stroke-opacity="0.7"
+  />
+  <!-- Inner earthen parade ground -->
+  <polygon
+    points="
+      480,195 524,256 610,244 598,334 658,400
+      598,466 610,556 524,544 480,605 436,544
+      350,556 362,466 302,400 362,334 350,244 436,256
+    "
+    fill="#F6EFE4"
+  />
+  <!-- Inner courtyard pathways & central flag bastion platform -->
+  <line x1="302" y1="400" x2="658" y2="400" stroke="#C99A2E" stroke-width="14" stroke-opacity="0.55" />
+  <line x1="480" y1="195" x2="480" y2="605" stroke="#C99A2E" stroke-width="14" stroke-opacity="0.55" />
+  <!-- Command roof tiles inside the citadel -->
+  <rect x="415" y="345" width="130" height="75" rx="6" fill="#A84825" />
+  <rect x="428" y="356" width="104" height="53" rx="4" fill="#C99A2E" />
+  <!-- South gate causeway bridge over the moat -->
+  <rect x="462" y="645" width="36" height="68" rx="4" fill="#C99A2E" />
+</svg>

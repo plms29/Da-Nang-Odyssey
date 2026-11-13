@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1120" fill="none">
+  <defs>
+    <linearGradient id="lanternSilk2" x1="480" y1="210" x2="480" y2="660" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E5B94E" />
+      <stop offset="45%" stop-color="#C99A2E" />
+      <stop offset="100%" stop-color="#A84825" />
+    </linearGradient>
+    <radialGradient id="lanternCore2" cx="0.5" cy="0.48" r="0.48">
+      <stop offset="0%" stop-color="#F6EFE4" stop-opacity="0.95" />
+      <stop offset="55%" stop-color="#C99A2E" stop-opacity="0.65" />
+      <stop offset="100%" stop-color="#A84825" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <!-- Soft outer night halo -->
+  <circle cx="480" cy="440" r="360" fill="#C99A2E" fill-opacity="0.16" />
+
+  <!-- Hanging cord anchored at top-center (x=480, y=0) for animate="sway" -->
+  <rect x="468" y="0" width="24" height="195" fill="#C99A2E" />
+  <circle cx="480" cy="115" r="24" fill="#A84825" stroke="#C99A2E" stroke-width="8" />
+
+  <!-- Upper wooden/gold collar -->
+  <rect x="360" y="185" width="240" height="36" rx="10" fill="#1F1A17" stroke="#C99A2E" stroke-width="8" />
+
+  <!-- Round-octagonal silk lantern body -->
+  <ellipse cx="480" cy="425" rx="275" ry="225" fill="url(#lanternSilk2)" />
+  <ellipse cx="480" cy="425" rx="215" ry="185" fill="url(#lanternCore2)" />
+
+  <!-- Curved bamboo ribs -->
+  <ellipse cx="480" cy="425" rx="145" ry="222" stroke="#A84825" stroke-width="10" stroke-opacity="0.55" />
+  <line x1="480" y1="203" x2="480" y2="647" stroke="#A84825" stroke-width="10" stroke-opacity="0.55" />
+
+  <!-- Lower wooden/gold collar -->
+  <rect x="365" y="635" width="230" height="36" rx="10" fill="#1F1A17" stroke="#C99A2E" stroke-width="8" />
+
+  <!-- Terracotta & gold silk tassel -->
+  <line x1="480" y1="671" x2="480" y2="735" stroke="#C99A2E" stroke-width="16" />
+  <circle cx="480" cy="735" r="26" fill="#C99A2E" stroke="#1F1A17" stroke-width="6" />
+  <path
+    d="M454 755 L420 1015 L540 1015 L506 755 Z"
+    fill="#A84825"
+  />
+  <line x1="462" y1="765" x2="448" y2="1015" stroke="#C99A2E" stroke-width="6" stroke-opacity="0.7" />
+  <line x1="480" y1="765" x2="480" y2="1015" stroke="#C99A2E" stroke-width="6" stroke-opacity="0.7" />
+  <line x1="498" y1="765" x2="512" y2="1015" stroke="#C99A2E" stroke-width="6" stroke-opacity="0.7" />
+</svg>

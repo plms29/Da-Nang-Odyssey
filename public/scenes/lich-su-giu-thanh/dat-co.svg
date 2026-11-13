@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1600" preserveAspectRatio="xMidYMid slice" fill="none">
+  <defs>
+    <linearGradient id="groundMapGrad" x1="0" y1="0" x2="960" y2="1600" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F6EFE4" />
+      <stop offset="50%" stop-color="#DCE2C6" />
+      <stop offset="100%" stop-color="#BAC79D" />
+    </linearGradient>
+  </defs>
+  <!-- Opaque full-cover map ground -->
+  <rect x="0" y="0" width="960" height="1600" fill="url(#groundMapGrad)" />
+  <!-- Topographic contour patches (soft grass & sandy earth zones) -->
+  <path
+    d="M0 180 C240 140, 460 240, 720 190 L960 220 L960 620 C700 680, 380 560, 0 640 Z"
+    fill="#C7D2AC"
+    fill-opacity="0.55"
+  />
+  <path
+    d="M0 880 C310 820, 590 960, 960 890 L960 1320 C640 1390, 320 1250, 0 1340 Z"
+    fill="#C7D2AC"
+    fill-opacity="0.5"
+  />
+  <!-- Earthen cart paths leading toward the citadel -->
+  <path
+    d="M0 740 C160 720, 260 640, 380 540"
+    stroke="#C99A2E"
+    stroke-opacity="0.32"
+    stroke-width="26"
+    stroke-linecap="round"
+  />
+  <path
+    d="M180 1600 C240 1320, 300 1080, 390 820"
+    stroke="#C99A2E"
+    stroke-opacity="0.28"
+    stroke-width="22"
+    stroke-linecap="round"
+  />
+  <!-- Subtle grass tuft dots seen from above -->
+  <g fill="#5E5148" fill-opacity="0.18">
+    <circle cx="140" cy="260" r="18" />
+    <circle cx="165" cy="272" r="12" />
+    <circle cx="220" cy="480" r="16" />
+    <circle cx="110" cy="960" r="22" />
+    <circle cx="138" cy="975" r="14" />
+    <circle cx="290" cy="1180" r="18" />
+    <circle cx="460" cy="1380" r="20" />
+  </g>
+</svg>

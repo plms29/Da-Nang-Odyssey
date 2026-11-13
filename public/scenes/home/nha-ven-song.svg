@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 280" fill="none">
+  <defs>
+    <linearGradient id="skylineGrad" x1="480" y1="60" x2="480" y2="260" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5E5148" stop-opacity="0.88" />
+      <stop offset="100%" stop-color="#1F1A17" stop-opacity="0.94" />
+    </linearGradient>
+  </defs>
+  <!-- Back row low buildings -->
+  <g fill="#5E5148" fill-opacity="0.55">
+    <rect x="30" y="130" width="55" height="110" rx="2" />
+    <rect x="95" y="105" width="48" height="135" rx="2" />
+    <rect x="190" y="120" width="66" height="120" rx="2" />
+    <rect x="320" y="95" width="54" height="145" rx="2" />
+    <rect x="440" y="115" width="70" height="125" rx="2" />
+    <rect x="575" y="100" width="58" height="140" rx="2" />
+    <rect x="690" y="125" width="65" height="115" rx="2" />
+    <rect x="815" y="110" width="52" height="130" rx="2" />
+  </g>
+  <!-- Front row riverside houses and low-rise blocks with pitched roofs -->
+  <path
+    d="M0 240 L0 165 L45 165 L45 150 L72 132 L100 150 L100 172 L152 172 L152 128 L205 128 L205 162 L245 142 L285 162 L285 175 L345 175 L345 138 L398 138 L398 168 L455 168 L485 146 L515 168 L515 152 L570 152 L570 174 L630 174 L630 134 L682 134 L682 165 L730 145 L765 165 L765 156 L825 156 L825 172 L875 150 L910 172 L960 172 L960 240 Z"
+    fill="url(#skylineGrad)"
+  />
+  <!-- Warm golden hour windows -->
+  <g fill="#C99A2E" fill-opacity="0.78">
+    <rect x="165" y="142" width="10" height="14" rx="1" />
+    <rect x="183" y="142" width="10" height="14" rx="1" />
+    <rect x="165" y="164" width="10" height="14" rx="1" />
+    <rect x="358" y="150" width="10" height="14" rx="1" />
+    <rect x="376" y="150" width="10" height="14" rx="1" />
+    <rect x="530" y="164" width="12" height="12" rx="1" />
+    <rect x="644" y="148" width="10" height="14" rx="1" />
+    <rect x="662" y="148" width="10" height="14" rx="1" />
+    <rect x="644" y="170" width="10" height="14" rx="1" />
+    <rect x="780" y="168" width="10" height="14" rx="1" />
+    <rect x="798" y="168" width="10" height="14" rx="1" />
+  </g>
+  <!-- Far riverbank quay wall -->
+  <rect x="0" y="236" width="960" height="14" fill="#5E5148" />
+  <rect x="0" y="248" width="960" height="32" fill="#1F4E6B" fill-opacity="0.45" />
+</svg>

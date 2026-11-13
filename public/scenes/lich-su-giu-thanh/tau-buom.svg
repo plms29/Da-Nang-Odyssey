@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" fill="none">
+  <!-- Water wake V-lines behind ship (seen from elevated angle) -->
+  <path
+    d="M480 120 L230 670 M480 120 L730 670"
+    stroke="#F6EFE4"
+    stroke-width="14"
+    stroke-opacity="0.35"
+    stroke-linecap="round"
+  />
+  <!-- Wooden hull seen from top-three-quarter angle -->
+  <path
+    d="M480 70 C595 165, 635 330, 595 575 L365 575 C325 330, 365 165, 480 70 Z"
+    fill="#1F1A17"
+  />
+  <path
+    d="M480 105 C568 188, 598 330, 566 545 L394 545 C362 330, 392 188, 480 105 Z"
+    fill="#5E5148"
+  />
+  <!-- Deck planks & bowsprit -->
+  <line x1="480" y1="15" x2="480" y2="120" stroke="#C99A2E" stroke-width="16" stroke-linecap="round" />
+
+  <!-- Fore sail (billowing in sand/ink) -->
+  <path
+    d="M250 215 C380 165, 580 165, 710 215 C660 265, 300 265, 250 215 Z"
+    fill="#F6EFE4"
+    stroke="#1F1A17"
+    stroke-width="10"
+  />
+  <circle cx="480" cy="215" r="20" fill="#1F1A17" />
+
+  <!-- Main central sail (largest) -->
+  <path
+    d="M190 365 C355 298, 605 298, 770 365 C705 432, 255 432, 190 365 Z"
+    fill="#F6EFE4"
+    stroke="#1F1A17"
+    stroke-width="12"
+  />
+  <circle cx="480" cy="365" r="24" fill="#1F1A17" />
+
+  <!-- Mizzen rear sail -->
+  <path
+    d="M275 505 C390 462, 570 462, 685 505 C638 548, 322 548, 275 505 Z"
+    fill="#E5D7C1"
+    stroke="#1F1A17"
+    stroke-width="10"
+  />
+  <circle cx="480" cy="505" r="18" fill="#1F1A17" />
+</svg>
