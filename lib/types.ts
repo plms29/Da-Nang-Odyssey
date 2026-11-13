@@ -41,6 +41,8 @@ export interface Spot {
   caption_fallback: string;
   /** Prebuilt tour narration, used when Gemini fails (KH mục 5). */
   narration_fallback: string;
+  /** Optional prebuilt narration audio under /public; played instead of speech synthesis. */
+  narration_audio?: string;
   sources: Source[];
   status: ContentStatus;
 }
@@ -153,5 +155,15 @@ export interface TourStop {
 
 export interface TourPlan {
   stops: TourStop[];
+  generated_by: "gemini" | "fallback";
+}
+
+export interface TourRequest {
+  seconds: number;
+  themes: Theme[];
+}
+
+export interface CaptionResult {
+  caption: string;
   generated_by: "gemini" | "fallback";
 }
