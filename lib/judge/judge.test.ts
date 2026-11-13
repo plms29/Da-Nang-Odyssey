@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { getLevels } from "@/lib/content";
+import { MAX_AUDIO_DECODED_BYTES, validateAudio } from "./audio";
 import { gradeFallback } from "./fallback";
-import { buildPrompt, gradeWithGemini } from "./gemini";
+import { buildAudioPrompt, buildPrompt, gradeWithGemini } from "./gemini";
 import { starsFor, totalScore } from "./score";
 import type { ExpressStation, Level } from "@/lib/types";
 
@@ -238,5 +239,189 @@ describe("gradeWithGemini", () => {
     await expect(
       gradeWithGemini(sampleLevel, sampleStation, "Bài làm hợp lệ"),
     ).rejects.toThrow();
+  });
+});
+
+const voiceStation: ExpressStation = {
+  id: "the-hien",
+  type: "open_text_or_voice",
+  prompt: "Hô một câu bài chòi theo câu mẫu.",
+  sample: "Chiều chiều ra đứng bờ sông.",
+  max_seconds: 20,
+  max_chars: 300,
+  rubric: [
+    { id: "dung-loi", desc: "Đúng lời câu mẫu" },
+    { id: "ro-tieng", desc: "Rõ tiếng, nghe được từng chữ" },
+    { id: "ngat-nhip", desc: "Có ngắt nhịp theo câu hô" },
+  ],
+};
+
+describe("validateAudio", () => {
+  it("returns null for a valid audio payload and voice station", () => {
+    expect(
+      validateAudio(
+        { mime: "audio/webm;codecs=opus", data_base64: "AAAA" },
+        voiceStation,
+      ),
+    ).toBeNull();
+  });
+
+  it("returns an error for an unsupported mime type", () => {
+    const err = validateAudio(
+      { mime: "video/mp4", data_base64: "AAAA" },
+      voiceStation,
+    );
+    expect(typeof err).toBe("string");
+    expect(err).not.toBeNull();
+  });
+
+  it("returns an error when decoded payload exceeds size limit", () => {
+    const oversizedBase64Length = Math.ceil(((MAX_AUDIO_DECODED_BYTES + 1) * 4) / 3);
+    const err = validateAudio(
+      { mime: "audio/webm", data_base64: "A".repeat(oversizedBase64Length) },
+      voiceStation,
+    );
+    expect(typeof err).toBe("string");
+    expect(err).not.toBeNull();
+  });
+
+  it("returns an error for a station without max_seconds", () => {
+    const err = validateAudio(
+      { mime: "audio/webm", data_base64: "AAAA" },
+      sampleStation,
+    );
+    expect(typeof err).toBe("string");
+    expect(err).not.toBeNull();
+  });
+
+  it("rejects non-base64 characters such as '!!!!'", () => {
+    const err = validateAudio(
+      { mime: "audio/webm", data_base64: "!!!!" },
+      voiceStation,
+    );
+    expect(err).toBe("audio.data_base64 is not valid base64");
+  });
+
+  it("rejects base64 strings containing internal whitespace", () => {
+    const err = validateAudio(
+      { mime: "audio/webm", data_base64: "SGVs bG8=" },
+      voiceStation,
+    );
+    expect(err).toBe("audio.data_base64 is not valid base64");
+  });
+});
+
+describe("gradeWithGemini (audio)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  it("sends inline_data with stripped base mime_type and returns transcript", async () => {
+    vi.stubEnv("GEMINI_API_KEY", "test-key");
+    vi.stubEnv("GEMINI_MODEL", "gemini-test");
+
+    let capturedBody:
+      | {
+          contents?: Array<{
+            parts?: Array<{
+              text?: string;
+              inline_data?: { mime_type: string; data: string };
+            }>;
+          }>;
+          generationConfig?: {
+            responseSchema?: {
+              required?: string[];
+              properties?: Record<string, unknown>;
+            };
+          };
+        }
+      | undefined;
+
+    const payload = JSON.stringify({
+      criteria: voiceStation.rubric.map((r) => ({
+        id: r.id,
+        score: 3,
+        evidence: "Chiều chiều ra đứng bờ sông",
+      })),
+      praise: "Bạn hô rõ chữ và đúng nhịp.",
+      addition: "Bảo tàng lưu giữ nhiều hiện vật Chăm quý giá.",
+      transcript: "Chiều chiều ra đứng bờ sông.",
+    });
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (_url: unknown, init?: { body?: string }) => {
+        capturedBody = init?.body ? JSON.parse(init.body) : undefined;
+        return new Response(
+          JSON.stringify({
+            candidates: [{ content: { parts: [{ text: payload }] } }],
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } },
+        );
+      }),
+    );
+
+    const result = await gradeWithGemini(sampleLevel, voiceStation, "", {
+      mime: "audio/webm;codecs=opus",
+      data_base64: "SGVsbG8=",
+    });
+
+    const parts = capturedBody?.contents?.[0]?.parts;
+    expect(parts).toHaveLength(2);
+    expect(parts?.[1]).toEqual({
+      inline_data: {
+        mime_type: "audio/webm",
+        data: "SGVsbG8=",
+      },
+    });
+    expect(capturedBody?.generationConfig?.responseSchema?.required).toContain("transcript");
+    expect(result.graded_by).toBe("gemini");
+    expect(result.transcript).toBe("Chiều chiều ra đứng bờ sông.");
+  });
+
+  it("caps returned transcript at 500 characters", async () => {
+    vi.stubEnv("GEMINI_API_KEY", "test-key");
+    vi.stubEnv("GEMINI_MODEL", "gemini-test");
+
+    const payload = JSON.stringify({
+      criteria: voiceStation.rubric.map((r) => ({
+        id: r.id,
+        score: 2,
+        evidence: "trích dẫn",
+      })),
+      praise: "Làm tốt lắm.",
+      addition: "Bảo tàng lưu giữ nhiều hiện vật Chăm quý giá.",
+      transcript: `  ${"t".repeat(650)}  `,
+    });
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () =>
+        new Response(
+          JSON.stringify({
+            candidates: [{ content: { parts: [{ text: payload }] } }],
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } },
+        ),
+      ),
+    );
+
+    const result = await gradeWithGemini(sampleLevel, voiceStation, "", {
+      mime: "audio/mp4",
+      data_base64: "AAAA",
+    });
+
+    expect(result.transcript).toHaveLength(500);
+  });
+
+  it("builds an audio prompt mentioning sample sentence, data-only rule, and not judging accent", () => {
+    const prompt = buildAudioPrompt(sampleLevel, voiceStation);
+    expect(prompt).toContain(voiceStation.sample!);
+    expect(prompt.toLowerCase()).toContain("accent");
+    expect(prompt.toLowerCase()).toContain("giọng vùng miền");
+    expect(prompt.toLowerCase()).toContain("không");
+    expect(prompt.toLowerCase()).toContain("dữ liệu");
+    expect(prompt.toLowerCase()).toContain("chỉ là dữ liệu");
   });
 });
