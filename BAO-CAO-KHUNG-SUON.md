@@ -1,0 +1,83 @@
+# Báo cáo giai đoạn A: Khung sườn sản phẩm
+
+Ngày 13/11/2026 · Repo: https://github.com/plms29/Da-Nang-Odyssey (nhánh `main`)
+
+## Kết luận
+
+Khung sườn chạy được trọn một vòng trên điện thoại. Màn 1 chơi được từ mở màn đến lúc nhận sao; bài ở trạm Thể hiện được `/api/judge` chấm bằng đường dự phòng; hộ chiếu trên máy ghi dấu "hoàn thành màn". Chưa cần khóa Gemini hay Google Maps. Toàn bộ nội dung vẫn là **dữ liệu giữ chỗ (`draft`)**, chưa có sự kiện lịch sử nào được kiểm chứng.
+
+## Kiểm tra đã chạy
+
+| Kiểm tra | Kết quả |
+| --- | --- |
+| `npm test` (Vitest) | 42 test qua, 6 file |
+| `npx tsc --noEmit` | Không lỗi |
+| `npx eslint .` | Không lỗi |
+| `npm run build` | Qua; 3 màn được dựng tĩnh |
+| `npm run validate` | Hợp lệ, 6 cảnh báo "chưa verified" (đúng như mong đợi) |
+| Chơi màn 1 trên khung 375px | Mở màn → ghim (nút demo) → ghép 9 mảnh → nộp bài → kết màn, 2 sao, 200 điểm code |
+| Hộ chiếu (`localStorage`) | `bao-tang-cham: {level: true}`, màn 1 lưu sao và điểm |
+| `GET /healthz` | 200 |
+| `POST /api/judge` | `graded_by: "fallback"` khi chưa có khóa; JSON hỏng trả 400 |
+| `POST /api/tour/plan` (180 giây, di sản Chăm) | 2 điểm dừng, xếp theo tuyến, `generated_by: "fallback"` |
+
+Chưa thử: iPhone/Android thật, gọi Gemini thật (chưa có khóa), triển khai Cloud Run.
+
+## Module đã có (đối chiếu KH mục 8)
+
+| Mã KH | Module | Trạng thái | File chính |
+| --- | --- | --- | --- |
+| C1, C2 | Kho tri thức, kịch bản màn | Khung + 3 điểm, 3 màn P0 giữ chỗ | `content/spots.json`, `content/levels.json` |
+| C4 | Kiểm tra nội dung | Xong; chạy trước mỗi lần build; `npm run validate:demo` chặn nội dung chưa `verified` | `scripts/validate-content.mjs` |
+| F1 | Vỏ ứng dụng | Xong: trang chủ 3 lối vào + hộ chiếu, thanh điều hướng dưới, trang giữ chỗ | `app/layout.tsx`, `app/page.tsx`, `components/shell/*` |
+| F3 | Bộ máy màn | Xong (máy trạng thái thuần, có test) | `lib/level/engine.ts` |
+| F4 | Thư viện hoạt động | Hàm chấm xong cho ghim, ghép mảnh, xếp thứ tự, ghép cặp; giao diện tạm (chưa kéo thả, chưa bản đồ) | `lib/activities/scoring.ts`, `components/level/stations/*` |
+| F5 | Trạm Thể hiện | Dạng chữ xong; chưa ghi âm, chưa vẽ | `components/level/stations/ExpressStation.tsx` |
+| F8 | Xác thực vị trí | Logic xong (chọn điểm gần nhất, từ chối khi sai số lớn hơn bán kính, cờ `?demo=`); chưa có giao diện | `lib/geo/locate.ts` |
+| F9 | Hộ chiếu | Lưu trên máy xong; chưa có trang hiển thị, chưa đồng bộ Firestore | `lib/passport/*` |
+| B1 | Lập tuyến tour | Chọn điểm theo luật + lời kể dựng sẵn | `lib/tour/*`, `app/api/tour/plan/route.ts` |
+| B2 | Giám khảo | Xong: Gemini (khi có khóa) + dự phòng theo từ khóa, server tự cộng điểm | `lib/judge/*`, `app/api/judge/route.ts` |
+| I1 (một phần) | `/healthz` | Xong; chưa có Dockerfile/Cloud Run/CI | `app/healthz/route.ts` |
+
+Các giao kèo trong KH mục 9 đã có trong code: `spot_id` là khóa chung; F4 chỉ trả `{correct, score, hints_used}`; chỉ F9 ghi tiến độ; trình duyệt không gọi Gemini; mọi đường Gemini đều có dự phòng.
+
+## Bảo mật ở `/api/judge` (theo KH mục 7 và 12)
+
+- Bài làm nằm trong khối `<bai_lam>`, mọi dấu `<` `>` trong bài bị vô hiệu hóa để người chơi không đóng khối sớm; prompt nhắc bỏ qua chỉ dẫn cả trước và sau khối.
+- Gemini chỉ trả điểm từng tiêu chí; server kiểm tra đủ id, số nguyên 0 đến 3, rồi tự tính tổng và sao.
+- Nhiệt độ 0, hết 8 giây thì chuyển sang chấm dự phòng; nhận xét bị cắt ở 300 ký tự.
+- Không ghi bài làm vào log; body lớn hơn 64 KB trả 413; bài dài hơn `max_chars` trả 400.
+
+## Ai làm gì
+
+| Task | Worker | Review (sonnet) | Vòng sửa |
+| --- | --- | --- | --- |
+| T0 nền móng: scaffold, kiểu dữ liệu, nội dung, kiểm tra nội dung | Claude (main) | — | — |
+| T1 vỏ ứng dụng | `ui-argon` | Duyệt | 0 |
+| T2 bộ máy màn + hàm chấm | `ui-hydrogen-high` | Duyệt | 0 |
+| T3 hộ chiếu + vị trí | `ui-hydrogen-high` | Duyệt | 0 |
+| T4 API chấm và tour | `ui-hydrogen-high` | Yêu cầu sửa: 1 lỗi chặn (lách khối `<bai_lam>`), 3 lỗi nên sửa | 1, Claude kiểm tra lại |
+| T5 trang chơi màn | `ui-hydrogen` | Yêu cầu sửa: 4 lỗi nên sửa (xử lý lỗi API, a11y sao, ghép cặp trùng, nút gợi ý) | 1 |
+
+**Sự cố:** lần chạy đầu, cả 4 worker Gemini dừng vì chế độ chạy nền không cho dùng lệnh shell. Mình không đổi cấu hình quyền; thay vào đó dặn worker chỉ đọc/ghi file, còn test, tsc, lint, build do phiên chính chạy. Cách này chạy ổn cho mọi task sau.
+
+## Việc còn mở trước giai đoạn B
+
+1. **Nội dung:** đội nội dung thay toàn bộ chữ `[CHỜ KIỂM CHỨNG]`, tọa độ `0.0`, nguồn và `must_include` của rubric; đổi `status` sang `verified` khi đã đối chiếu hai nguồn.
+2. **Tên mô hình Gemini:** đặt `GEMINI_API_KEY` và `GEMINI_MODEL` trong `.env.local` sau khi tra trang Models (KH mục 7).
+3. **Khóa Google Maps** cho F2.
+4. Danh sách "Việc cần xác minh trước khi code" ở KH mục 11 vẫn chưa tích mục nào.
+
+## Đề xuất giai đoạn B (theo lộ trình KH mục 11)
+
+| Đợt | Việc | Module | Worker dự kiến |
+| --- | --- | --- | --- |
+| B1 | Trang hộ chiếu đọc store (xử lý hydration), trang check-in: xin quyền vị trí, cờ demo, khoảng cách, nút chỉ đường | F9, F8 | `ui-hydrogen-high` |
+| B1 | Photobooth: camera trước/sau, khung 9:16, đếm ngược, ghép khung + chữ tiếng Việt trên canvas, tải về, Web Share | F7 | `ui-argon-high` |
+| B1 | Dockerfile + Cloud Run asia-southeast1 + Secret Manager; CI chạy validate, test, build | I1 | Claude (main) |
+| B2 | Bản đồ Google Maps cho trạm Tìm và tour | F2 | `ui-argon` |
+| B2 | Ghép mảnh và xếp thứ tự bằng kéo thả (dnd-kit) | F4 | `ui-argon` |
+| B2 | Ghi âm 20 giây cho trạm hô bài chòi + chấm âm thanh | F5, B2 | `ui-hydrogen-high` |
+| B3 | Trình phát tour: chọn thời lượng/chủ đề, phụ đề, giọng đọc trình duyệt, lời kể Gemini có dự phòng 8 giây | F6, B3 | `ui-argon` + `ui-hydrogen-high` |
+| B3 | Chú thích ảnh check-in `/api/caption` | B5 | `ui-hydrogen` |
+| Sau | Tách nền MediaPipe cho kiểu từ xa, Firestore, bảng xếp hạng, Live API | F7, I2, B4, B6 | theo thứ tự cắt ở KH mục 11 |
