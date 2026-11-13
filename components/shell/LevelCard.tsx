@@ -43,10 +43,14 @@ export function LevelCard({ level, delay = 0 }: LevelCardProps) {
           href={`/kham-pha/${level.id}`}
           sky={kit.sky}
           label={level.title}
-          className="group block overflow-hidden rounded-lg border border-ink/15 bg-white/80 transition-colors hover:border-terracotta hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="group block overflow-hidden rounded-lg border border-ink/15 bg-white/80 transition-colors lg:transition-[background-color,border-color,translate] lg:hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0 hover:border-terracotta hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
-          <div className="relative h-[140px] overflow-hidden rounded-t-lg">
-            <SceneBackdrop kit={kit} intensity="calm" />
+          <div className="relative h-[140px] lg:h-56 overflow-hidden rounded-t-lg">
+            <SceneBackdrop
+              kit={kit}
+              intensity="calm"
+              className="lg:transition-transform lg:duration-500 lg:group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+            />
             <span className="absolute left-3 top-3 rounded-full border border-white/50 bg-white/60 px-2.5 py-1 text-xs font-bold tracking-wider text-ink uppercase backdrop-blur-md">
               Màn {level.order}
             </span>
@@ -55,7 +59,7 @@ export function LevelCard({ level, delay = 0 }: LevelCardProps) {
             <div className="flex items-center justify-between gap-2">
               <KineticText
                 as="h2"
-                className="text-base font-bold text-ink group-hover:text-terracotta"
+                className="text-base lg:text-2xl font-bold text-ink group-hover:text-terracotta"
                 stagger={0.02}
               >
                 {level.title}

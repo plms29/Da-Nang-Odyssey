@@ -132,19 +132,19 @@ export function PassportView({ spots, levels }: PassportViewProps) {
         className="space-y-5"
       >
         <span className="sr-only">Đang tải hộ chiếu…</span>
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4 lg:gap-4">
           {Array.from({ length: 4 }).map((_, index) => (
             <div
               key={index}
-              className="h-18 animate-pulse rounded-lg border border-ink/10 bg-white/60 p-3"
+              className="h-18 animate-pulse rounded-lg border border-ink/10 bg-white/60 p-3 lg:h-28 lg:p-5"
             />
           ))}
         </div>
-        <div className="space-y-3">
+        <div className="space-y-3 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-y-0">
           {Array.from({ length: 3 }).map((_, index) => (
             <div
               key={index}
-              className="h-28 animate-pulse rounded-lg border border-ink/10 bg-white/60 p-4"
+              className="h-28 animate-pulse rounded-lg border border-ink/10 bg-white/60 p-4 lg:h-56 lg:p-6"
             />
           ))}
         </div>
@@ -205,24 +205,28 @@ export function PassportView({ spots, levels }: PassportViewProps) {
   return (
     <div className="space-y-6">
       <section aria-label="Tổng kết hộ chiếu">
-        <div className="grid grid-cols-2 gap-2.5">
-          <GlassPanel className="rounded-lg p-3">
+        <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4 lg:gap-4">
+          <GlassPanel className="rounded-lg p-3 lg:p-5">
             <p className="text-xs font-semibold text-muted">Hoàn thành màn</p>
-            <p className="mt-1 text-xl font-bold text-terracotta">
+            <p className="mt-1 text-xl font-bold text-terracotta lg:text-4xl">
               {counts.level}
             </p>
           </GlassPanel>
-          <GlassPanel className="rounded-lg p-3">
+          <GlassPanel className="rounded-lg p-3 lg:p-5">
             <p className="text-xs font-semibold text-muted">Đã nghe tour</p>
-            <p className="mt-1 text-xl font-bold text-river">{counts.tour}</p>
+            <p className="mt-1 text-xl font-bold text-river lg:text-4xl">
+              {counts.tour}
+            </p>
           </GlassPanel>
-          <GlassPanel className="rounded-lg p-3">
+          <GlassPanel className="rounded-lg p-3 lg:p-5">
             <p className="text-xs font-semibold text-muted">Đã đến</p>
-            <p className="mt-1 text-xl font-bold text-ink">{counts.visited}</p>
+            <p className="mt-1 text-xl font-bold text-ink lg:text-4xl">
+              {counts.visited}
+            </p>
           </GlassPanel>
-          <GlassPanel className="rounded-lg p-3">
+          <GlassPanel className="rounded-lg p-3 lg:p-5">
             <p className="text-xs font-semibold text-muted">Điểm hoạt động</p>
-            <p className="mt-1 text-xl font-bold text-river">
+            <p className="mt-1 text-xl font-bold text-river lg:text-4xl">
               <CountUp value={totalCodeScore} />
             </p>
           </GlassPanel>
@@ -233,7 +237,7 @@ export function PassportView({ spots, levels }: PassportViewProps) {
         (reducedMotion ? (
           <section
             aria-label="Hộ chiếu chưa có dấu"
-            className="rounded-lg border border-dashed border-gold/80 bg-gold/15 p-4 text-sm text-ink"
+            className="rounded-lg border border-dashed border-gold/80 bg-gold/15 p-4 text-sm text-ink lg:mx-auto lg:max-w-2xl lg:p-6"
           >
             {emptyStateContent}
           </section>
@@ -243,7 +247,7 @@ export function PassportView({ spots, levels }: PassportViewProps) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="rounded-lg border border-dashed border-gold/80 bg-gold/15 p-4 text-sm text-ink"
+            className="rounded-lg border border-dashed border-gold/80 bg-gold/15 p-4 text-sm text-ink lg:mx-auto lg:max-w-2xl lg:p-6"
           >
             {emptyStateContent}
           </motion.section>
@@ -254,10 +258,12 @@ export function PassportView({ spots, levels }: PassportViewProps) {
           <KineticText as="span">Dấu theo điểm văn hóa</KineticText>
         </h2>
         {reducedMotion ? (
-          <div className="grid grid-cols-1 gap-3">{stampCards}</div>
+          <div className="grid grid-cols-1 gap-3 lg:grid lg:grid-cols-3 lg:gap-6">
+            {stampCards}
+          </div>
         ) : (
           <motion.div
-            className="grid grid-cols-1 gap-3"
+            className="grid grid-cols-1 gap-3 lg:grid lg:grid-cols-3 lg:gap-6"
             variants={gridVariants}
             initial="hidden"
             animate="show"

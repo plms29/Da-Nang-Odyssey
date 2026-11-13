@@ -8,7 +8,6 @@ import type {
   StationResult,
 } from "@/lib/types";
 import { MapView } from "@/components/map/MapView";
-import { haptic } from "@/lib/haptics";
 import { useAttempt } from "../useAttempt";
 import { HintBox } from "../HintBox";
 
@@ -99,7 +98,6 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
   const [revealedHints, setRevealedHints] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [mapFailed, setMapFailed] = useState(false);
-  const [solvedGlow, setSolvedGlow] = useState(false);
   const { hintsUsed, nextHint, addWrong, result } = useAttempt(station.hints);
 
   const showMap = apiKey.length > 0 && !mapFailed;
@@ -108,8 +106,6 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
     const check = checkMapPin(station, candidate);
     if (check.correct) {
       setFeedback(null);
-      setSolvedGlow(true);
-      haptic("success");
       onDone(result(true));
       return;
     }
@@ -133,7 +129,6 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
     const lat = Number.parseFloat(latInput);
     const lng = Number.parseFloat(lngInput);
     if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-      haptic("error");
       setFeedback("Vui lòng nhập vĩ độ và kinh độ hợp lệ.");
       return;
     }
@@ -184,7 +179,7 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
   );
 
   return (
-    <section className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${solvedGlow ? "ring-2 ring-gold ring-offset-2" : ""}`}>
+    <section className="rounded-lg border border-ink/15 bg-white/80 p-4">
       <p className="text-base font-medium leading-relaxed text-ink">
         {station.clue}
       </p>

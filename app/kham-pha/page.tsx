@@ -13,7 +13,7 @@ export default function KhamPhaPage() {
         backHref="/"
       />
 
-      <ul className="space-y-3">
+      <ul className="space-y-3 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-y-0">
         {levels.map((level, index) => (
           <li key={level.id}>
             <LevelCard level={level} delay={Math.min(0.05 * index, 0.2)} />

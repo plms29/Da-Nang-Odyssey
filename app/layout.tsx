@@ -27,8 +27,8 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body className={`${beVietnamPro.variable} bg-sand text-ink antialiased`}>
-        <div className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col bg-sand pb-24 shadow-sm">
-          <div className="flex-1 px-4 pt-5">{children}</div>
+        <div className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col bg-sand pb-24 shadow-sm lg:max-w-[1200px] lg:pb-12">
+          <div className="flex-1 px-4 pt-5 lg:px-8 lg:pt-24">{children}</div>
           <BottomNav />
         </div>
         <ZoomOverlayHost />

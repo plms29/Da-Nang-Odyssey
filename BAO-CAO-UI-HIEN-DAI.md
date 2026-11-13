@@ -121,3 +121,7 @@ Bỏ: V6a (vẽ lại SVG home + Chăm): tranh AI thay thế.
 
 ### Cách tạo nốt ảnh còn thiếu
 Khi hạn mức hồi: gọi lại worker tạo ảnh cho `home` (cau-rong, bo-song) và `lich-su-giu-thanh` (map, dai-bao, co), lưu JPG vào `.art-raw/<kit>/<layer>.jpg`, rồi `node scripts/gen-scene-art.mjs --kit <kit>` để tách nền magenta và đổi sang WebP. Sau đó cập nhật `lib/scene/kits/*.ts` dùng các file `ai-*.webp` mới.
+
+## 9. Bản cho máy tính (breakpoint `lg` = 1024px)
+Giao diện điện thoại giữ nguyên; từ 1024px trở lên: khung nội dung rộng tối đa 1200px, thanh điều hướng nổi bằng kính ở trên đầu, trang chủ hero lớn + thẻ vào 3 cột, danh sách màn lưới 3 cột, màn chơi chia hai cột (cảnh bên trái, nội dung bên phải) và phần mở đầu cuộn có chữ bên trái, hộ chiếu 4 ô thống kê + lưới 3 cột. Đã bổ sung 5 ảnh AI (cầu Rồng, bờ sông, bản đồ thành, đại bác, cờ); cầu Rồng chưa dùng vì ảnh thành phố đã có cầu.
+Chưa kiểm: màn chơi desktop khi làm bài (trạm), độ rộng thanh điều hướng ở đúng 1024px, ảnh bờ sông có thể còn viền hồng nhẹ do tách nền magenta.

@@ -20,7 +20,7 @@ const layers: SceneLayer[] = [
     animate: "waves",
   },
   {
-    src: "/scenes/home/bo-song.svg",
+    src: "/scenes/home/ai-bo-song.webp",
     depth: 1,
     className: "bottom-0 left-0 w-full h-auto",
   },

@@ -48,9 +48,9 @@ export function PageHeader({
 
   return (
     <header
-      className={`-mx-4 mb-6 px-4 py-2 transition-[background-color,box-shadow,border-color] duration-200 ${
+      className={`-mx-4 mb-6 px-4 py-2 transition-[background-color,box-shadow,border-color] duration-200 lg:-mx-8 lg:px-8 ${
         scrolled
-          ? "sticky top-0 z-30 rounded-b-2xl border-b border-white/50 bg-sand/65 shadow-sm backdrop-blur-[18px] backdrop-saturate-[1.6]"
+          ? "sticky top-0 z-30 rounded-b-2xl border-b border-white/50 bg-sand/65 shadow-sm backdrop-blur-[18px] backdrop-saturate-[1.6] lg:top-20"
           : "border-b border-transparent"
       }`}
     >
@@ -74,7 +74,7 @@ export function PageHeader({
           <span>{backLabel}</span>
         </Link>
       )}
-      <KineticText as="h1" className="text-2xl font-bold tracking-tight text-ink">
+      <KineticText as="h1" className="text-2xl font-bold tracking-tight text-ink lg:text-4xl">
         {title}
       </KineticText>
       {subtitle && (
@@ -82,7 +82,7 @@ export function PageHeader({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.2, delay: reduce ? 0 : 0.08 }}
-          className="mt-1 text-sm leading-relaxed text-muted"
+          className="mt-1 text-sm leading-relaxed text-muted lg:max-w-2xl"
         >
           {subtitle}
         </motion.p>
