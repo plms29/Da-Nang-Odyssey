@@ -1,6 +1,10 @@
 "use client";
 
 import { useState, type Dispatch } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { GlassPanel } from "@/components/fx/Glass";
+import { GlowButton } from "@/components/fx/GlowButton";
+import { KineticText } from "@/components/fx/KineticText";
 import { TOUR_STOPS } from "@/lib/tour/config";
 import { fallbackPlan, pickStops } from "@/lib/tour/plan";
 import type { TourAction } from "@/lib/tour/player";
@@ -80,9 +84,17 @@ export function TourSetup({
   const [themes, setThemes] = useState<Theme[]>([]);
   const [isStarting, setIsStarting] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
+  const reduceMotion = useReducedMotion();
 
   const availableThemes = THEME_OPTIONS.filter((opt) =>
     spots.some((spot) => spot.theme === opt.value),
+  );
+  const selectedDuration =
+    DURATION_OPTIONS.find((opt) => opt.seconds === seconds) ??
+    DURATION_OPTIONS[1];
+  const selectedStopCount = Math.min(
+    TOUR_STOPS[seconds] ?? 0,
+    spots.length,
   );
 
   function toggleTheme(theme: Theme) {
@@ -157,104 +169,155 @@ export function TourSetup({
   const displayError = localError ?? notice;
 
   return (
-    <section className="space-y-5 rounded-lg border border-ink/15 bg-white/80 p-5">
-      {displayError && (
-        <p
-          role="alert"
-          className="rounded-md border border-terracotta/40 bg-terracotta/10 px-3.5 py-2.5 text-sm font-medium text-terracotta"
-        >
-          {displayError}
-        </p>
-      )}
-
-      <fieldset className="space-y-2.5">
-        <legend className="text-sm font-bold text-ink">Thời lượng</legend>
-        <div className="grid grid-cols-3 gap-2">
-          {DURATION_OPTIONS.map((option) => {
-            const stopCount = Math.min(
-              TOUR_STOPS[option.seconds] ?? 0,
-              spots.length,
-            );
-            const checked = seconds === option.seconds;
-            return (
-              <label
-                key={option.seconds}
-                className={`flex min-h-14 cursor-pointer flex-col items-center justify-center rounded-md border px-2 py-2 text-center transition-colors motion-reduce:transition-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
-                  checked
-                    ? "border-terracotta bg-terracotta text-sand"
-                    : "border-ink/20 bg-sand/60 text-ink hover:border-terracotta"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="tour-duration"
-                  value={option.seconds}
-                  checked={checked}
-                  onChange={() => {
-                    setLocalError(null);
-                    onClearNotice?.();
-                    setSeconds(option.seconds);
-                  }}
-                  className="sr-only"
-                />
-                <span className="text-sm font-bold">{option.label}</span>
-                <span
-                  className={`mt-0.5 text-xs ${
-                    checked ? "text-sand/90" : "text-muted"
-                  }`}
-                >
-                  {stopCount} điểm
-                </span>
-              </label>
-            );
-          })}
-        </div>
-      </fieldset>
-
-      {availableThemes.length > 0 && (
-        <fieldset className="space-y-2.5">
-          <legend className="text-sm font-bold text-ink">
-            Chủ đề quan tâm
-          </legend>
-          <p className="text-xs text-muted">
-            Không chọn chủ đề nào để nghe tất cả điểm nổi bật dọc sông Hàn.
+    <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-8">
+      <GlassPanel
+        tone="light"
+        className="hidden lg:col-span-5 lg:flex lg:flex-col lg:gap-5 lg:rounded-2xl lg:p-8"
+      >
+        <div className="space-y-2">
+          <p className="text-xs font-bold uppercase tracking-wider text-terracotta">
+            Hành trình dọc sông Hàn
           </p>
-          <div className="flex flex-wrap gap-2">
-            {availableThemes.map((option) => {
-              const checked = themes.includes(option.value);
+          <KineticText
+            as="h2"
+            shimmer
+            className="text-2xl font-bold leading-snug text-ink"
+          >
+            Nghe kể chuyện nhanh theo quỹ thời gian của bạn
+          </KineticText>
+          <p className="text-sm leading-relaxed text-muted">
+            Chọn thời lượng và những chủ đề bạn quan tâm. Hệ thống sẽ sắp xếp
+            lộ trình các điểm văn hóa dọc sông Hàn kèm bản đồ, thuyết minh và
+            phụ đề trực tiếp.
+          </p>
+        </div>
+
+        <dl className="grid grid-cols-2 gap-3 border-t border-ink/10 pt-4 text-sm">
+          <div className="rounded-xl border border-ink/10 bg-sand/60 p-3">
+            <dt className="text-xs font-medium text-muted">Thời lượng</dt>
+            <dd className="mt-1 font-bold text-ink">
+              {selectedDuration.label} ({selectedStopCount} điểm)
+            </dd>
+          </div>
+          <div className="rounded-xl border border-ink/10 bg-sand/60 p-3">
+            <dt className="text-xs font-medium text-muted">Chủ đề</dt>
+            <dd className="mt-1 font-bold text-ink">
+              {themes.length === 0 ? "Tất cả nổi bật" : `${themes.length} đã chọn`}
+            </dd>
+          </div>
+        </dl>
+
+        <p className="text-xs leading-relaxed text-muted">
+          Mỗi điểm dừng hoàn thành sẽ được ghi dấu “đã nghe tour” vào Hộ chiếu
+          văn hóa của bạn.
+        </p>
+      </GlassPanel>
+
+      <GlassPanel
+        as="section"
+        tone="light"
+        className="space-y-5 rounded-2xl p-5 lg:col-span-7 lg:p-8"
+      >
+        {displayError && (
+          <p
+            role="alert"
+            className="rounded-md border border-terracotta/40 bg-terracotta/10 px-3.5 py-2.5 text-sm font-medium text-terracotta"
+          >
+            {displayError}
+          </p>
+        )}
+
+        <fieldset className="space-y-2.5">
+          <legend className="text-sm font-bold text-ink">Thời lượng</legend>
+          <div className="grid grid-cols-3 gap-2.5">
+            {DURATION_OPTIONS.map((option) => {
+              const stopCount = Math.min(
+                TOUR_STOPS[option.seconds] ?? 0,
+                spots.length,
+              );
+              const checked = seconds === option.seconds;
               return (
-                <label
-                  key={option.value}
-                  className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors motion-reduce:transition-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
+                <motion.label
+                  key={option.seconds}
+                  whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+                  className={`flex min-h-14 cursor-pointer flex-col items-center justify-center rounded-md border px-2 py-2 text-center transition-all motion-reduce:transition-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
                     checked
-                      ? "border-river bg-river text-sand"
-                      : "border-ink/20 bg-sand/60 text-ink hover:border-river"
+                      ? "border-gold bg-terracotta text-sand ring-2 ring-gold/80 shadow-[0_0_18px_rgba(201,154,46,0.6)]"
+                      : "border-ink/20 bg-sand/60 text-ink hover:border-gold/70"
                   }`}
                 >
                   <input
-                    type="checkbox"
+                    type="radio"
+                    name="tour-duration"
+                    value={option.seconds}
                     checked={checked}
-                    onChange={() => toggleTheme(option.value)}
+                    onChange={() => {
+                      setLocalError(null);
+                      onClearNotice?.();
+                      setSeconds(option.seconds);
+                    }}
                     className="sr-only"
                   />
-                  <span>{option.label}</span>
-                </label>
+                  <span className="text-sm font-bold">{option.label}</span>
+                  <span
+                    className={`mt-0.5 text-xs ${
+                      checked ? "text-sand/90" : "text-muted"
+                    }`}
+                  >
+                    {stopCount} điểm
+                  </span>
+                </motion.label>
               );
             })}
           </div>
         </fieldset>
-      )}
 
-      <div className="pt-1">
-        <button
-          type="button"
-          onClick={handleStart}
-          disabled={isStarting}
-          className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-terracotta px-5 py-2.5 text-sm font-semibold text-sand transition-opacity motion-reduce:transition-none hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:opacity-60"
-        >
-          Bắt đầu tour
-        </button>
-      </div>
-    </section>
+        {availableThemes.length > 0 && (
+          <fieldset className="space-y-2.5">
+            <legend className="text-sm font-bold text-ink">
+              Chủ đề quan tâm
+            </legend>
+            <p className="text-xs text-muted">
+              Không chọn chủ đề nào để nghe tất cả điểm nổi bật dọc sông Hàn.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {availableThemes.map((option) => {
+                const checked = themes.includes(option.value);
+                return (
+                  <motion.label
+                    key={option.value}
+                    whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+                    className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium transition-all motion-reduce:transition-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
+                      checked
+                        ? "border-gold bg-river text-sand ring-2 ring-gold/80 shadow-[0_0_18px_rgba(201,154,46,0.6)]"
+                        : "border-ink/20 bg-sand/60 text-ink hover:border-gold/70"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => toggleTheme(option.value)}
+                      className="sr-only"
+                    />
+                    <span>{option.label}</span>
+                  </motion.label>
+                );
+              })}
+            </div>
+          </fieldset>
+        )}
+
+        <div className="pt-1">
+          <GlowButton
+            type="button"
+            onClick={handleStart}
+            disabled={isStarting}
+            className="min-h-11 w-full px-5 py-2.5 text-sm font-semibold disabled:opacity-60"
+          >
+            Bắt đầu tour
+          </GlowButton>
+        </div>
+      </GlassPanel>
+    </div>
   );
 }

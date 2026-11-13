@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState, type Dispatch } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { Celebrate } from "@/components/fx/Celebrate";
+import { GlassPanel } from "@/components/fx/Glass";
+import { GlowButton } from "@/components/fx/GlowButton";
+import { StampPress } from "@/components/fx/StampPress";
 import { JigsawStation } from "@/components/level/stations/JigsawStation";
 import { MatchStation } from "@/components/level/stations/MatchStation";
 import { OrderStation } from "@/components/level/stations/OrderStation";
@@ -16,6 +21,7 @@ export interface TourStopStationProps {
 export function TourStopStation({ spot, dispatch }: TourStopStationProps) {
   const [completed, setCompleted] = useState(false);
   const skippedSpotIdRef = useRef<string | null>(null);
+  const reducedMotion = Boolean(useReducedMotion());
 
   const station = levelForSpot(spot.id)?.stations[1];
   const isAllowed =
@@ -47,23 +53,45 @@ export function TourStopStation({ spot, dispatch }: TourStopStationProps) {
 
   if (completed) {
     return (
-      <div className="space-y-4 rounded-md border border-gold/60 bg-gold/15 p-4">
-        <p role="status" className="text-base font-bold text-ink">
-          Làm tốt lắm!
-        </p>
-        <button
-          type="button"
-          onClick={() => dispatch({ type: "next" })}
-          className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity motion-reduce:transition-none hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
-        >
-          Tiếp tục
-        </button>
-      </div>
+      <GlassPanel
+        tone="light"
+        className="overflow-hidden border border-gold/60 bg-gold/15"
+      >
+        <div className="relative p-5">
+          <Celebrate kind="gold-burst" play={true} />
+          <motion.div
+            initial={reducedMotion ? false : { opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: reducedMotion ? 0 : 0.25,
+              ease: "easeOut",
+            }}
+            className="relative z-10 space-y-4"
+          >
+            <p role="status" className="text-base font-bold text-ink">
+              <StampPress play={true}>Làm tốt lắm!</StampPress>
+            </p>
+            <GlowButton
+              type="button"
+              onClick={() => dispatch({ type: "next" })}
+              className="min-h-11 px-5 py-2 text-sm"
+            >
+              Tiếp tục
+            </GlowButton>
+          </motion.div>
+        </div>
+      </GlassPanel>
     );
   }
 
   return (
-    <div className="space-y-3">
+    <GlassPanel tone="light" className="space-y-4 p-4 lg:p-5">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-xs font-bold uppercase tracking-wider text-river">
+          Hoạt động tại điểm dừng
+        </span>
+      </div>
+
       {station.type === "jigsaw" && (
         <JigsawStation key={station.id} station={station} onDone={handleDone} />
       )}
@@ -74,15 +102,18 @@ export function TourStopStation({ spot, dispatch }: TourStopStationProps) {
         <MatchStation key={station.id} station={station} onDone={handleDone} />
       )}
 
-      <div className="flex justify-end">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-ink/10 pt-3">
+        <span className="text-xs text-muted">
+          Có thể bỏ qua hoạt động để nghe điểm tiếp theo
+        </span>
         <button
           type="button"
           onClick={handleSkip}
-          className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-sand px-4 py-2 text-sm font-semibold text-ink transition-colors motion-reduce:transition-none hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-ink/25 bg-white/85 px-5 py-2 text-sm font-semibold text-ink shadow-xs backdrop-blur-sm transition-colors motion-reduce:transition-none hover:border-terracotta/50 hover:bg-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Để sau
         </button>
       </div>
-    </div>
+    </GlassPanel>
   );
 }

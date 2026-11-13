@@ -1,3 +1,20 @@
+# Kế hoạch: làm đẹp /tour + bản máy tính (mục 3.3 báo cáo)
+
+Mẫu phong cách: trang chủ/màn chơi hiện có (`components/fx/*`: Glass, GlowButton, TiltCard, KineticText, PhaseTransition, StampPress, Celebrate, ShaderBackdrop; `components/level/LevelPlayer.tsx` cho bố cục máy tính `lg:` 2 cột, cảnh trái sticky).
+Quy tắc chung: không đổi logic (`tourReducer`, `useSpeech`, fetch kế hoạch, đóng dấu hộ chiếu, link); tôn trọng reduced-motion; điện thoại giữ bố cục 1 cột, máy tính từ `lg:`.
+Chấp nhận: tsc, eslint, vitest qua; reviewer duyệt.
+
+| Task | File (chỉ sửa) | Worker |
+|---|---|---|
+| T5 Bản đồ sông Hàn vẽ tay (SVG): thuyền chạy dọc sông giữa các điểm, điểm đang nghe sáng lên; dùng khi không có khóa Maps (thay thanh tiến độ) | `components/tour/TourRiverMap.tsx` (mới), `components/tour/TourMap.tsx` | ui-hydrogen-high |
+| T6 Màn chọn tour: kính, chip chủ đề phát sáng, nút GlowButton; trang + TourApp rộng ra ở máy tính | `components/tour/TourSetup.tsx`, `components/tour/TourApp.tsx`, `app/tour/page.tsx` | ui-hydrogen |
+| T7 Trình phát: panel kính, phụ đề câu đang đọc nổi bật (KineticText), chuyển cảnh giữa điểm (PhaseTransition); máy tính 2 cột (bản đồ trái sticky, phụ đề phải) | `components/tour/TourPlayer.tsx`, `components/tour/TourStopStation.tsx` | ui-hydrogen-high |
+| T8 Kết tour: con dấu StampPress cho mỗi điểm đã nghe + Celebrate | `components/tour/TourEnd.tsx` | ui-hydrogen |
+
+T5–T8 không chung file → chạy song song. /photobooth làm đợt sau.
+
+---
+
 # Kế hoạch tiếp nối (từ BAO-CAO-TIEP-NOI.md)
 
 Mẫu tham chiếu chung: `components/level/stations/MatchStation.tsx` và `HintBox` (đã có đủ hiệu ứng).

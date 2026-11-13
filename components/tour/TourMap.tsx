@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { loadMaps } from "@/components/map/loadMaps";
 import type { Spot } from "@/lib/types";
+import { TourRiverMap } from "./TourRiverMap";
 
 export interface TourMapProps {
   stops: Spot[];
@@ -17,7 +18,6 @@ export function TourMap({ stops, activeSpotId }: TourMapProps) {
   const mapRef = useRef<google.maps.Map | null>(null);
   const mapsApiRef = useRef<typeof google.maps | null>(null);
   const markersRef = useRef<google.maps.Marker[]>([]);
-  const activeIndex = stops.findIndex((stop) => stop.id === activeSpotId);
   const initialStop =
     stops.find((stop) => stop.id === activeSpotId) ?? stops[0];
   const initialCenterRef = useRef(initialStop?.checkin ?? DEFAULT_CENTER);
@@ -123,35 +123,7 @@ export function TourMap({ stops, activeSpotId }: TourMapProps) {
   }, [stops, activeSpotId, status]);
 
   if (status === "error" || !apiKey) {
-    return (
-      <section
-        aria-label="Bản đồ lộ trình tour"
-        className="rounded-lg border border-ink/15 bg-white/80 p-3"
-      >
-        <ol className="flex items-center gap-2 overflow-x-auto pb-1">
-          {stops.map((stop, index) => {
-            const isCurrent = stop.id === activeSpotId;
-            const isDone = activeIndex !== -1 && index < activeIndex;
-            return (
-              <li
-                key={stop.id}
-                aria-current={isCurrent ? "step" : undefined}
-                className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold ${
-                  isCurrent
-                    ? "border-terracotta bg-terracotta text-sand"
-                    : isDone
-                      ? "border-river/40 bg-river/10 text-river"
-                      : "border-ink/15 bg-sand/60 text-muted"
-                }`}
-              >
-                <span>{index + 1}.</span>
-                <span>{stop.name}</span>
-              </li>
-            );
-          })}
-        </ol>
-      </section>
-    );
+    return <TourRiverMap stops={stops} activeSpotId={activeSpotId} />;
   }
 
   return (
