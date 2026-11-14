@@ -7,7 +7,7 @@ export default function TourPage() {
     <main className="space-y-4 pb-4 lg:space-y-8 lg:pb-12">
       <PageHeader
         title="Tour 5 phút"
-        subtitle="Lộ trình kể chuyện nhanh trên bản đồ sông Hàn dành cho người có ít thời gian."
+        subtitle="Lộ trình thuyết minh ngắn gọn dọc sông Hàn dành cho người bận rộn."
         backHref="/"
       />
 

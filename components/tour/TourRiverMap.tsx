@@ -397,11 +397,11 @@ export function TourRiverMap({ stops, activeSpotId }: TourRiverMapProps) {
     >
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-river">
+          <span className="text-xs font-semibold text-river">
             Bản đồ sông Hàn
           </span>
           {stops.length > 0 && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/60 bg-gold/20 px-2.5 py-0.5 text-xs font-bold text-ink">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/60 bg-gold/20 px-2.5 py-0.5 text-xs font-semibold text-ink">
               <span>
                 {activeIndex >= 0
                   ? `Điểm ${activeIndex + 1}/${stops.length}`
@@ -409,7 +409,7 @@ export function TourRiverMap({ stops, activeSpotId }: TourRiverMapProps) {
               </span>
               {activeStop && (
                 <span className="hidden sm:inline">
-                  · {activeStop.name}
+                  — {activeStop.name}
                 </span>
               )}
             </span>
@@ -857,7 +857,23 @@ export function TourRiverMap({ stops, activeSpotId }: TourRiverMapProps) {
                           : "border border-ink/30 bg-sand text-muted"
                     }`}
                   >
-                    {isDone ? "✓" : index + 1}
+                    {isDone ? (
+                      <svg
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.4"
+                        className="h-3 w-3"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M3.5 8.5l3 3 6-6.5"
+                        />
+                      </svg>
+                    ) : (
+                      index + 1
+                    )}
                   </span>
                   <span className="min-w-0 truncate">{stop.name}</span>
                 </li>

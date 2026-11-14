@@ -2,12 +2,15 @@
 @import "./fx.css";
 
 @theme {
-  --color-sand: #F6EFE4;
-  --color-terracotta: #A84825;
-  --color-river: #1F4E6B;
-  --color-gold: #C99A2E;
-  --color-ink: #1F1A17;
-  --color-muted: #5E5148;
+  --color-sand: #F7F5F0;
+  --color-surface: #FFFFFF;
+  --color-terracotta: #B44C28;
+  --color-river: #1E4D6B;
+  --color-gold: #B88920;
+  --color-ink: #18181B;
+  --color-muted: #57534E;
+  --color-border: #E4E1DA;
+  --color-on-accent: #FAF8F5;
 
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
@@ -17,8 +20,73 @@
   --font-sans: var(--font-be-vietnam-pro), ui-sans-serif, system-ui, sans-serif;
 }
 
-body {
+:root {
+  color-scheme: light;
+  --bg-scrim: rgba(247, 245, 240, 0.72);
+  --bg-scrim-soft: rgba(247, 245, 240, 0.90);
+  --active-scrim: var(--bg-scrim);
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-bg-elevated: rgba(255, 255, 255, 0.92);
+  --glass-border: rgba(24, 24, 27, 0.1);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-sand: #111214;
+  --color-surface: #1A1B1E;
+  --color-terracotta: #D96B43;
+  --color-river: #5B9EC7;
+  --color-gold: #D6A73B;
+  --color-ink: #F3F1EC;
+  --color-muted: #A19D95;
+  --color-border: #2B2D31;
+  --color-on-accent: #FAF8F5;
+
+  --bg-scrim: rgba(17, 18, 20, 0.68);
+  --bg-scrim-soft: rgba(17, 18, 20, 0.86);
+  --active-scrim: var(--bg-scrim);
+  --glass-bg: rgba(26, 27, 30, 0.82);
+  --glass-bg-elevated: rgba(26, 27, 30, 0.94);
+  --glass-border: rgba(243, 241, 236, 0.12);
+}
+
+:root[data-bg-dim="soft"] {
+  --active-scrim: var(--bg-scrim-soft);
+}
+
+html {
   background-color: var(--color-sand);
+}
+
+body {
+  background-color: transparent;
   color: var(--color-ink);
   font-family: var(--font-sans);
+  transition: color 180ms ease;
+}
+
+/* Bảo đảm tương phản tối ưu cho các thành phần legacy khi bật Dark Mode */
+:root[data-theme="dark"] .bg-white,
+:root[data-theme="dark"] .bg-white\/80,
+:root[data-theme="dark"] .bg-white\/85,
+:root[data-theme="dark"] .bg-white\/75,
+:root[data-theme="dark"] .bg-white\/70,
+:root[data-theme="dark"] .bg-white\/65,
+:root[data-theme="dark"] .bg-white\/60,
+:root[data-theme="dark"] .bg-white\/50 {
+  background-color: var(--color-surface);
+}
+
+:root[data-theme="dark"] .bg-terracotta {
+  background-color: #B44C28;
+}
+
+:root[data-theme="dark"] .bg-terracotta.text-sand,
+:root[data-theme="dark"] .bg-river.text-sand,
+:root[data-theme="dark"] .hover\:bg-terracotta:hover {
+  color: #FAF8F5;
+}
+
+:root[data-theme="dark"] .bg-river {
+  background-color: #1E4D6B;
 }

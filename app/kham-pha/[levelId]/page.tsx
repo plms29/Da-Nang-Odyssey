@@ -25,7 +25,7 @@ export default async function LevelPage({
       <PageHeader
         title={`Màn ${level.order}: ${level.title}`}
         backHref="/kham-pha"
-        backLabel="Chiến dịch khám phá"
+        backLabel="Hành trình khám phá"
       />
       <LevelGate level={level}>
         <LevelPlayer level={level} />

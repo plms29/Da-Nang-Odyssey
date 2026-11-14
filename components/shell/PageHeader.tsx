@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion } from "motion/react";
-import { KineticText } from "@/components/fx/KineticText";
 
 export interface PageHeaderProps {
   title: string;
@@ -18,7 +16,6 @@ export function PageHeader({
   backHref,
   backLabel = "Trang chủ",
 }: PageHeaderProps) {
-  const reduce = useReducedMotion();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -48,22 +45,22 @@ export function PageHeader({
 
   return (
     <header
-      className={`-mx-4 mb-6 px-4 py-2 transition-[background-color,box-shadow,border-color] duration-200 lg:-mx-8 lg:px-8 ${
+      className={`-mx-4 mb-6 px-4 py-2.5 transition-[background-color,border-color] duration-200 lg:-mx-8 lg:px-8 ${
         scrolled
-          ? "sticky top-0 z-30 rounded-b-2xl border-b border-white/50 bg-sand/65 shadow-sm backdrop-blur-[18px] backdrop-saturate-[1.6] lg:static lg:rounded-none lg:border-transparent lg:bg-transparent lg:shadow-none lg:backdrop-blur-none lg:backdrop-saturate-100"
+          ? "sticky top-0 z-30 border-b border-border bg-surface/85 backdrop-blur-md lg:static lg:border-transparent lg:bg-transparent lg:backdrop-blur-none"
           : "border-b border-transparent"
       }`}
     >
       {backHref && (
         <Link
           href={backHref}
-          className="mb-2 inline-flex min-h-[44px] items-center gap-1.5 rounded-sm py-1 pr-2 text-sm font-semibold text-terracotta hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="mb-1.5 inline-flex min-h-[44px] items-center gap-1.5 rounded-sm py-1 pr-2 text-sm font-medium text-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           <svg
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth={2}
+            strokeWidth={1.75}
             strokeLinecap="round"
             strokeLinejoin="round"
             className="h-4 w-4"
@@ -74,18 +71,13 @@ export function PageHeader({
           <span>{backLabel}</span>
         </Link>
       )}
-      <KineticText as="h1" className="text-2xl font-bold tracking-tight text-ink lg:text-4xl">
+      <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl lg:text-4xl">
         {title}
-      </KineticText>
+      </h1>
       {subtitle && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.2, delay: reduce ? 0 : 0.08 }}
-          className="mt-1 text-sm leading-relaxed text-muted lg:max-w-2xl"
-        >
+        <p className="mt-1.5 text-sm leading-relaxed text-muted lg:max-w-2xl lg:text-base">
           {subtitle}
-        </motion.p>
+        </p>
       )}
     </header>
   );

@@ -21,17 +21,17 @@ export function HintBox({
   const exhausted = revealedHints.length >= maxHints || hintsUsed >= maxHints;
 
   return (
-    <div className="mt-4 rounded-lg border border-ink/15 bg-sand/60 p-3 transition-shadow hover:shadow-sm">
+    <div className="mt-4 rounded-xl border border-border bg-sand/70 p-3.5">
       <button
         type="button"
         onClick={onRequestHint}
         disabled={exhausted}
-        className="inline-flex min-h-11 items-center justify-center rounded-md border border-gold bg-gold/20 px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-gold/35 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex min-h-11 items-center justify-center rounded-lg border border-gold/60 bg-gold/15 px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-gold/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-50"
       >
         Gợi ý (−20 điểm)
       </button>
 
-      <div aria-live="polite" className="mt-2">
+      <div aria-live="polite" className={revealedHints.length > 0 ? "mt-2.5" : ""}>
         <AnimatePresence initial={false}>
           {revealedHints.length > 0 && (
             <ul className="space-y-1.5 text-sm text-ink">
@@ -48,7 +48,7 @@ export function HintBox({
                       ? { duration: 0.15 }
                       : { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
                   }
-                  className="overflow-hidden rounded-sm bg-white/80 px-3 py-2 text-ink"
+                  className="overflow-hidden rounded-lg border border-border bg-surface px-3 py-2 text-ink"
                 >
                   <span className="font-semibold text-terracotta">
                     Gợi ý {index + 1}:{" "}

@@ -1,6 +1,6 @@
 import type { Theme } from "@/lib/types";
 
-// Giao kèo giai đoạn C (plan-ui-dong.md mục 2). Worker không được sửa file này.
+// Giao kèo scene kit (cập nhật hỗ trợ ảnh nền thực tế và minimalist UI).
 
 export type SceneId = Theme | "home";
 
@@ -19,23 +19,27 @@ export type TransitionKind = "dust-sweep" | "smoke-cover" | "card-flip" | "river
 export type CelebrateKind = "gold-burst" | "flag-raise" | "drum-confetti" | "fireworks";
 
 export interface SceneLayer {
-  /** Đường dẫn trong /public, ví dụ "/scenes/di-san-cham/thap.svg". */
+  /** Đường dẫn ảnh trong /public. */
   src: string;
-  /** 0 = xa nhất (trôi chậm), 1 = gần nhất (trôi nhanh). */
+  /** 0 = xa nhất, 1 = gần nhất. */
   depth: number;
-  /** Vị trí/kích thước Tailwind trong khung cảnh, ví dụ "bottom-0 left-0 w-full". */
+  /** Vị trí/kích thước Tailwind trong khung cảnh. */
   className: string;
-  /** Lớp tự chuyển động (đèn lồng "sway", cờ "flag"). */
+  /** Lớp tự chuyển động (nếu có). */
   animate?: AmbientKind;
 }
 
 export interface SceneKit {
   id: SceneId;
-  /** CSS background của bầu trời / nền. */
+  /** CSS background dự phòng của bầu trời / nền. */
   sky: string;
+  /** Ảnh nền chính của chủ đề (từ /background/...). */
+  photo?: string;
+  /** Chú thích ngắn cho cảnh. */
+  subtitle?: string;
   /** Xếp từ xa đến gần. */
   layers: SceneLayer[];
-  /** Hiệu ứng phủ toàn cảnh. */
+  /** Hiệu ứng phủ toàn cảnh (tối giản mặc định rỗng). */
   ambient: AmbientKind[];
   transition: TransitionKind;
   celebrate: CelebrateKind;
