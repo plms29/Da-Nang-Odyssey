@@ -1,3 +1,4 @@
+import { requireUser } from "@/lib/supabase/requireUser";
 import { NextResponse } from "next/server";
 import { getLevel } from "@/lib/content";
 import { MAX_AUDIO_REQUEST_BYTES, validateAudio, validateImage } from "@/lib/judge/audio";
@@ -15,6 +16,9 @@ const MAX_CONTENT_LENGTH_BYTES = 65536;
 const VOICE_GRADE_ERROR_MESSAGE = "Chưa chấm được giọng nói, bạn gõ chữ nhé.";
 
 export async function POST(request: Request) {
+  const denied = await requireUser(request);
+  if (denied) return denied;
+
   const contentLengthHeader = request.headers.get("content-length");
   if (contentLengthHeader !== null) {
     const contentLength = Number(contentLengthHeader);

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { motion, useAnimate, useReducedMotion } from "motion/react";
 import { GlowButton } from "@/components/fx/GlowButton";
 import { checkMapPin } from "@/lib/activities/scoring";
+import { bearingDeg, directionHint } from "@/lib/geo/direction";
 import { haptic } from "@/lib/haptics";
 import type {
   LatLng,
@@ -19,8 +20,8 @@ export interface MapPinStationProps {
   onDone: (result: StationResult) => void;
 }
 
-const DA_NANG_CENTER: LatLng = { lat: 16.0544, lng: 108.2022 };
-const DA_NANG_ZOOM = 13;
+const DA_NANG_CENTER: LatLng = { lat: 16.0665, lng: 108.2235 };
+const DA_NANG_ZOOM = 14;
 
 interface CoordFormProps {
   latId: string;
@@ -99,15 +100,20 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
   const [scope, animate] = useAnimate();
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY?.trim() ?? "";
   const [pin, setPin] = useState<LatLng | null>(null);
+  const [mapCenter, setMapCenter] = useState<LatLng>(DA_NANG_CENTER);
   const [latInput, setLatInput] = useState("");
   const [lngInput, setLngInput] = useState("");
   const [revealedHints, setRevealedHints] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [solvedGlow, setSolvedGlow] = useState(false);
   const [mapFailed, setMapFailed] = useState(false);
+  const prevWrongDistanceRef = useRef<number | null>(null);
   const { hintsUsed, nextHint, addWrong, result } = useAttempt(station.hints);
 
-  const showMap = apiKey.length > 0 && !mapFailed;
+  const showMap = !mapFailed;
+  const compassOrigin = pin ?? mapCenter;
+  const compassBearing = bearingDeg(compassOrigin, station.target);
+  const compassLabel = directionHint(compassOrigin, station.target);
 
   function triggerShake() {
     haptic("error");
@@ -119,6 +125,7 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
   function submitPin(candidate: LatLng) {
     const check = checkMapPin(station, candidate);
     if (check.correct) {
+      prevWrongDistanceRef.current = null;
       setFeedback(null);
       setSolvedGlow(true);
       haptic("success");
@@ -135,7 +142,17 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
     addWrong();
     triggerShake();
     const roundedDistance = Math.round(check.distance_m / 10) * 10;
-    setFeedback(`Chưa đúng, còn cách khoảng ${roundedDistance} m`);
+    const prevDistance = prevWrongDistanceRef.current;
+    let deltaNote = "";
+    if (prevDistance !== null) {
+      if (check.distance_m < prevDistance - 1) {
+        deltaNote = " — Gần hơn lần trước.";
+      } else if (check.distance_m > prevDistance + 1) {
+        deltaNote = " — Xa hơn lần trước.";
+      }
+    }
+    prevWrongDistanceRef.current = check.distance_m;
+    setFeedback(`Chưa đúng, còn cách khoảng ${roundedDistance} m${deltaNote}`);
   }
 
   function handleConfirmPin() {
@@ -218,38 +235,116 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
       </p>
 
       {showMap ? (
-        <p className="mt-1 text-xs text-muted">Chạm vào bản đồ để đặt ghim</p>
-      ) : mapFailed ? (
+        <p className="mt-1 text-xs text-muted">
+          {station.landmarks && station.landmarks.length > 0
+            ? "Chạm vào bản đồ để đặt ghim · Chạm chấm xanh để xem gợi ý địa danh"
+            : "Chạm vào bản đồ để đặt ghim"}
+        </p>
+      ) : (
         <p role="alert" className="mt-1 text-xs font-medium text-terracotta">
           Không tải được bản đồ, hãy nhập tọa độ bên dưới.
         </p>
-      ) : (
-        <p className="mt-1 text-xs text-muted">Bản đồ sẽ có ở giai đoạn sau</p>
       )}
 
       {showMap && (
-        <motion.div
-          animate={reduced ? undefined : { y: pin ? -2 : 0 }}
-          transition={
-            reduced
-              ? { duration: 0.15 }
-              : { type: "spring", stiffness: 380, damping: 30 }
-          }
-          className={`mt-3 rounded-lg transition-shadow ${
-            pin
-              ? "ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-              : ""
-          }`}
-        >
-          <MapView
-            center={DA_NANG_CENTER}
-            zoom={DA_NANG_ZOOM}
-            pin={pin}
-            onPick={handleMapPick}
-            apiKey={apiKey}
-            onError={() => setMapFailed(true)}
-          />
-        </motion.div>
+        <>
+          <motion.div
+            animate={reduced ? undefined : { y: pin ? -2 : 0 }}
+            transition={
+              reduced
+                ? { duration: 0.15 }
+                : { type: "spring", stiffness: 380, damping: 30 }
+            }
+            className={`relative mt-3 rounded-lg transition-shadow ${
+              pin
+                ? "ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+                : ""
+            }`}
+          >
+            <MapView
+              center={DA_NANG_CENTER}
+              zoom={DA_NANG_ZOOM}
+              pin={pin}
+              onPick={handleMapPick}
+              apiKey={apiKey}
+              landmarks={station.landmarks}
+              onCenterChange={setMapCenter}
+              onError={() => setMapFailed(true)}
+            />
+
+            <div className="pointer-events-none absolute top-2 right-2 z-20">
+              <div className="relative flex h-11 w-11 items-center justify-center rounded-full border border-ink/20 bg-sand/95 shadow-md">
+                <span
+                  aria-hidden="true"
+                  className="absolute top-0.5 text-[8px] font-bold leading-none text-muted"
+                >
+                  B
+                </span>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                  style={{ transform: `rotate(${compassBearing}deg)` }}
+                  className={
+                    reduced ? "" : "transition-transform duration-150 ease-out"
+                  }
+                >
+                  <path
+                    d="M12 3L16 14L12 11.5L8 14L12 3Z"
+                    fill="#A84825"
+                    stroke="#1F1A17"
+                    strokeWidth="1"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M12 21L15 14L12 11.5L9 14L12 21Z"
+                    fill="#C99A2E"
+                    fillOpacity="0.45"
+                    stroke="#1F1A17"
+                    strokeWidth="0.8"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+          </motion.div>
+
+          <p
+            role="status"
+            className="mt-2 flex w-full items-center gap-2 rounded-md bg-sand/60 px-3 py-2 text-sm text-ink"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+              style={{ transform: `rotate(${compassBearing}deg)` }}
+              className={`shrink-0 ${
+                reduced ? "" : "transition-transform duration-150 ease-out"
+              }`}
+            >
+              <path
+                d="M12 3L16 14L12 11.5L8 14L12 3Z"
+                fill="#A84825"
+                stroke="#1F1A17"
+                strokeWidth="1"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M12 21L15 14L12 11.5L9 14L12 21Z"
+                fill="#C99A2E"
+                fillOpacity="0.45"
+                stroke="#1F1A17"
+                strokeWidth="0.8"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span>{compassLabel}</span>
+          </p>
+        </>
       )}
 
       {feedback && (

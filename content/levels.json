@@ -1,95 +1,14 @@
 [
   {
-    "id": "man-1-dau-an-cham",
-    "order": 1,
-    "title": "Dấu ấn Chăm",
-    "page": "Trang 1: Đá kể chuyện",
-    "spot_ids": [
-      "bao-tang-cham"
-    ],
-    "intro": {
-      "text": "Trang đầu tiên rơi gần một ngôi nhà mái cong như tháp cổ bên sông Hàn. Ông mình kể, trong ngôi nhà ấy có những vũ nữ bằng đá đã múa hơn một nghìn năm. Trang sổ bị kẹt dưới một phù điêu vỡ thành nhiều mảnh. Mình cùng tìm đường tới đó, ghép lại phù điêu, rồi làm thuyết minh viên một lần nhé!",
-      "audio": "audio/man-1-intro.mp3"
-    },
-    "stations": [
-      {
-        "id": "tim",
-        "type": "map_pin",
-        "clue": "Hãy tìm ngôi nhà mái cong như tháp Chăm, đứng ở góc đường mang tên ngày Quốc khánh, nhìn ra sông Hàn.",
-        "target": {
-          "lat": 16.0605,
-          "lng": 108.2235,
-          "radius_m": 250
-        },
-        "hints": [
-          "Nơi này nằm ở bờ tây sông Hàn, quận Hải Châu.",
-          "Tên con đường là 2 Tháng 9, giao với đường Bạch Đằng.",
-          "Đó là Bảo tàng Điêu khắc Chăm, ngay đầu phía nam đường Bạch Đằng, gần Cầu Rồng."
-        ]
-      },
-      {
-        "id": "lam",
-        "type": "jigsaw",
-        "instruction": "Ghép các mảnh để hoàn thiện phù điêu vũ nữ trên Đài thờ Trà Kiệu.",
-        "image": "images/man-1-phu-dieu.jpg",
-        "grid": [
-          3,
-          3
-        ],
-        "hints": [
-          "Bắt đầu từ bốn góc, các góc có viền thẳng.",
-          "Hàng trên là phần đầu và mũ của vũ nữ.",
-          "Hàng dưới là phần đế đài thờ, có hoa văn chạy ngang."
-        ]
-      },
-      {
-        "id": "the-hien",
-        "type": "open_text_or_voice",
-        "prompt": "Thuyết minh viên 30 giây: giới thiệu Đài thờ Trà Kiệu vừa ghép cho một du khách.",
-        "max_seconds": 30,
-        "max_chars": 600,
-        "rubric": [
-          {
-            "id": "dung",
-            "desc": "Không trái với kho tri thức"
-          },
-          {
-            "id": "du-y",
-            "desc": "Nêu đủ ba ý: tên hiện vật, chất liệu, hình chạm nổi bật",
-            "must_include": [
-              "Trà Kiệu",
-              "sa thạch",
-              "vũ nữ"
-            ]
-          },
-          {
-            "id": "de-hieu",
-            "desc": "Diễn đạt dễ hiểu với người chưa biết"
-          }
-        ]
-      }
-    ],
-    "reveal": {
-      "text": "Đài thờ Trà Kiệu là bảo vật quốc gia, tạc bằng đá sa thạch, quanh chân đài là các vũ nữ Apsara và nhạc công. Bảo tàng Điêu khắc Chăm mở cửa năm 1919 và giữ sưu tập điêu khắc Chăm lớn nhất. Trang 1 của sổ tay đã về với Hàn. Trên mép trang có vết mực vẽ một tòa thành vuông bên bờ sông: đó là nơi trang tiếp theo đang chờ.",
-      "sources": [
-        {
-          "title": "Bảo tàng Điêu khắc Chăm Đà Nẵng (trang chính thức)",
-          "url": "https://chammuseum.danang.vn"
-        }
-      ]
-    },
-    "status": "draft"
-  },
-  {
     "id": "man-2-giu-thanh",
-    "order": 2,
+    "order": 1,
     "title": "Giữ thành",
-    "page": "Trang 2: Lũy đất bên sông",
+    "page": "Trang 1: Lũy đất bên sông",
     "spot_ids": [
       "thanh-dien-hai"
     ],
     "intro": {
-      "text": "Trang thứ hai bay ngược dòng, tới một tòa thành cổ từng canh giữ cửa biển. Ông mình nói, mỗi viên gạch ở đó đều nhớ năm 1858, khi tiếng súng nổ trên vịnh Đà Nẵng. Nhưng các trang ghi chép về thành bị xáo trộn hết thứ tự. Mình cùng tìm thành, xếp lại dòng thời gian, rồi viết một lá thư trong vai người giữ thành nhé.",
+      "text": "Trang đầu tiên bay ngược dòng, tới một tòa thành cổ từng canh giữ cửa biển. Ông mình nói, mỗi viên gạch ở đó đều nhớ năm 1858, khi tiếng súng nổ trên vịnh Đà Nẵng. Nhưng các trang ghi chép về thành bị xáo trộn hết thứ tự. Mình cùng tìm thành, xếp lại dòng thời gian, rồi hoàn thành lá thư của một người giữ thành nhé.",
       "audio": "audio/man-2-intro.mp3"
     },
     "stations": [
@@ -106,6 +25,38 @@
           "Thành nằm ở quận Hải Châu, phía bắc trung tâm, cách sông Hàn vài trăm mét.",
           "Con đường là Trần Phú.",
           "Đó là Thành Điện Hải, gần chỗ đường Trần Phú gặp đường Lý Tự Trọng."
+        ],
+        "landmarks": [
+          {
+            "name": "Cầu sông Hàn",
+            "lat": 16.072,
+            "lng": 108.2268,
+            "note": "Cầu quay đầu tiên của Việt Nam, nối hai bờ sông Hàn."
+          },
+          {
+            "name": "Chợ Hàn",
+            "lat": 16.0682,
+            "lng": 108.2238,
+            "note": "Khu chợ lâu đời giữa trung tâm thành phố."
+          },
+          {
+            "name": "Nhà thờ Con Gà",
+            "lat": 16.0667,
+            "lng": 108.2233,
+            "note": "Nhà thờ chính tòa màu hồng, trên tháp có tượng con gà chỉ hướng gió."
+          },
+          {
+            "name": "Cầu Rồng",
+            "lat": 16.0612,
+            "lng": 108.2272,
+            "note": "Cây cầu hình con rồng, tối cuối tuần phun lửa và nước."
+          },
+          {
+            "name": "Cầu Thuận Phước",
+            "lat": 16.0905,
+            "lng": 108.2215,
+            "note": "Cầu treo ở cửa sông Hàn, nơi sông đổ ra vịnh Đà Nẵng — ngày xưa là cửa biển mà thành phải canh giữ."
+          }
         ]
       },
       {
@@ -115,19 +66,23 @@
         "items": [
           {
             "id": "1813",
-            "label": "Triều Nguyễn xây đồn Điện Hải gần cửa sông Hàn"
+            "label": "Triều Nguyễn xây đồn Điện Hải gần cửa sông Hàn",
+            "note": "Cửa biển Đà Nẵng là cửa ngõ của kinh đô Huế, nên triều Nguyễn đặt đồn canh ngay gần cửa sông Hàn."
           },
           {
             "id": "1823",
-            "label": "Đồn dời vào trong, xây lại bằng gạch, đổi tên thành thành Điện Hải"
+            "label": "Đồn dời vào trong, xây lại bằng gạch, đổi tên thành thành Điện Hải",
+            "note": "Đồn được dời sâu vào đất liền cho an toàn hơn, xây lại bằng gạch vững chắc và nâng lên thành 'thành'. Điện Hải nghĩa là 'điện bên biển'."
           },
           {
             "id": "1847",
-            "label": "Tàu chiến Pháp bắn phá cửa biển Đà Nẵng"
+            "label": "Tàu chiến Pháp bắn phá cửa biển Đà Nẵng",
+            "note": "Lần đầu tàu chiến Pháp nổ súng vào cửa biển Đà Nẵng — dấu hiệu cho thấy cửa biển này đang bị nhòm ngó."
           },
           {
             "id": "1858",
-            "label": "Liên quân Pháp và Tây Ban Nha tấn công, Nguyễn Tri Phương chỉ huy giữ thành"
+            "label": "Liên quân Pháp và Tây Ban Nha tấn công, Nguyễn Tri Phương chỉ huy giữ thành",
+            "note": "Ngày 1/9/1858 liên quân Pháp – Tây Ban Nha tấn công. Nguyễn Tri Phương chỉ huy quân dân đắp lũy, giữ thành, cầm chân đối phương nhiều tháng."
           }
         ],
         "hints": [
@@ -138,35 +93,230 @@
       },
       {
         "id": "the-hien",
-        "type": "open_text_or_voice",
-        "prompt": "Lá thư từ thành: viết 3 đến 4 câu trong vai một người lính giữ thành Điện Hải năm 1858, gửi về cho gia đình.",
-        "max_chars": 600,
-        "rubric": [
+        "type": "learn_retell",
+        "prompt": "Tìm hiểu thành Điện Hải, rồi hoàn thành lá thư của một người lính giữ thành năm 1858 gửi về gia đình.",
+        "cards": [
           {
-            "id": "dung",
-            "desc": "Không trái với kho tri thức"
+            "title": "Cửa biển Đà Nẵng",
+            "body": "Sông Hàn đổ ra vịnh Đà Nẵng, một cửa biển sâu và kín gió. Thời Nguyễn, đây là cửa ngõ đường biển để vào kinh đô Huế, nên phải được canh giữ cẩn thận."
           },
           {
-            "id": "du-y",
-            "desc": "Nhắc tới thành Điện Hải và cửa sông Hàn",
-            "must_include": [
-              "Điện Hải",
-              "sông Hàn"
-            ]
+            "title": "Từ đồn thành thành (1813 → 1823)",
+            "body": "Năm 1813 triều Nguyễn xây đồn Điện Hải gần cửa sông Hàn. Năm 1823 đồn được dời vào trong, xây lại bằng gạch và đổi tên thành thành Điện Hải — nghĩa là 'điện bên biển'."
           },
           {
-            "id": "nhap-vai",
-            "desc": "Giữ đúng vai người giữ thành, giọng thư gửi người thân"
+            "title": "Tiếng súng năm 1858",
+            "body": "Ngày 1 tháng 9 năm 1858, liên quân Pháp và Tây Ban Nha nổ súng tấn công Đà Nẵng. Đây là mở đầu cuộc xâm lược của Pháp vào Việt Nam."
+          },
+          {
+            "title": "Nguyễn Tri Phương",
+            "body": "Vị tướng chỉ huy quân dân đắp lũy dọc bờ biển và giữ thành. Nhờ cách đánh bền bỉ đó, liên quân bị cầm chân ở Đà Nẵng nhiều tháng liền."
+          },
+          {
+            "title": "Thành Điện Hải hôm nay",
+            "body": "Di tích nằm trên đường Trần Phú, gần sông Hàn, giữa trung tâm thành phố. Bạn vẫn có thể đi dạo quanh thành và nhìn những đoạn tường xưa."
+          }
+        ],
+        "template": "Thầy mẹ kính yêu! Con đang giữ thành {{ten}}, nơi canh cửa biển bên sông {{song}}. Từ năm {{nam}}, tàu giặc Pháp và Tây Ban Nha nổ súng ngoài vịnh. Chúng con theo quan {{tuong}} đắp lũy ngày đêm, quyết không để giặc qua. Thầy mẹ yên lòng, con vẫn khỏe.",
+        "blanks": [
+          {
+            "id": "ten",
+            "answer": "Điện Hải",
+            "distractors": [
+              "Hoàng Thành",
+              "Cổ Loa"
+            ],
+            "explain": "Hoàng Thành ở Huế, Cổ Loa ở Hà Nội. Thành canh cửa biển Đà Nẵng là thành Điện Hải — 'điện bên biển'."
+          },
+          {
+            "id": "song",
+            "answer": "Hàn",
+            "distractors": [
+              "Hương",
+              "Hồng"
+            ],
+            "explain": "Sông Hương chảy qua Huế, sông Hồng qua Hà Nội. Sông chảy qua giữa Đà Nẵng rồi đổ ra vịnh là sông Hàn."
+          },
+          {
+            "id": "nam",
+            "answer": "1858",
+            "distractors": [
+              "1813",
+              "1945"
+            ],
+            "explain": "1813 là năm xây đồn Điện Hải. Liên quân Pháp – Tây Ban Nha tấn công Đà Nẵng vào năm 1858."
+          },
+          {
+            "id": "tuong",
+            "answer": "Nguyễn Tri Phương",
+            "distractors": [
+              "Trần Hưng Đạo",
+              "Quang Trung"
+            ],
+            "explain": "Trần Hưng Đạo đánh quân Nguyên (thế kỷ 13), Quang Trung đánh quân Thanh (1789). Người chỉ huy giữ Đà Nẵng năm 1858 là Nguyễn Tri Phương."
           }
         ]
       }
     ],
     "reveal": {
-      "text": "Đồn Điện Hải xây năm 1813, dời vào trong và đổi thành thành Điện Hải năm 1823. Năm 1858, quân dân trong thành theo Nguyễn Tri Phương đắp lũy, cầm chân liên quân Pháp và Tây Ban Nha nhiều tháng. Trang 2 đã về. Mặt sau trang có câu thơ lục bát chép vội, kèm hình chiếc trống và mấy cái chòi tre.",
+      "text": "Đồn Điện Hải xây năm 1813, dời vào trong và đổi thành thành Điện Hải năm 1823. Năm 1858, quân dân trong thành theo Nguyễn Tri Phương đắp lũy, cầm chân liên quân Pháp và Tây Ban Nha nhiều tháng. Trang 1 của sổ tay đã về với Hàn. Mặt sau trang có hình một ngôi nhà mái cong như tháp cổ bên sông Hàn: đó là nơi trang tiếp theo đang chờ.",
       "sources": [
         {
           "title": "Cổng thông tin Sở Văn hóa và Thể thao Đà Nẵng",
           "url": "https://svhtt.danang.gov.vn"
+        }
+      ]
+    },
+    "status": "draft"
+  },
+  {
+    "id": "man-1-dau-an-cham",
+    "order": 2,
+    "title": "Dấu ấn Chăm",
+    "page": "Trang 2: Đá kể chuyện",
+    "spot_ids": [
+      "bao-tang-cham"
+    ],
+    "intro": {
+      "text": "Trang thứ hai rơi gần một ngôi nhà mái cong như tháp cổ bên sông Hàn. Ông mình kể, trong ngôi nhà ấy có những vũ nữ bằng đá đã múa hơn một nghìn năm. Trang sổ bị kẹt dưới một phù điêu vỡ thành nhiều mảnh. Mình cùng tìm đường tới đó, ghép lại phù điêu, rồi làm thuyết minh viên một lần nhé!",
+      "audio": "audio/man-1-intro.mp3"
+    },
+    "stations": [
+      {
+        "id": "tim",
+        "type": "map_pin",
+        "clue": "Hãy tìm ngôi nhà mái cong như tháp Chăm, đứng ở góc đường mang tên ngày Quốc khánh, nhìn ra sông Hàn.",
+        "target": {
+          "lat": 16.0605,
+          "lng": 108.2235,
+          "radius_m": 250
+        },
+        "hints": [
+          "Nơi này nằm ở bờ tây sông Hàn, quận Hải Châu.",
+          "Tên con đường là 2 Tháng 9, giao với đường Bạch Đằng.",
+          "Đó là Bảo tàng Điêu khắc Chăm, ngay đầu phía nam đường Bạch Đằng, gần Cầu Rồng."
+        ],
+        "landmarks": [
+          {
+            "name": "Cầu Rồng",
+            "lat": 16.0612,
+            "lng": 108.2272,
+            "note": "Cây cầu hình con rồng vượt sông Hàn, tối cuối tuần rồng phun lửa và nước."
+          },
+          {
+            "name": "Cầu sông Hàn",
+            "lat": 16.072,
+            "lng": 108.2268,
+            "note": "Cầu quay đầu tiên của Việt Nam (2000), đêm khuya quay ngang cho tàu qua."
+          },
+          {
+            "name": "Đường Bạch Đằng",
+            "lat": 16.068,
+            "lng": 108.2245,
+            "note": "Con đường chạy dọc bờ tây sông Hàn, đẹp nhất về đêm."
+          },
+          {
+            "name": "Chợ Hàn",
+            "lat": 16.0682,
+            "lng": 108.2238,
+            "note": "Khu chợ lâu đời giữa trung tâm, nơi bán đặc sản Đà Nẵng."
+          },
+          {
+            "name": "Cầu Trần Thị Lý",
+            "lat": 16.0505,
+            "lng": 108.2275,
+            "note": "Cầu dây văng có trụ hình cánh buồm, phía nam Cầu Rồng."
+          }
+        ]
+      },
+      {
+        "id": "lam",
+        "type": "jigsaw",
+        "instruction": "Ghép các mảnh để hoàn thiện phù điêu vũ nữ trên Đài thờ Trà Kiệu.",
+        "image": "images/man-1-phu-dieu.svg",
+        "grid": [
+          3,
+          3
+        ],
+        "hints": [
+          "Bắt đầu từ bốn góc, các góc có viền thẳng.",
+          "Hàng trên là phần đầu và mũ của vũ nữ.",
+          "Hàng dưới là phần đế đài thờ, có hoa văn chạy ngang."
+        ]
+      },
+      {
+        "id": "the-hien",
+        "type": "learn_retell",
+        "prompt": "Học về Đài thờ Trà Kiệu, rồi hoàn thành bài thuyết minh để giới thiệu cho một du khách.",
+        "cards": [
+          {
+            "title": "Bảo tàng Điêu khắc Chăm",
+            "body": "Mở cửa năm 1919 bên sông Hàn, ngôi nhà mái cong mô phỏng tháp Chăm. Đây là nơi giữ sưu tập điêu khắc Chăm lớn nhất thế giới."
+          },
+          {
+            "title": "Người Chăm là ai?",
+            "body": "Người Chăm lập nên vương quốc Chăm Pa ở miền Trung từ khoảng thế kỷ 2. Họ để lại nhiều đền tháp gạch và tượng đá, như thánh địa Mỹ Sơn gần Đà Nẵng."
+          },
+          {
+            "title": "Đài thờ Trà Kiệu",
+            "body": "Một bệ thờ tìm thấy ở Trà Kiệu (Quảng Nam), thế kỷ 7. Năm 2012 được công nhận là bảo vật quốc gia."
+          },
+          {
+            "title": "Chất liệu: sa thạch",
+            "body": "Đài được tạc từ đá sa thạch, loại đá cát mềm dễ chạm khắc. Phần lớn tượng Chăm đều làm bằng sa thạch."
+          },
+          {
+            "title": "Hình chạm: vũ nữ Apsara",
+            "body": "Quanh chân đài là các vũ nữ Apsara đang múa và nhạc công. Apsara là tiên nữ múa trên thiên đình trong văn hóa Ấn Độ, được người Chăm tiếp nhận."
+          }
+        ],
+        "template": "Kính chào quý khách! Đây là Đài thờ {{ten}}, bảo vật quốc gia của Việt Nam. Đài được tạc từ đá {{chat-lieu}}, một loại đá mềm dễ chạm khắc. Quanh chân đài là các {{hinh}} đang múa cùng nhạc công. Hiện vật được giữ tại Bảo tàng Điêu khắc Chăm, mở cửa từ năm {{nam}}.",
+        "blanks": [
+          {
+            "id": "ten",
+            "answer": "Trà Kiệu",
+            "distractors": [
+              "Mỹ Sơn",
+              "Hội An"
+            ],
+            "explain": "Mỹ Sơn là thánh địa đền tháp, Hội An là phố cổ. Đài thờ mang tên nơi tìm thấy nó: Trà Kiệu."
+          },
+          {
+            "id": "chat-lieu",
+            "answer": "sa thạch",
+            "distractors": [
+              "cẩm thạch",
+              "đá granite"
+            ],
+            "explain": "Cẩm thạch có ở Ngũ Hành Sơn, nhưng tượng Chăm chủ yếu tạc từ sa thạch, đá cát mềm."
+          },
+          {
+            "id": "hinh",
+            "answer": "vũ nữ Apsara",
+            "distractors": [
+              "chiến binh",
+              "con rồng"
+            ],
+            "explain": "Hình chạm nổi bật nhất của đài thờ là các tiên nữ múa Apsara, không phải chiến binh hay rồng."
+          },
+          {
+            "id": "nam",
+            "answer": "1919",
+            "distractors": [
+              "1975",
+              "2000"
+            ],
+            "explain": "Bảo tàng do người Pháp xây và mở cửa năm 1919, là bảo tàng lâu đời ở Đà Nẵng."
+          }
+        ]
+      }
+    ],
+    "reveal": {
+      "text": "Đài thờ Trà Kiệu là bảo vật quốc gia, tạc bằng đá sa thạch, quanh chân đài là các vũ nữ Apsara và nhạc công. Bảo tàng Điêu khắc Chăm mở cửa năm 1919 và giữ sưu tập điêu khắc Chăm lớn nhất. Trang 2 đã về. Mặt sau trang có câu thơ lục bát chép vội, kèm hình chiếc trống và mấy cái chòi tre.",
+      "sources": [
+        {
+          "title": "Bảo tàng Điêu khắc Chăm Đà Nẵng (trang chính thức)",
+          "url": "https://chammuseum.danang.vn"
         }
       ]
     },

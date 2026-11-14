@@ -6,6 +6,7 @@ import {
   checkMatch,
   checkOrder,
   checkRecipe,
+  checkRetell,
   checkSpotDiff,
   hitSpot,
   finalResult,
@@ -15,6 +16,7 @@ import type {
   MatchStation,
   OrderStation,
   RecipeStation,
+  RetellStation,
   SpotDiffStation,
 } from "@/lib/types";
 
@@ -191,5 +193,14 @@ describe("checkRecipe, hitSpot, checkSpotDiff", () => {
   it("needs every spot found", () => {
     expect(checkSpotDiff(diff, ["cau"])).toBe(false);
     expect(checkSpotDiff(diff, ["nha", "cau", "cau"])).toBe(true);
+  });
+});
+
+describe("checkRetell", () => {
+  const st = { id: "r", type: "learn_retell", prompt: "", cards: [], template: "", blanks: [1, 2, 3].map((i) => ({ id: `b${i}`, answer: "a", distractors: ["x", "y"], explain: "" })) } as RetellStation;
+  it("gives 3 stars with no wrong picks", () => expect(checkRetell(st, 0)).toMatchObject({ stars: 3, score: 100, graded_by: "local" }));
+  it("lowers score per wrong pick, floored at 20", () => {
+    expect(checkRetell(st, 1).score).toBe(80);
+    expect(checkRetell(st, 99).score).toBe(20);
   });
 });

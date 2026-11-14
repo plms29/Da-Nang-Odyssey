@@ -1,5 +1,6 @@
 "use client";
 
+import { authFetch } from "@/lib/supabase/client";
 import { useCallback, useId, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import { motion, useAnimate, useReducedMotion } from "motion/react";
@@ -176,7 +177,7 @@ export function ExpressStation({
     }
 
     try {
-      const response = await fetch("/api/judge", {
+      const response = await authFetch("/api/judge", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

@@ -1,5 +1,6 @@
 "use client";
 
+import { authFetch } from "@/lib/supabase/client";
 import { useEffect, useId, useRef, useState, type RefObject } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Celebrate } from "@/components/fx/Celebrate";
@@ -45,7 +46,7 @@ export function OnsiteBooth({ spot, headingRef, onReset }: OnsiteBoothProps) {
 
     async function fetchCaption() {
       try {
-        const response = await fetch("/api/caption", {
+        const response = await authFetch("/api/caption", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ spot_id: spot.id }),

@@ -1,5 +1,6 @@
 "use client";
 
+import { authFetch } from "@/lib/supabase/client";
 import { useEffect, useState, type Dispatch } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { GlassPanel } from "@/components/fx/Glass";
@@ -141,7 +142,7 @@ export function TourSetup({
     let plan: TourPlan;
 
     try {
-      const res = await fetch("/api/tour/plan", {
+      const res = await authFetch("/api/tour/plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(

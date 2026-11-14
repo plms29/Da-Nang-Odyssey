@@ -40,6 +40,7 @@ import { MapPinStation } from "./stations/MapPinStation";
 import { JigsawStation } from "./stations/JigsawStation";
 import { OrderStation } from "./stations/OrderStation";
 import { MatchStation } from "./stations/MatchStation";
+import { RetellStation } from "./stations/RetellStation";
 import { ExpressStation } from "./stations/ExpressStation";
 import { RecipeStation } from "./stations/RecipeStation";
 import { SpotDiffStation } from "./stations/SpotDiffStation";
@@ -572,6 +573,14 @@ function renderStation(
           key={station.id}
           station={station}
           onDone={(result) => dispatch({ type: "completeActivity", result })}
+        />
+      );
+    case "learn_retell":
+      return (
+        <RetellStation
+          key={station.id}
+          station={station}
+          onDone={(judge) => dispatch({ type: "submitExpress", judge })}
         />
       );
     case "open_text_or_voice":

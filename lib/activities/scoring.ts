@@ -4,7 +4,9 @@ import type {
   MapPinStation,
   MatchStation,
   OrderStation,
+  JudgeResult,
   RecipeStation,
+  RetellStation,
   SpotDiffStation,
   StationResult,
 } from "@/lib/types";
@@ -95,5 +97,20 @@ export function finalResult(
     correct,
     score: correct ? attemptScore(hintsUsed, wrongAttempts) : 0,
     hints_used: hintsUsed,
+  };
+}
+
+/** Grade a learn_retell station: every blank is filled at the end, so stars come from wrong picks. */
+export function checkRetell(station: RetellStation, wrongPicks: number): JudgeResult {
+  const total = station.blanks.length;
+  const score = Math.max(20, Math.round(100 - (60 * wrongPicks) / Math.max(1, total)));
+  const stars: 1 | 2 | 3 = wrongPicks === 0 ? 3 : score >= 60 ? 2 : 1;
+  return {
+    criteria: [{ id: "du-y", score: stars, evidence: `${total} chỗ trống, chọn sai ${wrongPicks} lần` }],
+    score,
+    stars,
+    praise: wrongPicks === 0 ? "Bạn nhớ trọn cả bài!" : "Bạn đã hoàn thành cả bài.",
+    addition: "",
+    graded_by: "local",
   };
 }
