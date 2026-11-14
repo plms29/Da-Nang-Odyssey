@@ -58,7 +58,7 @@ export function RemoteModeView({
   if (selectedSpot) {
     return (
       <section className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-ink/15 bg-white/80 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-surface/90 p-4 shadow-xs backdrop-blur-md">
           <div>
             <h2
               ref={headingRef}
@@ -74,7 +74,7 @@ export function RemoteModeView({
           <button
             type="button"
             onClick={() => setSelectedSpotId(null)}
-            className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-sand px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            className="inline-flex min-h-11 items-center justify-center rounded-md border border-border bg-sand/70 px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-terracotta/50 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
           >
             Chọn điểm khác
           </button>
@@ -86,7 +86,7 @@ export function RemoteModeView({
   }
 
   return (
-    <section className="space-y-4 rounded-lg border border-ink/15 bg-white/80 p-5">
+    <section className="space-y-4 rounded-xl border border-border bg-surface/90 p-5 shadow-xs backdrop-blur-md">
       <div>
         <h2
           ref={headingRef}
@@ -96,8 +96,8 @@ export function RemoteModeView({
           Ghé thăm từ xa
         </h2>
         <p className="mt-1 text-sm leading-relaxed text-muted">
-          Chọn điểm bạn đã mở khóa để chụp ảnh với khung hình từ xa (không ghi
-          dấu ĐÃ ĐẾN).
+          Chọn điểm bạn đã mở khóa để chụp ảnh kỷ niệm với khung hình từ xa
+          (không ghi dấu ĐÃ ĐẾN).
         </p>
       </div>
 
@@ -116,7 +116,7 @@ export function RemoteModeView({
             return (
               <li
                 key={spot.id}
-                className="rounded-md border border-ink/15 bg-sand/60 p-3.5"
+                className="rounded-lg border border-border bg-sand/70 p-3.5"
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
@@ -132,14 +132,14 @@ export function RemoteModeView({
                     <button
                       type="button"
                       onClick={() => setSelectedSpotId(spot.id)}
-                      className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-md bg-river px-4 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+                      className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-md bg-river px-4 py-2 text-sm font-semibold text-on-accent transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
                     >
                       Chụp ảnh từ xa
                     </button>
                   ) : (
                     <Link
                       href="/kham-pha"
-                      className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-md border border-terracotta/40 bg-white px-4 py-2 text-sm font-semibold text-terracotta transition-colors hover:bg-terracotta/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+                      className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-md border border-terracotta/40 bg-surface px-4 py-2 text-sm font-semibold text-terracotta transition-colors hover:bg-terracotta/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
                     >
                       Đến Khám phá
                     </Link>
@@ -155,7 +155,7 @@ export function RemoteModeView({
         <button
           type="button"
           onClick={onBack}
-          className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-sand px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="inline-flex min-h-11 items-center justify-center rounded-md border border-border bg-sand/70 px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-terracotta/50 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Quay lại check-in tại chỗ
         </button>

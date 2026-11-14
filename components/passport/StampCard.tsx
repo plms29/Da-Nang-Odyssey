@@ -56,7 +56,6 @@ export function StampCard({
   const hasFresh = isFreshLevel || isFreshTour || isFreshVisited;
 
   const [started, setStarted] = useState(false);
-  const [shimmerDone, setShimmerDone] = useState(false);
   const onPressedRef = useRef(onPressed);
 
   useEffect(() => {
@@ -93,128 +92,132 @@ export function StampCard({
   const card = (
     <TiltCard
       as="article"
-      max={10}
-      className="rounded-lg border border-ink/15 bg-white/80 p-4 lg:flex lg:h-full lg:min-h-56 lg:flex-col lg:justify-between lg:p-6"
+      max={6}
+      className="flex h-full flex-col justify-between overflow-hidden rounded-xl border border-border bg-surface/90 shadow-xs"
     >
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="text-base font-bold text-ink">{spot.name}</h3>
-        {!visitedDate && (
-          <Link
-            href={`/photobooth?spot=${encodeURIComponent(spot.id)}`}
-            className="inline-flex min-h-11 shrink-0 items-center rounded-md px-2 text-xs font-semibold text-terracotta underline underline-offset-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+      {spot.image && (
+        <div className="relative h-36 overflow-hidden rounded-t-xl bg-sand/70">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={spot.image}
+            alt=""
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"
+          />
+        </div>
+      )}
+
+      <div className="flex flex-1 flex-col justify-between bg-surface/95 p-4 lg:p-5">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="text-base font-bold leading-snug text-ink">
+            {spot.name}
+          </h3>
+          {!visitedDate && (
+            <Link
+              href={`/photobooth?spot=${encodeURIComponent(spot.id)}`}
+              className="inline-flex min-h-11 shrink-0 items-center rounded-md px-2 text-xs font-semibold text-terracotta underline underline-offset-2 transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            >
+              Check-in tại đây
+            </Link>
+          )}
+        </div>
+
+        <div className="mt-3 grid grid-cols-3 gap-2 lg:mt-5 lg:gap-3">
+          <div
+            role="group"
+            aria-label={
+              hasLevel ? "Hoàn thành màn: có" : "Hoàn thành màn: chưa"
+            }
+            className={`relative flex min-h-14 flex-col items-center justify-center overflow-hidden rounded-lg px-2 py-2.5 text-center text-xs lg:min-h-24 lg:px-3 lg:py-4 ${
+              hasLevel
+                ? "bg-terracotta font-semibold text-on-accent"
+                : "border border-dashed border-ink/20 bg-sand/70 text-muted"
+            }`}
           >
-            Check-in tại đây
-          </Link>
-        )}
-      </div>
-
-      <div className="mt-3 grid grid-cols-3 gap-2 lg:mt-5 lg:gap-3">
-        <div
-          role="group"
-          aria-label={
-            hasLevel ? "Hoàn thành màn: có" : "Hoàn thành màn: chưa"
-          }
-          className={`relative flex min-h-14 flex-col items-center justify-center overflow-hidden rounded-md px-2 py-2 text-center text-xs lg:min-h-28 lg:px-3 lg:py-4 ${
-            hasLevel
-              ? "bg-terracotta font-semibold text-sand"
-              : "border border-dashed border-ink/25 bg-sand/50 text-muted"
-          }`}
-        >
-          {hasLevel && <HoloFoil reduced={effectiveReduced} />}
-          {hasLevel ? (
-            <StampPress
-              play={isFreshLevel && started}
-              className={isFreshLevel && !started ? "opacity-0" : undefined}
-            >
-              <span className="flex flex-col items-center">
+            {hasLevel && <HoloFoil reduced={effectiveReduced} />}
+            {hasLevel ? (
+              <StampPress
+                play={isFreshLevel && started}
+                className={isFreshLevel && !started ? "opacity-0" : undefined}
+              >
+                <span className="flex flex-col items-center">
+                  <span>Hoàn thành màn</span>
+                  <span className="mt-1 text-xs opacity-90">Đã có</span>
+                </span>
+              </StampPress>
+            ) : (
+              <>
                 <span>Hoàn thành màn</span>
-                <span className="mt-1 text-xs opacity-90">Đã có</span>
-              </span>
-            </StampPress>
-          ) : (
-            <>
-              <span>Hoàn thành màn</span>
-              <span className="mt-1 text-xs opacity-90">Chưa</span>
-            </>
-          )}
-        </div>
+                <span className="mt-1 text-xs opacity-90">Chưa</span>
+              </>
+            )}
+          </div>
 
-        <div
-          role="group"
-          aria-label={hasTour ? "Đã nghe tour: có" : "Đã nghe tour: chưa"}
-          className={`relative flex min-h-14 flex-col items-center justify-center overflow-hidden rounded-md px-2 py-2 text-center text-xs lg:min-h-28 lg:px-3 lg:py-4 ${
-            hasTour
-              ? "bg-river font-semibold text-sand"
-              : "border border-dashed border-ink/25 bg-sand/50 text-muted"
-          }`}
-        >
-          {hasTour && <HoloFoil reduced={effectiveReduced} />}
-          {hasTour ? (
-            <StampPress
-              play={isFreshTour && started}
-              className={isFreshTour && !started ? "opacity-0" : undefined}
-            >
-              <span className="flex flex-col items-center">
+          <div
+            role="group"
+            aria-label={hasTour ? "Đã nghe tour: có" : "Đã nghe tour: chưa"}
+            className={`relative flex min-h-14 flex-col items-center justify-center overflow-hidden rounded-lg px-2 py-2.5 text-center text-xs lg:min-h-24 lg:px-3 lg:py-4 ${
+              hasTour
+                ? "bg-river font-semibold text-on-accent"
+                : "border border-dashed border-ink/20 bg-sand/70 text-muted"
+            }`}
+          >
+            {hasTour && <HoloFoil reduced={effectiveReduced} />}
+            {hasTour ? (
+              <StampPress
+                play={isFreshTour && started}
+                className={isFreshTour && !started ? "opacity-0" : undefined}
+              >
+                <span className="flex flex-col items-center">
+                  <span>Đã nghe tour</span>
+                  <span className="mt-1 text-xs opacity-90">Đã có</span>
+                </span>
+              </StampPress>
+            ) : (
+              <>
                 <span>Đã nghe tour</span>
-                <span className="mt-1 text-xs opacity-90">Đã có</span>
-              </span>
-            </StampPress>
-          ) : (
-            <>
-              <span>Đã nghe tour</span>
-              <span className="mt-1 text-xs opacity-90">Chưa</span>
-            </>
-          )}
-        </div>
+                <span className="mt-1 text-xs opacity-90">Chưa</span>
+              </>
+            )}
+          </div>
 
-        <div
-          role="group"
-          aria-label={
-            visitedDate
-              ? `Đã đến: có, ngày ${visitedDate}`
-              : "Đã đến: chưa"
-          }
-          className={`relative flex min-h-14 flex-col items-center justify-center overflow-hidden rounded-md px-2 py-2 text-center text-xs lg:min-h-28 lg:px-3 lg:py-4 ${
-            visitedDate
-              ? "bg-gold font-semibold text-ink"
-              : "border border-dashed border-ink/25 bg-sand/50 text-muted"
-          }`}
-        >
-          {visitedDate && <HoloFoil variant="gold" reduced={effectiveReduced} />}
-          {visitedDate && !effectiveReduced && !shimmerDone && (
-            <motion.span
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 rounded-md"
-              style={{
-                background:
-                  "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.7) 50%, transparent 70%)",
-              }}
-              initial={{ x: "-120%" }}
-              animate={{ x: "220%" }}
-              transition={{
-                duration: 0.9,
-                ease: "easeInOut",
-                delay: 1.2,
-              }}
-              onAnimationComplete={() => setShimmerDone(true)}
-            />
-          )}
-          {visitedDate ? (
-            <StampPress
-              play={isFreshVisited && started}
-              className={isFreshVisited && !started ? "opacity-0" : undefined}
-            >
-              <span className="flex flex-col items-center">
+          <div
+            role="group"
+            aria-label={
+              visitedDate
+                ? `Đã đến: có, ngày ${visitedDate}`
+                : "Đã đến: chưa"
+            }
+            className={`relative flex min-h-14 flex-col items-center justify-center overflow-hidden rounded-lg px-2 py-2.5 text-center text-xs lg:min-h-24 lg:px-3 lg:py-4 ${
+              visitedDate
+                ? "border border-gold/60 bg-gold/20 font-semibold text-ink"
+                : "border border-dashed border-ink/20 bg-sand/70 text-muted"
+            }`}
+          >
+            {visitedDate && (
+              <HoloFoil variant="gold" reduced={effectiveReduced} />
+            )}
+            {visitedDate ? (
+              <StampPress
+                play={isFreshVisited && started}
+                className={isFreshVisited && !started ? "opacity-0" : undefined}
+              >
+                <span className="flex flex-col items-center">
+                  <span>Đã đến</span>
+                  <span className="mt-1 text-xs">{visitedDate}</span>
+                </span>
+              </StampPress>
+            ) : (
+              <>
                 <span>Đã đến</span>
-                <span className="mt-1 text-xs">{visitedDate}</span>
-              </span>
-            </StampPress>
-          ) : (
-            <>
-              <span>Đã đến</span>
-              <span className="mt-1 text-xs">Chưa</span>
-            </>
-          )}
+                <span className="mt-1 text-xs">Chưa</span>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </TiltCard>

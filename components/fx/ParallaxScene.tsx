@@ -82,7 +82,6 @@ function PanelCard({
   const opacity = useTransform(
     progress,
     [a, a + 0.15 * s, b - 0.15 * s, b],
-    // panel 0 is already visible when the intro opens
     index === 0 ? [1, 1, 1, 0] : [0, 1, 1, 0]
   );
   const y = useTransform(
@@ -90,8 +89,6 @@ function PanelCard({
     [a, a + 0.15 * s],
     index === 0 ? [0, 0] : [16, 0]
   );
-  // Write straight to the node: bound via motion `style`, panel 0 stopped receiving updates
-  // (its MotionValue reached 0 while the DOM stayed at 1).
   const ref = useRef<HTMLDivElement>(null);
   const apply = useCallback(() => {
     const el = ref.current;
@@ -110,8 +107,7 @@ function PanelCard({
       ref={ref}
       aria-hidden="true"
       style={{ opacity: index === 0 ? 1 : 0 }}
-      // top-anchored: before the stage sticks it starts below the page header, so a bottom anchor hides under the nav
-      className="absolute inset-x-4 top-[40%] rounded-lg bg-sand/85 backdrop-blur-sm p-4 shadow-sm text-ink pointer-events-none lg:inset-x-auto lg:left-[8%] lg:top-[34%] lg:w-[min(520px,40vw)]"
+      className="absolute inset-x-4 top-[40%] rounded-xl border border-border bg-surface/90 backdrop-blur-md p-5 shadow-xs text-ink pointer-events-none lg:inset-x-auto lg:left-[8%] lg:top-[34%] lg:w-[min(520px,40vw)]"
     >
       {children}
     </div>
@@ -128,7 +124,7 @@ function StaticScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
         {panels.map((panel, index) => (
           <div
             key={index}
-            className="rounded-lg bg-sand/85 backdrop-blur-sm p-4 shadow-sm text-ink lg:max-w-[520px]"
+            className="rounded-xl border border-border bg-surface/90 backdrop-blur-md p-5 shadow-xs text-ink lg:max-w-[520px]"
           >
             {panel}
           </div>
@@ -282,7 +278,7 @@ function ScrollScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
               visibility: ctaVisibility,
             }}
           >
-            <div className="w-full max-w-[400px] rounded-lg bg-sand/85 backdrop-blur-sm p-4 shadow-sm text-ink text-center lg:max-w-none">
+            <div className="w-full max-w-[400px] rounded-xl border border-border bg-surface/90 backdrop-blur-md p-5 shadow-xs text-ink text-center lg:max-w-none">
               {cta}
             </div>
           </motion.div>
@@ -292,7 +288,7 @@ function ScrollScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
             style={{ opacity: hintOpacity, visibility: hintVisibility }}
             className="absolute inset-x-0 top-16 flex justify-center pointer-events-none lg:top-auto lg:bottom-8"
           >
-            <div className="flex items-center gap-1.5 bg-sand/85 rounded-full px-3 py-1 text-sm text-ink backdrop-blur-sm">
+            <div className="flex items-center gap-1.5 rounded-full border border-border bg-surface/90 px-3.5 py-1.5 text-sm text-ink backdrop-blur-md">
               <span>Cuộn để khám phá</span>
               <svg
                 viewBox="0 0 16 16"
@@ -316,7 +312,7 @@ function ScrollScene({ kit, panels, cta }: ParallaxSceneProps): JSX.Element {
               pointerEvents: skipPointer,
               visibility: skipVisibility,
             }}
-            className="absolute right-3 top-3 min-h-11 min-w-11 rounded-full bg-sand/85 px-4 text-sm text-ink backdrop-blur-sm lg:left-auto lg:right-8 lg:top-24"
+            className="absolute right-3 top-3 min-h-11 min-w-11 rounded-full border border-border bg-surface/90 px-4 text-sm font-medium text-ink backdrop-blur-md lg:left-auto lg:right-8 lg:top-24"
           >
             Bỏ qua
           </motion.button>

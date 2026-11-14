@@ -588,8 +588,8 @@ function drawBottomBand(
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  ctx.font = `700 ${Math.round(20 * s)}px ${fontFamily}`;
-  ctx.fillText("★ ★ ★", 0, -Math.round(44 * s));
+  ctx.font = `700 ${Math.round(18 * s)}px ${fontFamily}`;
+  ctx.fillText("DI SẢN", 0, -Math.round(44 * s));
 
   if (isOnsite) {
     ctx.font = `700 ${Math.round(30 * s)}px ${fontFamily}`;

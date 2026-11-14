@@ -182,10 +182,8 @@ export function ExpressStation({
 
   return (
     <section
-      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
-        judgeResult
-          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-          : ""
+      className={`rounded-xl border border-border bg-surface/95 p-4 transition-colors sm:p-5 ${
+        judgeResult ? "border-terracotta ring-2 ring-gold/70" : ""
       }`}
     >
       <p className="text-base font-medium leading-relaxed text-ink">
@@ -193,8 +191,8 @@ export function ExpressStation({
       </p>
 
       {station.sample && (
-        <div className="mt-3 rounded-md border border-gold/50 bg-gold/15 p-3">
-          <p className="text-xs font-bold uppercase tracking-wider text-ink">
+        <div className="mt-3 rounded-xl border border-gold/40 bg-gold/10 p-3.5">
+          <p className="text-xs font-semibold text-ink">
             Câu mẫu
           </p>
           <p className="mt-1 text-sm text-ink">{station.sample}</p>
@@ -217,10 +215,10 @@ export function ExpressStation({
               </span>
               <div className="grid grid-cols-2 gap-2">
                 <label
-                  className={`inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
+                  className={`inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
                     answerMode === "voice"
-                      ? "border-terracotta bg-terracotta/10 text-terracotta ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-                      : "border-ink/20 bg-white text-ink hover:bg-sand/60"
+                      ? "border-terracotta bg-terracotta/10 text-terracotta ring-2 ring-gold/70"
+                      : "border-border bg-surface text-ink hover:bg-sand/70"
                   } ${loading ? "cursor-not-allowed opacity-60" : ""}`}
                 >
                   <input
@@ -235,10 +233,10 @@ export function ExpressStation({
                   <span>Nói</span>
                 </label>
                 <label
-                  className={`inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
+                  className={`inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
                     answerMode === "text"
-                      ? "border-terracotta bg-terracotta/10 text-terracotta ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-                      : "border-ink/20 bg-white text-ink hover:bg-sand/60"
+                      ? "border-terracotta bg-terracotta/10 text-terracotta ring-2 ring-gold/70"
+                      : "border-border bg-surface text-ink hover:bg-sand/70"
                   } ${loading ? "cursor-not-allowed opacity-60" : ""}`}
                 >
                   <input
@@ -289,7 +287,7 @@ export function ExpressStation({
                   onChange={(e) => setText(e.target.value)}
                   disabled={loading}
                   placeholder="Nhập phần thể hiện của bạn tại đây..."
-                  className="mt-1 w-full rounded-md border border-ink/20 bg-white px-3 py-2 text-sm text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:opacity-60"
+                  className="mt-1.5 w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-ink placeholder:text-muted/70 transition-colors focus:border-terracotta focus:ring-2 focus:ring-gold/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:opacity-60"
                 />
               </div>
 
@@ -308,7 +306,7 @@ export function ExpressStation({
           <GlowButton
             type="submit"
             disabled={loading || !canSubmit}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-terracotta px-5 py-2 text-sm font-semibold text-on-accent transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Đang chấm…" : "Nộp bài"}
           </GlowButton>
@@ -329,7 +327,7 @@ export function ExpressStation({
           className="mt-4 space-y-4"
         >
           {judgeResult.transcript && judgeResult.transcript.trim().length > 0 && (
-            <p className="rounded-md border border-ink/15 bg-sand/60 p-3 text-sm text-ink">
+            <p className="rounded-xl border border-border bg-sand/70 p-3.5 text-sm text-ink">
               <span className="font-semibold text-ink">Bản chép lời: </span>
               {judgeResult.transcript}
             </p>
@@ -339,7 +337,7 @@ export function ExpressStation({
             {judgeResult.criteria.map((criterion) => (
               <li
                 key={criterion.id}
-                className="rounded-md border border-ink/15 bg-sand/60 p-3 text-sm"
+                className="rounded-xl border border-border bg-sand/70 p-3.5 text-sm"
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-semibold text-ink">
@@ -356,7 +354,7 @@ export function ExpressStation({
             ))}
           </ul>
 
-          <div className="space-y-2 rounded-md border border-river/25 bg-white p-3 text-sm">
+          <div className="space-y-2 rounded-xl border border-river/30 bg-surface p-3.5 text-sm">
             <p className="text-ink">
               <span className="font-semibold text-river">Nhận xét: </span>
               {judgeResult.praise}
@@ -376,7 +374,7 @@ export function ExpressStation({
           <button
             type="button"
             onClick={() => onDone(judgeResult)}
-            className="inline-flex min-h-11 items-center justify-center rounded-md bg-river px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-river px-5 py-2 text-sm font-semibold text-on-accent transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
           >
             Tiếp tục
           </button>

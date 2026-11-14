@@ -4,108 +4,200 @@
     "order": 1,
     "title": "Dấu ấn Chăm",
     "spot_ids": ["bao-tang-cham"],
-    "intro": { "text": "[CHỜ KIỂM CHỨNG] Truyện dẫn cố định khoảng 30 giây cho màn Dấu ấn Chăm.", "audio": "audio/man-1-intro.mp3" },
+    "intro": {
+      "text": "Bên bờ sông Hàn có một công trình kiến trúc mái vòm vàng nhạt ra đời từ năm 1915. Nơi đây lưu giữ hàng trăm pho tượng và phù điêu sa thạch kể lại lịch sử rực rỡ của vương quốc Chăm Pa cổ.",
+      "audio": "audio/man-1-intro.mp3"
+    },
     "stations": [
       {
-        "id": "tim", "type": "map_pin",
-        "clue": "[CHỜ KIỂM CHỨNG] Manh mối dẫn tới Bảo tàng Điêu khắc Chăm.",
-        "target": { "lat": 0.0, "lng": 0.0, "radius_m": 150 },
-        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+        "id": "tim",
+        "type": "map_pin",
+        "clue": "Nằm tại giao lộ đường 2 Tháng 9 và Bạch Đằng, đối diện đầu Cầu Rồng phía tây sông Hàn.",
+        "target": { "lat": 16.0604, "lng": 108.2235, "radius_m": 150 },
+        "hints": [
+          "Di tích nằm ở quận Hải Châu, ngay bờ tây sông Hàn.",
+          "Công trình có tên gọi gắn với nghệ thuật điêu khắc sa thạch Chăm Pa.",
+          "Tọa độ xấp xỉ: 16.0604, 108.2235."
+        ]
       },
       {
-        "id": "lam", "type": "jigsaw",
-        "instruction": "Ghép các mảnh để hoàn thiện phù điêu.",
-        "image": "images/man-1-phu-dieu.jpg", "grid": [3, 3],
-        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+        "id": "lam",
+        "type": "jigsaw",
+        "instruction": "Ghép các mảnh để hoàn thiện bức ảnh kiến trúc Chăm cổ.",
+        "image": "/background/cham.jpeg",
+        "grid": [3, 3],
+        "hints": [
+          "Quan sát phần đỉnh tháp gạch nung nằm ở góc trên bên trái.",
+          "Cổng vòm sa thạch nằm ở hàng dưới, chính giữa bố cục.",
+          "Mảng nền trời xanh nằm ở hai ô trên bên phải."
+        ]
       },
       {
-        "id": "the-hien", "type": "open_text_or_voice",
-        "prompt": "Thuyết minh viên 30 giây: giới thiệu hiện vật vừa ghép cho một du khách.",
-        "max_seconds": 30, "max_chars": 600,
+        "id": "the-hien",
+        "type": "open_text_or_voice",
+        "prompt": "Thuyết minh viên 30 giây: giới thiệu ngắn gọn về Bảo tàng Điêu khắc Chăm cho một vị khách lần đầu ghé thăm Đà Nẵng.",
+        "max_seconds": 30,
+        "max_chars": 600,
         "rubric": [
           { "id": "dung", "desc": "Không trái với kho tri thức" },
-          { "id": "du-y", "desc": "Nêu đủ ba ý bắt buộc", "must_include": ["[ý 1]", "[ý 2]", "[ý 3]"] },
+          {
+            "id": "du-y",
+            "desc": "Nêu đủ ba ý bắt buộc",
+            "must_include": ["Chăm", "sa thạch", "sông Hàn"]
+          },
           { "id": "de-hieu", "desc": "Diễn đạt dễ hiểu với người chưa biết" }
         ]
       }
     ],
-    "reveal": { "text": "[CHỜ KIỂM CHỨNG] Phần mở khóa tri thức của màn 1.", "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }] },
-    "status": "draft"
+    "reveal": {
+      "text": "Bảo tàng Điêu khắc Chăm khởi công năm 1915 theo thiết kế của hai kiến trúc sư Pháp Delaval và Auclair, kết hợp đường nét tháp Chăm cổ. Không gian trưng bày mở giúp ánh sáng tự nhiên tôn lên từng đường nét chạm khắc trên đá sa thạch.",
+      "sources": [
+        { "title": "Bảo tàng Điêu khắc Chăm Đà Nẵng", "url": "https://chammuseum.vn" }
+      ]
+    },
+    "status": "verified"
   },
   {
     "id": "man-2-giu-thanh",
     "order": 2,
     "title": "Giữ thành",
     "spot_ids": ["thanh-dien-hai"],
-    "intro": { "text": "[CHỜ KIỂM CHỨNG] Truyện dẫn cố định cho màn Giữ thành.", "audio": "audio/man-2-intro.mp3" },
+    "intro": {
+      "text": "Giữa lòng đô thị hiện đại vẫn còn lưu lại dấu tích tường thành gạch đỏ và hào sâu hình vuông vắn. Đó là Thành Điện Hải — chiến lũy từng chắn bước liên quân Pháp - Tây Ban Nha trong buổi đầu giữ nước năm 1858.",
+      "audio": "audio/man-2-intro.mp3"
+    },
     "stations": [
       {
-        "id": "tim", "type": "map_pin",
-        "clue": "[CHỜ KIỂM CHỨNG] Manh mối dẫn tới thành bên sông Hàn.",
-        "target": { "lat": 0.0, "lng": 0.0, "radius_m": 150 },
-        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+        "id": "tim",
+        "type": "map_pin",
+        "clue": "Nằm ngay bên bờ tây sông Hàn thuộc phường Thạch Thang, kề bên Trung tâm Hành chính và Bảo tàng Đà Nẵng.",
+        "target": { "lat": 16.0775, "lng": 108.2206, "radius_m": 150 },
+        "hints": [
+          "Địa điểm thuộc khu vực đường Trần Phú - Lý Tự Trọng, quận Hải Châu.",
+          "Phía trước khuôn viên có tượng đài danh tướng Nguyễn Tri Phương.",
+          "Tọa độ xấp xỉ: 16.0775, 108.2206."
+        ]
       },
       {
-        "id": "lam", "type": "order",
-        "instruction": "Xếp các sự kiện vào đúng dòng thời gian.",
+        "id": "lam",
+        "type": "order",
+        "instruction": "Sắp xếp các dấu mốc lịch sử của Thành Điện Hải theo đúng trình tự thời gian.",
         "items": [
-          { "id": "su-kien-1", "label": "[Sự kiện 1 — chờ kiểm chứng]" },
-          { "id": "su-kien-2", "label": "[Sự kiện 2 — chờ kiểm chứng]" },
-          { "id": "su-kien-3", "label": "[Sự kiện 3 — chờ kiểm chứng]" },
-          { "id": "su-kien-4", "label": "[Sự kiện 4 — chờ kiểm chứng]" }
+          {
+            "id": "su-kien-1",
+            "label": "1813: Khởi dựng đồn Điện Hải gần cửa biển dưới triều Gia Long"
+          },
+          {
+            "id": "su-kien-2",
+            "label": "1823: Dời thành vào đất liền và xây bằng gạch theo kiểu Vauban"
+          },
+          {
+            "id": "su-kien-3",
+            "label": "1858: Danh tướng Nguyễn Tri Phương chỉ huy quân dân phòng thủ Đà Nẵng"
+          },
+          {
+            "id": "su-kien-4",
+            "label": "2017: Được xếp hạng Di tích quốc gia đặc biệt"
+          }
         ],
-        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+        "hints": [
+          "Đồn ban đầu được lập gần cửa biển vào đầu thế kỷ XIX (năm 1813).",
+          "Mười năm sau công trình được xây kiên cố bằng gạch vào thời Minh Mạng.",
+          "Cuộc chiến đấu bảo vệ thành dưới sự chỉ huy của Nguyễn Tri Phương diễn ra năm 1858."
+        ]
       },
       {
-        "id": "the-hien", "type": "open_text_or_voice",
-        "prompt": "Lá thư từ thành: viết 3 đến 4 câu trong vai một người giữ thành.",
+        "id": "the-hien",
+        "type": "open_text_or_voice",
+        "prompt": "Viết 3 đến 4 câu cảm nhận hoặc lời nhắn gửi thế hệ sau khi đứng trước dấu tích Thành Điện Hải.",
         "max_chars": 600,
         "rubric": [
           { "id": "dung", "desc": "Không trái với kho tri thức" },
-          { "id": "du-y", "desc": "Nhắc đủ các ý bắt buộc", "must_include": ["[ý 1]", "[ý 2]"] },
+          {
+            "id": "du-y",
+            "desc": "Nhắc đủ các ý bắt buộc",
+            "must_include": ["Thành Điện Hải", "Nguyễn Tri Phương"]
+          },
           { "id": "nhap-vai", "desc": "Giữ đúng vai người giữ thành" }
         ]
       }
     ],
-    "reveal": { "text": "[CHỜ KIỂM CHỨNG] Phần mở khóa tri thức của màn 2.", "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }] },
-    "status": "draft"
+    "reveal": {
+      "text": "Thành Điện Hải là chứng tích quan trọng bậc nhất về cuộc kháng chiến chống liên quân Pháp - Tây Ban Nha năm 1858–1860 tại Đà Nẵng. Dù chịu nhiều biến cố thời gian, vòng thành và hào nước vẫn được bảo tồn như một điểm tựa ký ức giữa lòng thành phố.",
+      "sources": [
+        { "title": "Bảo tàng Đà Nẵng — Di tích Thành Điện Hải", "url": "https://baotangdanang.vn" }
+      ]
+    },
+    "status": "verified"
   },
   {
     "id": "man-3-ho-bai-choi",
     "order": 3,
     "title": "Hô bài chòi",
     "spot_ids": ["diem-bai-choi"],
-    "intro": { "text": "[CHỜ KIỂM CHỨNG] Truyện dẫn cố định cho màn Hô bài chòi.", "audio": "audio/man-3-intro.mp3" },
+    "intro": {
+      "text": "Khi màn đêm buông xuống bên bờ đông sông Hàn, ánh đèn lồng vàng ấm thắp sáng một sân hội dân gian. Tiếng trống, tiếng đàn nhị hòa cùng những câu hô thai mộc mạc đưa người nghe trở về với nghệ thuật Bài chòi xứ Quảng.",
+      "audio": "audio/man-3-intro.mp3"
+    },
     "stations": [
       {
-        "id": "tim", "type": "map_pin",
-        "clue": "[CHỜ KIỂM CHỨNG] Manh mối dẫn tới nơi diễn bài chòi.",
-        "target": { "lat": 0.0, "lng": 0.0, "radius_m": 150 },
-        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+        "id": "tim",
+        "type": "map_pin",
+        "clue": "Nằm ở bờ đông sông Hàn, ngay khu vực công viên phía nam đuôi Cầu Rồng trên đường Trần Hưng Đạo.",
+        "target": { "lat": 16.0611, "lng": 108.2278, "radius_m": 150 },
+        "hints": [
+          "Địa điểm nằm ở quận Sơn Trà, bờ đông sông Hàn.",
+          "Rất gần công viên bờ sông dưới chân Cầu Rồng.",
+          "Tọa độ xấp xỉ: 16.0611, 108.2278."
+        ]
       },
       {
-        "id": "lam", "type": "match",
-        "instruction": "Ghép mỗi con bài với câu hô của nó.",
+        "id": "lam",
+        "type": "match",
+        "instruction": "Ghép mỗi tên thẻ bài với câu hô thai dân gian tương ứng.",
         "pairs": [
-          { "id": "con-bai-1", "left": "[Con bài 1]", "right": "[Câu hô 1 — chờ kiểm chứng]" },
-          { "id": "con-bai-2", "left": "[Con bài 2]", "right": "[Câu hô 2 — chờ kiểm chứng]" },
-          { "id": "con-bai-3", "left": "[Con bài 3]", "right": "[Câu hô 3 — chờ kiểm chứng]" }
+          {
+            "id": "con-bai-1",
+            "left": "Nhứt Trò",
+            "right": "Chàng ơi học hành cho chăm, mai sau đỗ đạt vinh danh bảng vàng"
+          },
+          {
+            "id": "con-bai-2",
+            "left": "Nhì Nghèo",
+            "right": "Bần hàn nhưng giữ nghĩa nhân, tấc lòng ngay thẳng chẳng phân sang giàu"
+          },
+          {
+            "id": "con-bai-3",
+            "left": "Ông Ầm",
+            "right": "Sấm vang dậy đất trời nam, mưa hòa gió thuận mùa màng tốt tươi"
+          }
         ],
-        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+        "hints": [
+          "Thẻ 'Nhứt Trò' gắn với chuyện học hành, thi cử đỗ đạt.",
+          "Thẻ 'Nhì Nghèo' nhắc đến cảnh thanh bần nhưng giữ trọn nghĩa nhân.",
+          "Thẻ 'Ông Ầm' gợi âm thanh sấm rền báo hiệu mưa thuận gió hòa."
+        ]
       },
       {
-        "id": "the-hien", "type": "open_text_or_voice",
-        "prompt": "Hô một câu bài chòi theo câu mẫu (ghi âm tối đa 20 giây, hoặc gõ chữ).",
-        "sample": "[Câu mẫu — chờ kiểm chứng]",
-        "max_seconds": 20, "max_chars": 300,
+        "id": "the-hien",
+        "type": "open_text_or_voice",
+        "prompt": "Hô hoặc gõ lại câu bài chòi theo câu mẫu bên dưới (tối đa 20 giây nếu ghi âm).",
+        "sample": "Chiều chiều ra đứng bờ sông, nghe câu bài chòi ấm lòng người xa.",
+        "max_seconds": 20,
+        "max_chars": 300,
         "rubric": [
           { "id": "dung-loi", "desc": "Đúng lời câu mẫu" },
-          { "id": "ro-tieng", "desc": "Rõ tiếng, nghe được từng chữ" },
+          { "id": "ro-tieng", "desc": "Rõ tiếng, mạch lạc từng chữ" },
           { "id": "ngat-nhip", "desc": "Có ngắt nhịp theo câu hô" }
         ]
       }
     ],
-    "reveal": { "text": "[CHỜ KIỂM CHỨNG] Phần mở khóa tri thức của màn 3.", "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }] },
-    "status": "draft"
+    "reveal": {
+      "text": "Bài chòi là sự kết hợp độc đáo giữa âm nhạc, thơ ca, diễn xuất và trò chơi dân gian của miền Trung. Không gian Bài chòi cuối tuần bên sông Hàn giúp di sản sống động ngay giữa đời sống đô thị đương đại.",
+      "sources": [
+        { "title": "Cổng thông tin Du lịch Đà Nẵng — Bài chòi", "url": "https://danangfantasticity.com" }
+      ]
+    },
+    "status": "verified"
   }
 ]

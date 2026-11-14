@@ -44,6 +44,8 @@ const layers: SceneLayer[] = [
 
 export const ngheThuatDanGian: SceneKit = {
   id,
+  photo: "/background/hobaichoi.jpeg",
+  subtitle: "Hội Bài chòi dân gian bên bờ sông Hàn",
   sky: "url(/scenes/nghe-thuat-dan-gian/ai-sky.webp) center / cover no-repeat, linear-gradient(180deg, #1F1A17 0%, #172A3A 50%, #1F4E6B 100%)",
   layers,
   ambient: ["fireflies", "sway"],

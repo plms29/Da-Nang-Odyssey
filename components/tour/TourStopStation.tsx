@@ -85,9 +85,12 @@ export function TourStopStation({ spot, dispatch }: TourStopStationProps) {
   }
 
   return (
-    <GlassPanel tone="light" className="space-y-4 p-4 lg:p-5">
+    <GlassPanel
+      tone="light"
+      className="space-y-4 border-border bg-surface/90 p-4 lg:p-5"
+    >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-bold uppercase tracking-wider text-river">
+        <span className="text-xs font-semibold text-river">
           Hoạt động tại điểm dừng
         </span>
       </div>
@@ -102,14 +105,14 @@ export function TourStopStation({ spot, dispatch }: TourStopStationProps) {
         <MatchStation key={station.id} station={station} onDone={handleDone} />
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-ink/10 pt-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3">
         <span className="text-xs text-muted">
           Có thể bỏ qua hoạt động để nghe điểm tiếp theo
         </span>
         <button
           type="button"
           onClick={handleSkip}
-          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-ink/25 bg-white/85 px-5 py-2 text-sm font-semibold text-ink shadow-xs backdrop-blur-sm transition-colors motion-reduce:transition-none hover:border-terracotta/50 hover:bg-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-border bg-surface/90 px-5 py-2 text-sm font-semibold text-ink shadow-xs transition-colors motion-reduce:transition-none hover:border-terracotta/50 hover:bg-sand/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Để sau
         </button>

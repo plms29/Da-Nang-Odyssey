@@ -92,10 +92,6 @@ export function SceneGodRays(): JSX.Element {
   );
 }
 
-/**
- * Bridges MotionValue tilt coordinates to ShaderBackdrop's plain { x, y } tilt prop
- * with a small delta threshold so stationary scenes do not re-render.
- */
 export function ShaderTiltBridge({
   preset,
   x,
@@ -143,7 +139,6 @@ export function SceneLayerImg({
   layer: SceneLayer;
   intensity: "full" | "calm";
 }): JSX.Element {
-  // Decorative layers have unknown intrinsic SVG dimensions, so next/image is not used.
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img

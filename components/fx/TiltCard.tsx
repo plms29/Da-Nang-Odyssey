@@ -28,13 +28,13 @@ export interface TiltCardProps {
 const SPRING_CONFIG = { stiffness: 120, damping: 20 };
 
 /**
- * Interactive 3D tilting card driven by shared tilt state or local pointer hover, with an optional glare overlay.
+ * Interactive 3D tilting card driven by shared tilt state or local pointer hover.
  */
 export function TiltCard({
   children,
   className,
-  max = 8,
-  glare = true,
+  max = 6,
+  glare = false,
   as = "div",
 }: TiltCardProps): JSX.Element {
   const reduced = useReducedMotion();
@@ -65,7 +65,7 @@ export function TiltCard({
 
   const glareX = useTransform(tiltX, (v) => 50 + v * 50);
   const glareY = useTransform(tiltY, (v) => 50 + v * 50);
-  const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.35), transparent 60%)`;
+  const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.22), transparent 60%)`;
 
   const classes = className ? `relative ${className}` : "relative";
 
@@ -103,7 +103,6 @@ export function TiltCard({
   const motionProps = {
     className: classes,
     style: { rotateX, rotateY, transformPerspective: 800 },
-    whileTap: { scale: 0.98 },
     onPointerEnter: handlePointerEnter,
     onPointerMove: handlePointerMove,
     onPointerLeave: handlePointerLeave,

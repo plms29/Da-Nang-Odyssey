@@ -49,9 +49,22 @@ function getPieceLabel(id: UniqueIdentifier): string {
   return Number.isFinite(num) ? `Mảnh ${num + 1}` : `Mảnh ${raw}`;
 }
 
+function normalizeImageSrc(src: string): string {
+  const trimmed = src.trim();
+  if (!trimmed) return "";
+  if (trimmed.startsWith("/") || trimmed.startsWith("http")) {
+    return trimmed;
+  }
+  return `/${trimmed}`;
+}
+
 interface SortableTileProps {
   id: string;
+  pieceIndex: number;
   pieceNumber: number;
+  rows: number;
+  cols: number;
+  imageSrc: string;
   slotIndex: number;
   isSelected: boolean;
   reducedMotion: boolean;
@@ -60,7 +73,11 @@ interface SortableTileProps {
 
 function SortableTile({
   id,
+  pieceIndex,
   pieceNumber,
+  rows,
+  cols,
+  imageSrc,
   slotIndex,
   isSelected,
   reducedMotion,
@@ -79,11 +96,20 @@ function SortableTile({
     transition: reducedMotion ? null : undefined,
   });
 
+  const origRow = Math.floor(pieceIndex / cols);
+  const origCol = pieceIndex % cols;
+  const posX = cols > 1 ? (origCol / (cols - 1)) * 100 : 0;
+  const posY = rows > 1 ? (origRow / (rows - 1)) * 100 : 0;
+
   const style: CSSProperties = {
     transform: transform
       ? `translate3d(${Math.round(transform.x)}px, ${Math.round(transform.y)}px, 0)`
       : undefined,
     transition: reducedMotion ? "none" : transition,
+    backgroundImage: imageSrc ? `url("${imageSrc}")` : undefined,
+    backgroundSize: `${cols * 100}% ${rows * 100}%`,
+    backgroundPosition: `${posX}% ${posY}%`,
+    backgroundRepeat: "no-repeat",
   };
 
   return (
@@ -96,15 +122,23 @@ function SortableTile({
       onClick={() => onTap(slotIndex)}
       aria-label={`Mảnh ${pieceNumber}`}
       aria-pressed={isSelected || isDragging}
-      className={`flex min-h-14 min-w-11 select-none items-center justify-center rounded-md border text-lg font-bold transition-colors motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
+      className={`relative aspect-[4/3] min-h-14 min-w-11 w-full select-none overflow-hidden rounded-lg border bg-sand/70 transition-all motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
         isDragging
-          ? "z-10 scale-105 border-terracotta bg-terracotta text-sand shadow-lg ring-2 ring-gold motion-reduce:scale-100"
+          ? "z-10 scale-105 border-terracotta shadow-lg ring-2 ring-gold/70 motion-reduce:scale-100"
           : isSelected
-            ? "border-terracotta bg-terracotta text-sand ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-            : "cursor-grab border-ink/20 bg-sand text-ink hover:border-terracotta active:cursor-grabbing"
+            ? "border-terracotta ring-2 ring-gold/70"
+            : "cursor-grab border-border hover:border-terracotta active:cursor-grabbing"
       }`}
     >
-      {pieceNumber}
+      {(isSelected || isDragging) && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-terracotta/20"
+        />
+      )}
+      <span className="absolute top-1.5 left-1.5 rounded-full bg-black/65 px-2 py-0.5 text-xs font-bold text-white">
+        {pieceNumber}
+      </span>
     </button>
   );
 }
@@ -115,6 +149,7 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
   const [scope, animate] = useAnimate();
   const [rows, cols] = station.grid;
   const total = rows * cols;
+  const imageSrc = normalizeImageSrc(station.image);
   const [placement, setPlacement] = useState<number[]>(() =>
     deterministicShuffle(
       Array.from({ length: total }, (_, i) => i),
@@ -243,10 +278,8 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
 
   return (
     <section
-      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow motion-reduce:transition-none hover:shadow-sm ${
-        solvedGlow
-          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-          : ""
+      className={`rounded-xl border border-border bg-surface/95 p-4 transition-colors motion-reduce:transition-none sm:p-5 ${
+        solvedGlow ? "border-terracotta ring-2 ring-gold/70" : ""
       }`}
     >
       <p className="text-base font-medium leading-relaxed text-ink">
@@ -270,7 +303,7 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
         <SortableContext items={itemIds} strategy={rectSortingStrategy}>
           <div
             ref={scope}
-            className="mt-4 grid gap-2"
+            className="mx-auto mt-4 grid max-w-[360px] gap-1.5"
             style={{
               gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
             }}
@@ -283,7 +316,11 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
                 <SortableTile
                   key={id}
                   id={id}
+                  pieceIndex={pieceIndex}
                   pieceNumber={pieceNumber}
+                  rows={rows}
+                  cols={cols}
+                  imageSrc={imageSrc}
                   slotIndex={slotIndex}
                   isSelected={isSelected}
                   reducedMotion={reducedMotion}
@@ -305,7 +342,7 @@ export function JigsawStation({ station, onDone }: JigsawStationProps) {
         <GlowButton
           type="button"
           onClick={handleCheck}
-          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity motion-reduce:transition-none hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-terracotta px-5 py-2 text-sm font-semibold text-on-accent transition-opacity motion-reduce:transition-none hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Kiểm tra
         </GlowButton>

@@ -201,7 +201,11 @@ export function TourPlayer({ state, dispatch, spots }: TourPlayerProps) {
 
   if (!stop || !spot) {
     return (
-      <GlassPanel as="section" tone="light" className="space-y-3 p-5">
+      <GlassPanel
+        as="section"
+        tone="light"
+        className="space-y-3 border-border bg-surface/90 p-5"
+      >
         <p role="status" className="text-sm font-medium text-ink">
           Không tìm thấy thông tin điểm dừng này.
         </p>
@@ -299,10 +303,10 @@ export function TourPlayer({ state, dispatch, spots }: TourPlayerProps) {
         <GlassPanel
           as="section"
           tone="light"
-          className="min-w-0 space-y-4 p-4 lg:space-y-5 lg:p-8"
+          className="min-w-0 space-y-4 border-border bg-surface/90 p-4 lg:space-y-5 lg:p-8"
         >
           <div className="flex items-center justify-between gap-2">
-            <span className="inline-flex items-center rounded-full border border-terracotta/25 bg-terracotta/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-terracotta">
+            <span className="inline-flex items-center rounded-full border border-terracotta/25 bg-terracotta/10 px-3 py-1 text-xs font-semibold text-terracotta">
               Điểm {state.stopIndex + 1}/{plan.stops.length}
             </span>
             <span className="text-xs font-semibold text-muted">
@@ -340,7 +344,7 @@ export function TourPlayer({ state, dispatch, spots }: TourPlayerProps) {
             className="space-y-4"
           >
             {showImage && (
-              <div className="overflow-hidden rounded-xl border border-ink/10 bg-sand/40 shadow-xs">
+              <div className="overflow-hidden rounded-xl border border-border bg-sand/70 shadow-xs">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={imageSrc}
@@ -370,16 +374,16 @@ export function TourPlayer({ state, dispatch, spots }: TourPlayerProps) {
 
                 <div
                   aria-live="off"
-                  className="relative overflow-hidden rounded-xl border border-gold/45 bg-white/75 p-4 shadow-sm backdrop-blur-md lg:p-5"
+                  className="relative overflow-hidden rounded-xl border border-border bg-surface/95 p-4 shadow-xs backdrop-blur-md lg:p-5"
                 >
                   <div
                     aria-hidden="true"
-                    className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-terracotta via-gold to-river"
+                    className="absolute inset-y-0 left-0 w-1 bg-terracotta"
                   />
                   <div className="space-y-2 pl-2">
                     {sentences.length > 1 && (
                       <div className="flex items-center justify-between gap-2 text-xs font-semibold text-muted">
-                        <span className="uppercase tracking-wider text-terracotta">
+                        <span className="text-terracotta">
                           Phụ đề đang đọc
                         </span>
                         <span>
@@ -406,10 +410,10 @@ export function TourPlayer({ state, dispatch, spots }: TourPlayerProps) {
                     {sentences.length > 1 && (
                       <div
                         aria-hidden="true"
-                        className="h-1 w-full overflow-hidden rounded-full bg-ink/10"
+                        className="h-1 w-full overflow-hidden rounded-full bg-border"
                       >
                         <motion.div
-                          className="h-full rounded-full bg-gradient-to-r from-terracotta to-gold"
+                          className="h-full rounded-full bg-terracotta"
                           initial={false}
                           animate={{
                             width: `${Math.min(
@@ -435,7 +439,7 @@ export function TourPlayer({ state, dispatch, spots }: TourPlayerProps) {
                   </p>
                 )}
 
-                <details className="rounded-xl border border-ink/12 bg-white/50 px-3.5 py-2.5 text-sm text-ink backdrop-blur-sm">
+                <details className="rounded-xl border border-border bg-surface/90 px-3.5 py-2.5 text-sm text-ink">
                   <summary className="cursor-pointer py-1 font-semibold text-river focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta">
                     Xem toàn bộ lời kể
                   </summary>
@@ -454,7 +458,7 @@ export function TourPlayer({ state, dispatch, spots }: TourPlayerProps) {
                   <button
                     type="button"
                     onClick={handleReplay}
-                    className="inline-flex min-h-11 items-center justify-center rounded-xl border border-ink/15 bg-white/65 px-4 py-2 text-sm font-semibold text-ink shadow-xs backdrop-blur-md transition-colors motion-reduce:transition-none hover:border-gold/50 hover:bg-white/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+                    className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border bg-surface/90 px-4 py-2 text-sm font-semibold text-ink shadow-xs transition-colors motion-reduce:transition-none hover:border-terracotta/50 hover:bg-sand/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
                   >
                     Nghe lại
                   </button>
@@ -462,7 +466,7 @@ export function TourPlayer({ state, dispatch, spots }: TourPlayerProps) {
                   <button
                     type="button"
                     onClick={handleSkipStop}
-                    className="inline-flex min-h-11 items-center justify-center rounded-xl border border-ink/15 bg-sand/70 px-4 py-2 text-sm font-semibold text-ink shadow-xs backdrop-blur-md transition-colors motion-reduce:transition-none hover:border-terracotta/40 hover:bg-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+                    className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border bg-sand/70 px-4 py-2 text-sm font-semibold text-ink shadow-xs transition-colors motion-reduce:transition-none hover:border-terracotta/50 hover:bg-surface/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
                   >
                     Bỏ qua điểm
                   </button>

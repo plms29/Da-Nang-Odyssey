@@ -1,24 +1,22 @@
-/* Giai đoạn C — hiệu ứng động. Mỗi task chỉ sửa file con của mình (plan-ui-dong.md). */
-@import "./fx/ambient.css"; /* U1 */
-@import "./fx/text.css"; /* U2 */
-@import "./fx/transition.css"; /* U4 */
-@import "./fx/glass.css"; /* V3 */
+/* Minimalist UI transitions & reduced-motion support */
+@import "./fx/ambient.css";
+@import "./fx/text.css";
+@import "./fx/transition.css";
+@import "./fx/glass.css";
 
 :root {
-  --fx-fast: 200ms;
-  --fx-base: 450ms;
-  --fx-slow: 900ms;
+  --fx-fast: 160ms;
+  --fx-base: 260ms;
+  --fx-slow: 400ms;
   --fx-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --fx-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* Dừng animation khi khối ra khỏi màn hình hoặc tab ẩn (xem components/fx/useInView.ts). */
 [data-paused="true"],
 [data-paused="true"] * {
   animation-play-state: paused !important;
 }
 
-/* Bắt buộc: giảm chuyển động thì tắt mọi chuyển động lặp, chỉ còn fade ngắn. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { GlassPanel } from "@/components/fx/Glass";
-import { KineticText } from "@/components/fx/KineticText";
 import { countStamps } from "@/lib/passport/logic";
 import { usePassport } from "@/lib/passport/store";
 import type { Level, Spot, StampKind } from "@/lib/types";
@@ -136,7 +135,7 @@ export function PassportView({ spots, levels }: PassportViewProps) {
           {Array.from({ length: 4 }).map((_, index) => (
             <div
               key={index}
-              className="h-18 animate-pulse rounded-lg border border-ink/10 bg-white/60 p-3 lg:h-28 lg:p-5"
+              className="h-18 animate-pulse rounded-xl border border-border bg-surface/90 p-3 lg:h-28 lg:p-5"
             />
           ))}
         </div>
@@ -144,7 +143,7 @@ export function PassportView({ spots, levels }: PassportViewProps) {
           {Array.from({ length: 3 }).map((_, index) => (
             <div
               key={index}
-              className="h-28 animate-pulse rounded-lg border border-ink/10 bg-white/60 p-4 lg:h-56 lg:p-6"
+              className="h-28 animate-pulse rounded-xl border border-border bg-surface/90 p-4 lg:h-56 lg:p-6"
             />
           ))}
         </div>
@@ -161,28 +160,28 @@ export function PassportView({ spots, levels }: PassportViewProps) {
     counts.level > 0 || counts.tour > 0 || counts.visited > 0;
 
   const handleReset = () => {
-    if (window.confirm("Xóa toàn bộ dấu và điểm trên máy này?")) {
+    if (window.confirm("Xóa toàn bộ con dấu và điểm tích lũy trên thiết bị này?")) {
       usePassport.getState().reset();
     }
   };
 
   const emptyStateContent = (
     <>
-      <p className="font-bold">Hộ chiếu của bạn chưa có con dấu nào.</p>
+      <p className="font-bold text-ink">Hộ chiếu của bạn chưa có con dấu nào.</p>
       <p className="mt-1 leading-relaxed text-muted">
-        Hãy thử một màn khám phá hoặc ghé điểm di sản để sưu tầm những con dấu
-        đầu tiên trên hành trình Đà Nẵng.
+        Hãy hoàn thành một màn khám phá hoặc check-in tại điểm di sản để sưu tầm
+        những con dấu đầu tiên trên hành trình Đà Nẵng.
       </p>
       <div className="mt-3 flex flex-wrap gap-2.5">
         <Link
           href="/kham-pha"
-          className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-4 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-4 py-2 text-sm font-semibold text-on-accent transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Khám phá ngay
         </Link>
         <Link
           href="/photobooth"
-          className="inline-flex min-h-11 items-center justify-center rounded-md bg-river px-4 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="inline-flex min-h-11 items-center justify-center rounded-md bg-river px-4 py-2 text-sm font-semibold text-on-accent transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Check-in tại điểm
         </Link>
@@ -206,25 +205,25 @@ export function PassportView({ spots, levels }: PassportViewProps) {
     <div className="space-y-6">
       <section aria-label="Tổng kết hộ chiếu">
         <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4 lg:gap-4">
-          <GlassPanel className="rounded-lg p-3 lg:p-5">
+          <GlassPanel className="rounded-xl border-border bg-surface/90 p-3.5 lg:p-5">
             <p className="text-xs font-semibold text-muted">Hoàn thành màn</p>
             <p className="mt-1 text-xl font-bold text-terracotta lg:text-4xl">
               {counts.level}
             </p>
           </GlassPanel>
-          <GlassPanel className="rounded-lg p-3 lg:p-5">
+          <GlassPanel className="rounded-xl border-border bg-surface/90 p-3.5 lg:p-5">
             <p className="text-xs font-semibold text-muted">Đã nghe tour</p>
             <p className="mt-1 text-xl font-bold text-river lg:text-4xl">
               {counts.tour}
             </p>
           </GlassPanel>
-          <GlassPanel className="rounded-lg p-3 lg:p-5">
+          <GlassPanel className="rounded-xl border-border bg-surface/90 p-3.5 lg:p-5">
             <p className="text-xs font-semibold text-muted">Đã đến</p>
             <p className="mt-1 text-xl font-bold text-ink lg:text-4xl">
               {counts.visited}
             </p>
           </GlassPanel>
-          <GlassPanel className="rounded-lg p-3 lg:p-5">
+          <GlassPanel className="rounded-xl border-border bg-surface/90 p-3.5 lg:p-5">
             <p className="text-xs font-semibold text-muted">Điểm hoạt động</p>
             <p className="mt-1 text-xl font-bold text-river lg:text-4xl">
               <CountUp value={totalCodeScore} />
@@ -237,7 +236,7 @@ export function PassportView({ spots, levels }: PassportViewProps) {
         (reducedMotion ? (
           <section
             aria-label="Hộ chiếu chưa có dấu"
-            className="rounded-lg border border-dashed border-gold/80 bg-gold/15 p-4 text-sm text-ink lg:mx-auto lg:max-w-2xl lg:p-6"
+            className="rounded-xl border border-dashed border-gold/60 bg-gold/10 p-4 text-sm text-ink lg:mx-auto lg:max-w-2xl lg:p-6"
           >
             {emptyStateContent}
           </section>
@@ -247,7 +246,7 @@ export function PassportView({ spots, levels }: PassportViewProps) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="rounded-lg border border-dashed border-gold/80 bg-gold/15 p-4 text-sm text-ink lg:mx-auto lg:max-w-2xl lg:p-6"
+            className="rounded-xl border border-dashed border-gold/60 bg-gold/10 p-4 text-sm text-ink lg:mx-auto lg:max-w-2xl lg:p-6"
           >
             {emptyStateContent}
           </motion.section>
@@ -255,7 +254,7 @@ export function PassportView({ spots, levels }: PassportViewProps) {
 
       <section aria-labelledby="stamps-heading" className="space-y-3">
         <h2 id="stamps-heading" className="text-lg font-bold text-ink">
-          <KineticText as="span">Dấu theo điểm văn hóa</KineticText>
+          Dấu theo điểm văn hóa
         </h2>
         {reducedMotion ? (
           <div className="grid grid-cols-1 gap-3 lg:grid lg:grid-cols-3 lg:gap-6">
@@ -285,7 +284,7 @@ export function PassportView({ spots, levels }: PassportViewProps) {
             return (
               <li
                 key={level.id}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-ink/15 bg-white/80 px-4 py-3"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-surface/90 px-4 py-3"
               >
                 <span className="text-sm font-semibold text-ink">
                   Màn {level.order}: {level.title}
@@ -295,11 +294,29 @@ export function PassportView({ spots, levels }: PassportViewProps) {
                   <span
                     role="img"
                     aria-label={`${stars} trên 3 sao`}
-                    className="text-lg leading-none tracking-widest text-terracotta"
+                    className="inline-flex items-center gap-1 text-terracotta"
                   >
-                    <span aria-hidden="true">
-                      {"★".repeat(stars) + "☆".repeat(3 - stars)}
-                    </span>
+                    {[1, 2, 3].map((n) => (
+                      <svg
+                        key={n}
+                        aria-hidden="true"
+                        viewBox="0 0 20 20"
+                        fill={n <= stars ? "currentColor" : "none"}
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        className={
+                          n <= stars
+                            ? "h-4 w-4 text-terracotta"
+                            : "h-4 w-4 text-muted/40"
+                        }
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                        />
+                      </svg>
+                    ))}
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
@@ -308,7 +325,7 @@ export function PassportView({ spots, levels }: PassportViewProps) {
                     </span>
                     <Link
                       href={`/kham-pha/${level.id}`}
-                      className="inline-flex min-h-11 items-center rounded-md border border-terracotta/40 bg-sand px-3 py-1.5 text-xs font-semibold text-terracotta transition-colors hover:bg-terracotta hover:text-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+                      className="inline-flex min-h-11 items-center rounded-md border border-terracotta/40 bg-sand/70 px-3 py-1.5 text-xs font-semibold text-terracotta transition-colors hover:bg-terracotta hover:text-on-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
                     >
                       Chơi ngay
                     </Link>
@@ -324,7 +341,7 @@ export function PassportView({ spots, levels }: PassportViewProps) {
         <button
           type="button"
           onClick={handleReset}
-          className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-sand px-4 py-2 text-xs font-semibold text-muted transition-colors hover:border-terracotta hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="inline-flex min-h-11 items-center justify-center rounded-md border border-border bg-surface/90 px-4 py-2 text-xs font-semibold text-muted transition-colors hover:border-terracotta hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Xóa tiến độ
         </button>

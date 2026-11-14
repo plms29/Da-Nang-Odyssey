@@ -4,7 +4,6 @@ import { useState, type Dispatch } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { GlassPanel } from "@/components/fx/Glass";
 import { GlowButton } from "@/components/fx/GlowButton";
-import { KineticText } from "@/components/fx/KineticText";
 import { TOUR_STOPS } from "@/lib/tour/config";
 import { fallbackPlan, pickStops } from "@/lib/tour/plan";
 import type { TourAction } from "@/lib/tour/player";
@@ -172,19 +171,15 @@ export function TourSetup({
     <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-8">
       <GlassPanel
         tone="light"
-        className="hidden lg:col-span-5 lg:flex lg:flex-col lg:gap-5 lg:rounded-2xl lg:p-8"
+        className="hidden border-border bg-surface/90 lg:col-span-5 lg:flex lg:flex-col lg:gap-5 lg:rounded-2xl lg:p-8"
       >
         <div className="space-y-2">
-          <p className="text-xs font-bold uppercase tracking-wider text-terracotta">
+          <p className="text-xs font-semibold text-terracotta">
             Hành trình dọc sông Hàn
           </p>
-          <KineticText
-            as="h2"
-            shimmer
-            className="text-2xl font-bold leading-snug text-ink"
-          >
+          <h2 className="text-2xl font-bold leading-snug text-ink">
             Nghe kể chuyện nhanh theo quỹ thời gian của bạn
-          </KineticText>
+          </h2>
           <p className="text-sm leading-relaxed text-muted">
             Chọn thời lượng và những chủ đề bạn quan tâm. Hệ thống sẽ sắp xếp
             lộ trình các điểm văn hóa dọc sông Hàn kèm bản đồ, thuyết minh và
@@ -192,14 +187,14 @@ export function TourSetup({
           </p>
         </div>
 
-        <dl className="grid grid-cols-2 gap-3 border-t border-ink/10 pt-4 text-sm">
-          <div className="rounded-xl border border-ink/10 bg-sand/60 p-3">
+        <dl className="grid grid-cols-2 gap-3 border-t border-border pt-4 text-sm">
+          <div className="rounded-xl border border-border bg-sand/70 p-3">
             <dt className="text-xs font-medium text-muted">Thời lượng</dt>
             <dd className="mt-1 font-bold text-ink">
               {selectedDuration.label} ({selectedStopCount} điểm)
             </dd>
           </div>
-          <div className="rounded-xl border border-ink/10 bg-sand/60 p-3">
+          <div className="rounded-xl border border-border bg-sand/70 p-3">
             <dt className="text-xs font-medium text-muted">Chủ đề</dt>
             <dd className="mt-1 font-bold text-ink">
               {themes.length === 0 ? "Tất cả nổi bật" : `${themes.length} đã chọn`}
@@ -216,7 +211,7 @@ export function TourSetup({
       <GlassPanel
         as="section"
         tone="light"
-        className="space-y-5 rounded-2xl p-5 lg:col-span-7 lg:p-8"
+        className="space-y-5 rounded-2xl border-border bg-surface/90 p-5 lg:col-span-7 lg:p-8"
       >
         {displayError && (
           <p
@@ -240,10 +235,10 @@ export function TourSetup({
                 <motion.label
                   key={option.seconds}
                   whileTap={reduceMotion ? undefined : { scale: 0.97 }}
-                  className={`flex min-h-14 cursor-pointer flex-col items-center justify-center rounded-md border px-2 py-2 text-center transition-all motion-reduce:transition-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
+                  className={`flex min-h-14 cursor-pointer flex-col items-center justify-center rounded-lg border px-2 py-2 text-center transition-colors motion-reduce:transition-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
                     checked
-                      ? "border-gold bg-terracotta text-sand ring-2 ring-gold/80 shadow-[0_0_18px_rgba(201,154,46,0.6)]"
-                      : "border-ink/20 bg-sand/60 text-ink hover:border-gold/70"
+                      ? "border-terracotta bg-terracotta text-on-accent ring-1 ring-terracotta/40"
+                      : "border-border bg-sand/70 text-ink hover:border-terracotta/50"
                   }`}
                 >
                   <input
@@ -261,7 +256,7 @@ export function TourSetup({
                   <span className="text-sm font-bold">{option.label}</span>
                   <span
                     className={`mt-0.5 text-xs ${
-                      checked ? "text-sand/90" : "text-muted"
+                      checked ? "text-on-accent/90" : "text-muted"
                     }`}
                   >
                     {stopCount} điểm
@@ -287,10 +282,10 @@ export function TourSetup({
                   <motion.label
                     key={option.value}
                     whileTap={reduceMotion ? undefined : { scale: 0.97 }}
-                    className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium transition-all motion-reduce:transition-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
+                    className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors motion-reduce:transition-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta ${
                       checked
-                        ? "border-gold bg-river text-sand ring-2 ring-gold/80 shadow-[0_0_18px_rgba(201,154,46,0.6)]"
-                        : "border-ink/20 bg-sand/60 text-ink hover:border-gold/70"
+                        ? "border-river bg-river text-on-accent ring-1 ring-river/40"
+                        : "border-border bg-sand/70 text-ink hover:border-terracotta/50"
                     }`}
                   >
                     <input

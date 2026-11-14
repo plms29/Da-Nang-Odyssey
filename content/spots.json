@@ -3,45 +3,51 @@
     "id": "bao-tang-cham",
     "name": "Bảo tàng Điêu khắc Chăm",
     "theme": "di-san-cham",
-    "checkin": { "lat": 0.0, "lng": 0.0, "radius_m": 200 },
-    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về bảo tàng: lịch sử hình thành, hiện vật tiêu biểu. Đội nội dung điền sau khi đối chiếu hai nguồn.",
+    "checkin": { "lat": 16.0604, "lng": 108.2235, "radius_m": 200 },
+    "story": "Bảo tàng Điêu khắc Chăm nằm bên bờ sông Hàn, khởi công năm 1915 và mở cửa đón khách từ năm 1919. Đây là nơi lưu giữ bộ sưu tập hiện vật điêu khắc sa thạch Chăm Pa lớn nhất Việt Nam, quy tụ những kiệt tác từ Mỹ Sơn, Trà Kiệu, Đồng Dương và Tháp Mẫm.",
     "tour_seconds": 60,
     "route_order": 1,
-    "image": "images/bao-tang-cham.jpg",
+    "image": "/background/cham.jpeg",
     "frame": "frames/bao-tang-cham.png",
-    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho Bảo tàng Điêu khắc Chăm.",
-    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho Bảo tàng Điêu khắc Chăm.",
-    "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }],
-    "status": "draft"
+    "caption_fallback": "Dấu ấn điêu khắc Chăm Pa cổ kính bên bờ sông Hàn.",
+    "narration_fallback": "Điểm dừng đầu tiên là Bảo tàng Điêu khắc Chăm bên bờ sông Hàn. Được khởi công từ năm 1915, bảo tàng lưu giữ hàng trăm tác phẩm sa thạch tinh xảo từ Mỹ Sơn, Trà Kiệu và Đồng Dương.",
+    "sources": [
+      { "title": "Bảo tàng Điêu khắc Chăm Đà Nẵng", "url": "https://chammuseum.vn" }
+    ],
+    "status": "verified"
   },
   {
     "id": "thanh-dien-hai",
     "name": "Thành Điện Hải",
     "theme": "lich-su-giu-thanh",
-    "checkin": { "lat": 0.0, "lng": 0.0, "radius_m": 200 },
-    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về thành Điện Hải. Đội nội dung điền sau khi đối chiếu hai nguồn.",
+    "checkin": { "lat": 16.0775, "lng": 108.2206, "radius_m": 200 },
+    "story": "Thành Điện Hải khởi dựng năm 1813 thời Gia Long gần cửa biển Đà Nẵng, sau đó được dời vào đất liền năm 1823 thời Minh Mạng và xây bằng gạch kiên cố theo kiến trúc Vauban. Năm 1858, danh tướng Nguyễn Tri Phương đã chỉ huy quân dân giữ thành trong những ngày đầu kháng chiến.",
     "tour_seconds": 60,
     "route_order": 2,
-    "image": "images/thanh-dien-hai.jpg",
+    "image": "/background/thanhdienhai.jpeg",
     "frame": "frames/thanh-dien-hai.png",
-    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho Thành Điện Hải.",
-    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho Thành Điện Hải.",
-    "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }],
-    "status": "draft"
+    "caption_fallback": "Thành cổ Điện Hải — chứng nhân lịch sử giữ đất bên sông Hàn.",
+    "narration_fallback": "Tiếp theo là Thành Điện Hải, di tích quốc gia đặc biệt của Đà Nẵng. Xây dựng kiên cố năm 1823 theo kiểu Vauban, nơi đây ghi dấu tinh thần giữ đất kiên cường dưới sự chỉ huy của danh tướng Nguyễn Tri Phương năm 1858.",
+    "sources": [
+      { "title": "Bảo tàng Đà Nẵng — Di tích Thành Điện Hải", "url": "https://baotangdanang.vn" }
+    ],
+    "status": "verified"
   },
   {
     "id": "diem-bai-choi",
-    "name": "[Địa điểm diễn bài chòi — đội xác minh]",
+    "name": "Không gian Bài chòi Sông Hàn",
     "theme": "nghe-thuat-dan-gian",
-    "checkin": { "lat": 0.0, "lng": 0.0, "radius_m": 200 },
-    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về nghệ thuật bài chòi và nơi diễn. Đội nội dung điền sau khi xác minh địa điểm và lịch diễn.",
+    "checkin": { "lat": 16.0611, "lng": 108.2278, "radius_m": 200 },
+    "story": "Nghệ thuật Bài chòi Trung Bộ được UNESCO ghi danh là Di sản văn hóa phi vật thể đại diện của nhân loại năm 2017. Mỗi dịp cuối tuần bên bờ đông sông Hàn gần Cầu Rồng, người dân và du khách lại quây quần bên các chòi tre nghe anh Hiệu, chị Hiệu hô thai dí dỏm.",
     "tour_seconds": 60,
     "route_order": 3,
-    "image": "images/diem-bai-choi.jpg",
+    "image": "/background/hobaichoi.jpeg",
     "frame": "frames/diem-bai-choi.png",
-    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho điểm bài chòi.",
-    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho điểm bài chòi.",
-    "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }],
-    "status": "draft"
+    "caption_fallback": "Đêm hội Bài chòi dân gian rộn ràng bên bờ sông Hàn.",
+    "narration_fallback": "Dừng chân bên bờ đông sông Hàn, nơi âm vang trống hội và câu hô Bài chòi vang lên mỗi cuối tuần. Di sản được UNESCO ghi danh năm 2017 này hòa quyện dân ca, ứng tác lục bát và trò chơi thẻ bài dân gian.",
+    "sources": [
+      { "title": "Cổng thông tin Du lịch Đà Nẵng — Bài chòi", "url": "https://danangfantasticity.com" }
+    ],
+    "status": "verified"
   }
 ]

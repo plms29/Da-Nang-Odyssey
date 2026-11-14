@@ -6,9 +6,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { Celebrate } from "@/components/fx/Celebrate";
 import { GlassPanel } from "@/components/fx/Glass";
 import { GlowButton, GlowLink } from "@/components/fx/GlowButton";
-import { KineticText } from "@/components/fx/KineticText";
 import { StampPress } from "@/components/fx/StampPress";
-import { TiltCard } from "@/components/fx/TiltCard";
 import { getSpot, levelForSpot } from "@/lib/content";
 import { usePassport } from "@/lib/passport/store";
 import { listenedSpotIds, type TourAction, type TourState } from "@/lib/tour/player";
@@ -21,7 +19,7 @@ export interface TourEndProps {
 }
 
 const GLASS_LINK_CLASS =
-  "fx-glass fx-glass--light inline-flex min-h-11 items-center justify-center rounded-xl px-3.5 py-2 text-xs font-semibold text-ink transition-colors motion-reduce:transition-none hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta";
+  "inline-flex min-h-11 items-center justify-center rounded-xl border border-border bg-surface/90 px-3.5 py-2 text-xs font-semibold text-ink transition-colors motion-reduce:transition-none hover:border-terracotta/50 hover:bg-sand/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta";
 
 function SpotStampBadge({
   index,
@@ -49,9 +47,21 @@ function SpotStampBadge({
     >
       <span
         aria-hidden="true"
-        className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/70 bg-river text-xs font-bold text-sand shadow-sm"
+        className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-river/30 bg-river text-xs font-bold text-on-accent shadow-xs"
       >
-        ✓
+        <svg
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          className="h-3.5 w-3.5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M3.5 8.5l3 3 6-6.5"
+          />
+        </svg>
       </span>
     </StampPress>
   );
@@ -79,7 +89,7 @@ export function TourEnd({ state, spots, dispatch }: TourEndProps) {
       <GlassPanel
         as="section"
         tone="light"
-        className="relative space-y-4 overflow-hidden p-5 lg:p-8"
+        className="relative space-y-4 overflow-hidden border-border bg-surface/90 p-5 lg:p-8"
       >
         <h2 className="text-lg font-bold text-ink lg:text-xl">Kết thúc tour</h2>
         <p className="text-sm leading-relaxed text-ink">
@@ -109,18 +119,14 @@ export function TourEnd({ state, spots, dispatch }: TourEndProps) {
     <GlassPanel
       as="section"
       tone="light"
-      className="relative space-y-5 overflow-hidden p-5 lg:p-8"
+      className="relative space-y-5 overflow-hidden border-border bg-surface/90 p-5 lg:p-8"
     >
       <Celebrate kind="gold-burst" play={true} />
 
       <div>
-        <KineticText
-          as="h2"
-          shimmer
-          className="text-lg font-bold text-ink lg:text-2xl"
-        >
+        <h2 className="text-lg font-bold text-ink lg:text-2xl">
           {`Bạn đã nghe ${listenedIds.length} điểm`}
-        </KineticText>
+        </h2>
         <p className="mt-1 text-xs text-muted lg:text-sm">
           Đã ghi nhận dấu đã nghe tour vào hộ chiếu văn hóa của bạn.
         </p>
@@ -135,10 +141,7 @@ export function TourEnd({ state, spots, dispatch }: TourEndProps) {
             (spot.checkin.lat !== 0 || spot.checkin.lng !== 0);
 
           const cardContent = (
-            <TiltCard
-              max={6}
-              className="flex h-full flex-col justify-between space-y-3 rounded-lg border border-ink/15 bg-sand/70 p-3.5 lg:p-4"
-            >
+            <div className="flex h-full flex-col justify-between space-y-3 rounded-xl border border-border bg-sand/70 p-3.5 lg:p-4">
               <div className="flex items-center gap-2.5">
                 <SpotStampBadge index={index} reducedMotion={reducedMotion} />
                 <span className="text-sm font-bold text-ink">
@@ -174,7 +177,7 @@ export function TourEnd({ state, spots, dispatch }: TourEndProps) {
                   Chụp ảnh check-in
                 </Link>
               </div>
-            </TiltCard>
+            </div>
           );
 
           if (reducedMotion) {

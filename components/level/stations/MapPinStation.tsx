@@ -58,7 +58,7 @@ function CoordForm({
             value={latInput}
             onChange={(e) => onLatChange(e.target.value)}
             placeholder="Ví dụ: 16.06"
-            className="mt-1 min-h-11 w-full rounded-md border border-ink/20 bg-white px-3 py-2 text-sm text-ink transition-shadow focus:border-terracotta focus:ring-2 focus:ring-gold focus:shadow-[0_0_16px_rgba(201,154,46,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            className="mt-1.5 min-h-11 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-ink placeholder:text-muted/70 transition-colors focus:border-terracotta focus:ring-2 focus:ring-gold/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
           />
         </div>
 
@@ -76,7 +76,7 @@ function CoordForm({
             value={lngInput}
             onChange={(e) => onLngChange(e.target.value)}
             placeholder="Ví dụ: 108.22"
-            className="mt-1 min-h-11 w-full rounded-md border border-ink/20 bg-white px-3 py-2 text-sm text-ink transition-shadow focus:border-terracotta focus:ring-2 focus:ring-gold focus:shadow-[0_0_16px_rgba(201,154,46,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            className="mt-1.5 min-h-11 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-ink placeholder:text-muted/70 transition-colors focus:border-terracotta focus:ring-2 focus:ring-gold/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
           />
         </div>
       </div>
@@ -84,7 +84,7 @@ function CoordForm({
       <div>
         <GlowButton
           type="submit"
-          className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-terracotta px-5 py-2 text-sm font-semibold text-on-accent transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Ghim
         </GlowButton>
@@ -198,7 +198,7 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
     <button
       type="button"
       onClick={handleDemoPin}
-      className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-sand px-3 py-2 text-xs font-semibold text-ink transition-colors hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+      className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-sand/70 px-3.5 py-2 text-xs font-semibold text-ink transition-colors hover:bg-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
     >
       Ghim đúng vị trí (chế độ demo)
     </button>
@@ -207,10 +207,8 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
   return (
     <section
       ref={scope}
-      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
-        solvedGlow
-          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-          : ""
+      className={`rounded-xl border border-border bg-surface/95 p-4 transition-colors sm:p-5 ${
+        solvedGlow ? "border-terracotta ring-2 ring-gold/70" : ""
       }`}
     >
       <p className="text-base font-medium leading-relaxed text-ink">
@@ -224,7 +222,10 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
           Không tải được bản đồ, hãy nhập tọa độ bên dưới.
         </p>
       ) : (
-        <p className="mt-1 text-xs text-muted">Bản đồ sẽ có ở giai đoạn sau</p>
+        <p className="mt-1 text-xs text-muted">
+          Nhập tọa độ vị trí của di tích bên dưới hoặc dùng nút xác nhận mẫu để
+          tiếp tục.
+        </p>
       )}
 
       {showMap && (
@@ -235,10 +236,8 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
               ? { duration: 0.15 }
               : { type: "spring", stiffness: 380, damping: 30 }
           }
-          className={`mt-3 rounded-lg transition-shadow ${
-            pin
-              ? "ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-              : ""
+          className={`mt-3 rounded-xl transition-all ${
+            pin ? "ring-2 ring-gold/70" : ""
           }`}
         >
           <MapView
@@ -265,15 +264,15 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
               type="button"
               onClick={handleConfirmPin}
               disabled={!pin}
-              className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-terracotta px-5 py-2 text-sm font-semibold text-on-accent transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-50"
             >
               Xác nhận ghim
             </GlowButton>
             {demoButton}
           </div>
 
-          <details className="mt-4 rounded-md border border-ink/15 bg-sand/40 p-3">
-            <summary className="flex min-h-11 cursor-pointer items-center rounded-sm px-2 text-sm font-semibold text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta">
+          <details className="mt-4 rounded-xl border border-border bg-sand/70 p-3">
+            <summary className="flex min-h-11 cursor-pointer items-center rounded-md px-2 text-sm font-semibold text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta">
               Nhập tọa độ thủ công
             </summary>
             <div className="mt-3">{coordForm}</div>
@@ -282,7 +281,7 @@ export function MapPinStation({ station, onDone }: MapPinStationProps) {
       ) : (
         <div className="mt-4 space-y-3">
           {coordForm}
-          {demoButton}
+          <div>{demoButton}</div>
         </div>
       )}
 

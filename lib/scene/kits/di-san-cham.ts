@@ -33,6 +33,8 @@ const layers: SceneLayer[] = [
 
 export const diSanCham: SceneKit = {
   id,
+  photo: "/background/cham.jpeg",
+  subtitle: "Di sản điêu khắc và kiến trúc Chăm Pa",
   sky: "url(/scenes/di-san-cham/ai-sky.webp) center / cover no-repeat, linear-gradient(180deg, #2B1D28 0%, #5E2B27 35%, #A84825 70%, #C99A2E 100%)",
   layers,
   ambient: ["dust", "smoke"],

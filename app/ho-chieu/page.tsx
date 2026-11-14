@@ -10,7 +10,7 @@ export default function HoChieuPage() {
     <main className="space-y-4 pb-4">
       <PageHeader
         title="Hộ chiếu văn hóa"
-        subtitle="Dấu hoàn thành màn, đã nghe tour và đã đến tận nơi"
+        subtitle="Lưu trữ dấu hoàn thành màn, điểm đã nghe tour và những nơi đã ghé thăm."
         backHref="/"
       />
 

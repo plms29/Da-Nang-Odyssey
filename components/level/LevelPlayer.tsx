@@ -26,13 +26,11 @@ import type { Level, Station } from "@/lib/types";
 import { Celebrate } from "@/components/fx/Celebrate";
 import { GlassPanel } from "@/components/fx/Glass";
 import { GlowButton, GlowLink } from "@/components/fx/GlowButton";
-import { KineticText } from "@/components/fx/KineticText";
 import { ParallaxScene } from "@/components/fx/ParallaxScene";
 import { PhaseTransition } from "@/components/fx/PhaseTransition";
 import { SceneBackdrop } from "@/components/fx/SceneBackdrop";
 import { StampPress } from "@/components/fx/StampPress";
 import { TextReveal } from "@/components/fx/TextReveal";
-import { TiltCard } from "@/components/fx/TiltCard";
 import { MapPinStation } from "./stations/MapPinStation";
 import { JigsawStation } from "./stations/JigsawStation";
 import { OrderStation } from "./stations/OrderStation";
@@ -133,7 +131,7 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
 
   if (shown.phase === "intro") {
     const panels: ReactNode[] = [
-      <div key="intro-title" className="min-w-0 space-y-3">
+      <div key="intro-title" className="min-w-0 space-y-2">
         <h2
           ref={(el) => {
             if (el && !el.closest('[aria-hidden="true"]')) {
@@ -145,16 +143,12 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
         >
           Giới thiệu
         </h2>
-        <p className="text-xs font-bold uppercase tracking-wider text-muted">
+        <p className="text-xs font-medium text-muted">
           Màn {level.order}
         </p>
-        <KineticText
-          as="h2"
-          shimmer
-          className="break-words text-2xl font-bold text-ink sm:text-3xl"
-        >
+        <p className="break-words text-2xl font-bold tracking-tight text-ink sm:text-3xl">
           {level.title}
-        </KineticText>
+        </p>
       </div>,
       ...introParagraphs.map((paragraph, index) => (
         <p
@@ -195,37 +189,33 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
               <li
                 key={label}
                 aria-current={isCurrent ? "step" : undefined}
-                className={`relative overflow-hidden rounded-md border px-2 py-2 text-center text-xs font-bold backdrop-blur-sm ${
+                className={`inline-flex items-center justify-center gap-1 rounded-lg border px-2 py-2 text-center text-xs font-semibold transition-colors ${
                   isCurrent
-                    ? "border-gold bg-gold text-ink shadow-[0_0_18px_rgba(201,154,46,0.7)]"
+                    ? "border-terracotta bg-terracotta text-on-accent"
                     : isDone
-                      ? "border-river/40 bg-river/15 text-river"
-                      : "border-ink/15 bg-white/40 text-muted"
+                      ? "border-river/30 bg-river/10 text-river"
+                      : "border-border bg-surface/60 text-muted"
                 }`}
               >
                 {isDone && (
-                  <span aria-hidden="true" className="mr-1">
-                    ✓
-                  </span>
-                )}
-                {index + 1}. {label}
-                {isCurrent && (
-                  <motion.span
+                  <svg
                     aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-1 bg-gold"
-                    style={{ originX: 0 }}
-                    initial={
-                      prefersReducedMotion
-                        ? { scaleX: 1 }
-                        : { scaleX: 0 }
-                    }
-                    animate={{ scaleX: 1 }}
-                    transition={{
-                      duration: prefersReducedMotion ? 0 : 0.5,
-                      ease: "easeOut",
-                    }}
-                  />
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    className="h-3.5 w-3.5 shrink-0"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3.5 8.5l3 3 6-6.5"
+                    />
+                  </svg>
                 )}
+                <span>
+                  {index + 1}. {label}
+                </span>
               </li>
             );
           })}
@@ -234,40 +224,46 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
     );
 
     content = (
-      <div className="relative isolate -mx-4 overflow-hidden lg:mx-0 lg:overflow-visible lg:flex lg:items-start lg:gap-8">
+      <div className="relative isolate -mx-4 overflow-hidden lg:mx-0 lg:flex lg:items-start lg:gap-8 lg:overflow-visible">
         <SceneBackdrop kit={kit} intensity="calm" className="lg:hidden" />
         <div
           aria-hidden="true"
           className="absolute inset-0 bg-gradient-to-b from-sand/70 via-sand/85 to-sand lg:hidden"
         />
+
         <div className="hidden lg:sticky lg:top-24 lg:flex lg:w-[42%] lg:flex-col lg:gap-4">
           <div className="space-y-1">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted">
+            <p className="text-xs font-medium text-muted">
               Màn {level.order}
             </p>
-            <p className="break-words text-2xl font-bold text-ink">
+            <p className="break-words text-2xl font-bold tracking-tight text-ink">
               {level.title}
             </p>
           </div>
           {renderProgressNav()}
-          <div className="relative h-[60vh] overflow-hidden rounded-3xl border border-ink/10 shadow-sm">
+          <div className="relative h-[60vh] overflow-hidden rounded-3xl border border-border shadow-sm">
             <SceneBackdrop kit={kit} intensity="calm" />
           </div>
         </div>
-        <div className="relative z-10 px-4 py-2 lg:w-[58%] lg:min-w-0 lg:px-0 lg:py-0">
-          <GlassPanel tone="light" className="min-w-0 space-y-4 p-4 lg:p-10">
-            <h2
-              ref={headingRef}
-              tabIndex={-1}
-              className="text-lg font-bold text-ink focus:outline-none lg:text-xl"
-            >
-              <KineticText key={shown.stationIndex} as="span">
-                {`Chặng ${shown.stationIndex + 1}: ${STEPS[shown.stationIndex] ?? ""}`}
-              </KineticText>
-            </h2>
-            <div className="space-y-4 rounded-md bg-white/70 p-3 lg:space-y-0 lg:p-5">
-              {renderProgressNav("lg:hidden")}
 
+        <div className="relative z-10 px-4 py-2 lg:w-[58%] lg:min-w-0 lg:px-0 lg:py-0">
+          <GlassPanel tone="light" className="min-w-0 space-y-4 p-4 sm:p-6 lg:p-8">
+            <div className="flex items-center justify-between gap-2">
+              <h2
+                ref={headingRef}
+                tabIndex={-1}
+                className="text-lg font-bold tracking-tight text-ink focus:outline-none sm:text-xl"
+              >
+                {`Chặng ${shown.stationIndex + 1}: ${STEPS[shown.stationIndex] ?? ""}`}
+              </h2>
+              <span className="text-xs font-medium text-muted">
+                {shown.stationIndex + 1}/{STEPS.length}
+              </span>
+            </div>
+
+            {renderProgressNav("lg:hidden")}
+
+            <div className="rounded-xl border border-border bg-surface/85 p-3.5 sm:p-5">
               {station && renderStation(station, level.id, guarded)}
             </div>
           </GlassPanel>
@@ -278,98 +274,80 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
     const starCount = stars ?? 0;
 
     content = (
-      <TiltCard max={6} className="rounded-lg lg:mx-auto lg:max-w-3xl">
-        <GlassPanel
-          as="section"
-          tone="light"
-          className="relative space-y-4 overflow-hidden p-5 lg:space-y-6 lg:p-10"
-        >
-          <Celebrate kind={kit.celebrate} play={true} />
+      <section className="relative mx-auto max-w-3xl overflow-hidden rounded-2xl border border-border bg-surface/95 shadow-sm">
+        <Celebrate kind={kit.celebrate} play={true} />
 
-          <h2
-            ref={headingRef}
-            tabIndex={-1}
-            className="text-lg font-bold text-ink focus:outline-none lg:text-xl"
-          >
-            Hoàn thành màn chơi
-          </h2>
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink/10 pb-4">
+        <div className="space-y-5 p-5 sm:p-8">
+          <div className="border-b border-border pb-4">
+            {kit.subtitle && (
+              <p className="text-xs font-medium text-muted">
+                {kit.subtitle}
+              </p>
+            )}
+            <h2
+              ref={headingRef}
+              tabIndex={-1}
+              className="mt-1 text-xl font-bold tracking-tight text-ink focus:outline-none sm:text-2xl"
+            >
+              {`Hoàn thành màn ${level.order}: ${level.title}`}
+            </h2>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-5">
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-muted">
+              <p className="text-xs font-medium text-muted">
                 Đánh giá
               </p>
-              <p
+              <div
                 role="img"
                 aria-label={`${starCount} trên 3 sao`}
-                className="mt-1 text-2xl leading-none tracking-widest text-gold lg:text-5xl"
+                className="mt-1.5 inline-flex items-center gap-1.5"
               >
-                <span aria-hidden="true" className="inline-flex gap-0.5">
-                  {[0, 1, 2].map((i) => {
-                    const filled = i < starCount;
-                    return (
-                      <motion.span
-                        key={i}
-                        className="inline-block"
-                        initial={
-                          prefersReducedMotion
-                            ? { y: 0, opacity: 1, scale: 1 }
-                            : { y: 24, opacity: 0, scale: 0.6 }
-                        }
-                        animate={
-                          prefersReducedMotion
-                            ? { y: 0, opacity: 1, scale: 1 }
-                            : {
-                                y: 0,
-                                opacity: 1,
-                                scale: 1,
-                                textShadow: [
-                                  "0 0 0px rgba(201, 154, 46, 0)",
-                                  "0 0 18px rgba(201, 154, 46, 0.95)",
-                                  "0 0 0px rgba(201, 154, 46, 0)",
-                                ],
-                              }
-                        }
-                        transition={
-                          prefersReducedMotion
-                            ? { duration: 0 }
-                            : {
-                                y: {
-                                  type: "spring",
-                                  stiffness: 300,
-                                  damping: 18,
-                                  delay: i * 0.25,
-                                },
-                                opacity: {
-                                  type: "spring",
-                                  stiffness: 300,
-                                  damping: 18,
-                                  delay: i * 0.25,
-                                },
-                                scale: {
-                                  type: "spring",
-                                  stiffness: 300,
-                                  damping: 18,
-                                  delay: i * 0.25,
-                                },
-                                textShadow: {
-                                  duration: 0.65,
-                                  delay: i * 0.25 + 0.3,
-                                  times: [0, 0.45, 1],
-                                  ease: "easeOut",
-                                },
-                              }
-                        }
+                {[0, 1, 2].map((i) => {
+                  const filled = i < starCount;
+                  return (
+                    <motion.span
+                      key={i}
+                      aria-hidden="true"
+                      className={`inline-flex ${filled ? "text-gold" : "text-muted/35"}`}
+                      initial={
+                        prefersReducedMotion
+                          ? { y: 0, opacity: 1, scale: 1 }
+                          : { y: 16, opacity: 0, scale: 0.7 }
+                      }
+                      animate={{ y: 0, opacity: 1, scale: 1 }}
+                      transition={
+                        prefersReducedMotion
+                          ? { duration: 0 }
+                          : {
+                              type: "spring",
+                              stiffness: 300,
+                              damping: 20,
+                              delay: i * 0.18,
+                            }
+                      }
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill={filled ? "currentColor" : "none"}
+                        stroke="currentColor"
+                        strokeWidth="1.75"
+                        className="h-7 w-7 sm:h-9 sm:w-9"
                       >
-                        {filled ? "★" : "☆"}
-                      </motion.span>
-                    );
-                  })}
-                </span>
-              </p>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+                        />
+                      </svg>
+                    </motion.span>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="text-right">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted">
+              <p className="text-xs font-medium text-muted">
                 Điểm hoạt động
               </p>
               <RevealScore score={score} reducedMotion={prefersReducedMotion} />
@@ -386,9 +364,9 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
 
           {level.reveal.sources.length > 0 && (
             <div>
-              <h2 className="text-xs font-bold uppercase tracking-wider text-muted">
+              <h3 className="text-xs font-medium text-muted">
                 Nguồn tham khảo
-              </h2>
+              </h3>
               <ul className="mt-1.5 space-y-1 text-sm text-ink">
                 {level.reveal.sources.map((source, index) => (
                   <li key={index} className="break-words">
@@ -397,7 +375,7 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
                         href={source.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-medium text-river underline hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+                        className="font-medium text-river underline underline-offset-2 hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
                       >
                         {source.title}
                       </a>
@@ -410,11 +388,11 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
             </div>
           )}
 
-          <div className="rounded-md border border-gold/60 bg-gold/15 p-3 text-sm text-ink">
+          <div className="rounded-xl border border-gold/40 bg-gold/10 p-4 text-sm text-ink">
             <p className="font-semibold">
               <StampPress play={true}>Con dấu hộ chiếu</StampPress>
             </p>
-            <p className="mt-0.5 text-xs text-muted">
+            <p className="mt-1 text-xs text-muted">
               Đã ghi nhận dấu hoàn thành màn chơi vào hộ chiếu của bạn.
             </p>
           </div>
@@ -422,21 +400,21 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
           <div className="flex flex-wrap items-center gap-3 pt-1">
             <GlowLink
               href="/photobooth"
-              className="min-h-11 px-4 py-2 text-sm"
+              className="min-h-11 px-5 py-2.5 text-sm"
             >
-              Đến tận nơi để lấy dấu đã đến
+              Đến nơi để chụp ảnh check-in
             </GlowLink>
 
             <button
               type="button"
               onClick={() => guarded({ type: "restart" })}
-              className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-sand px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-sand/70 px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
             >
               Chơi lại
             </button>
           </div>
-        </GlassPanel>
-      </TiltCard>
+        </div>
+      </section>
     );
   }
 
@@ -477,7 +455,7 @@ function RevealScore({
   }, [score, reducedMotion]);
 
   return (
-    <p className="mt-1 text-xl font-bold text-river lg:text-6xl">
+    <p className="mt-1 text-2xl font-bold tabular-nums text-river sm:text-4xl">
       {reducedMotion ? score : display}
     </p>
   );

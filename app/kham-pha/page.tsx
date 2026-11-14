@@ -8,15 +8,15 @@ export default function KhamPhaPage() {
   return (
     <main className="pb-4">
       <PageHeader
-        title="Chiến dịch khám phá"
-        subtitle="Mỗi màn gồm ba trạm: Tìm trên bản đồ, Làm thử thách và Thể hiện cảm nhận."
+        title="Hành trình khám phá"
+        subtitle="Chọn một điểm di sản để bắt đầu qua ba chặng: Tìm trên bản đồ, Thử thách và Thể hiện."
         backHref="/"
       />
 
-      <ul className="space-y-3 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-y-0">
-        {levels.map((level, index) => (
+      <ul className="grid gap-4 lg:grid-cols-3 lg:gap-6">
+        {levels.map((level) => (
           <li key={level.id}>
-            <LevelCard level={level} delay={Math.min(0.05 * index, 0.2)} />
+            <LevelCard level={level} />
           </li>
         ))}
       </ul>

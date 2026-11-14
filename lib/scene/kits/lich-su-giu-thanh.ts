@@ -23,6 +23,8 @@ const layers: SceneLayer[] = [
 
 export const lichSuGiuThanh: SceneKit = {
   id,
+  photo: "/background/thanhdienhai.jpeg",
+  subtitle: "Thành Điện Hải và danh tướng Nguyễn Tri Phương",
   sky: "url(/scenes/lich-su-giu-thanh/ai-map.webp) center / cover no-repeat, linear-gradient(180deg, #F6EFE4 0%, #DCE3C8 55%, #B8C69B 100%)",
   layers,
   ambient: ["drift", "waves", "smoke"],

@@ -94,10 +94,8 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
 
   return (
     <section
-      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
-        solvedGlow
-          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-          : ""
+      className={`rounded-xl border border-border bg-surface/95 p-4 transition-colors sm:p-5 ${
+        solvedGlow ? "border-terracotta ring-2 ring-gold/70" : ""
       }`}
     >
       <p className="text-base font-medium leading-relaxed text-ink">
@@ -112,7 +110,7 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
         className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2"
       >
         <div className="space-y-2">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-muted">
+          <h3 className="text-xs font-semibold text-muted">
             Vế trái
           </h3>
           {station.pairs.map((pair) => {
@@ -140,35 +138,43 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
                     ? { duration: 0.15 }
                     : { type: "spring", stiffness: 380, damping: 30 }
                 }
-                className={`flex min-h-11 w-full flex-col items-start rounded-md border px-3 py-2 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
+                className={`flex min-h-11 w-full flex-col items-start rounded-lg border px-3 py-2.5 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta ${
                   isSelected
-                    ? "border-terracotta bg-terracotta text-sand ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+                    ? "border-terracotta bg-terracotta text-on-accent ring-2 ring-gold/70"
                     : isLocked
                       ? "border-river bg-river/10 text-ink"
                       : isPaired
-                        ? "border-river bg-sand/60 text-ink ring-1 ring-river hover:border-terracotta"
-                        : "border-ink/20 bg-sand/60 text-ink hover:border-terracotta"
+                        ? "border-river bg-sand/70 text-ink ring-1 ring-river/50 hover:border-terracotta"
+                        : "border-border bg-sand/70 text-ink hover:border-terracotta"
                 }`}
               >
                 <div className="flex w-full items-center justify-between gap-2">
                   <span className="font-semibold">{pair.left}</span>
                   {isLocked && (
-                    <span
+                    <svg
                       aria-hidden="true"
-                      className={`shrink-0 font-bold ${
-                        isSelected ? "text-sand" : "text-river"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      className={`h-4 w-4 shrink-0 ${
+                        isSelected ? "text-on-accent" : "text-river"
                       }`}
                     >
-                      ✓
-                    </span>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3.5 8.5l3 3 6-6.5"
+                      />
+                    </svg>
                   )}
                 </div>
                 <span
                   className={`mt-0.5 text-xs ${
-                    isSelected ? "text-sand" : "text-muted"
+                    isSelected ? "text-on-accent/85" : "text-muted"
                   }`}
                 >
-                  {pairedText ? `→ ${pairedText}` : "Chưa ghép"}
+                  {pairedText ? `Ghép với: ${pairedText}` : "Chưa ghép"}
                 </span>
               </motion.button>
             );
@@ -176,7 +182,7 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
         </div>
 
         <div className="space-y-2">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-muted">
+          <h3 className="text-xs font-semibold text-muted">
             Vế phải
           </h3>
           {rightOptions.map((option) => {
@@ -196,20 +202,31 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
                     ? { duration: 0.15 }
                     : { type: "spring", stiffness: 380, damping: 30 }
                 }
-                className={`flex min-h-11 w-full items-center justify-between gap-2 rounded-md border px-3 py-2 text-left text-sm text-ink transition-colors hover:border-river hover:bg-sand/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-60 ${
+                className={`flex min-h-11 w-full items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left text-sm text-ink transition-colors hover:border-river hover:bg-sand/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-60 ${
                   isLocked
                     ? "border-river bg-river/10"
                     : isUsed
-                      ? "border-river bg-white ring-1 ring-river"
-                      : "border-ink/20 bg-white"
+                      ? "border-river bg-surface ring-1 ring-river/50"
+                      : "border-border bg-surface"
                 }`}
               >
                 <span>{option.right}</span>
                 <span className="flex shrink-0 items-center gap-1.5">
                   {isLocked && (
-                    <span aria-hidden="true" className="font-bold text-river">
-                      ✓
-                    </span>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      className="h-4 w-4 text-river"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3.5 8.5l3 3 6-6.5"
+                      />
+                    </svg>
                   )}
                   {isUsed && (
                     <span className="shrink-0 text-xs font-medium text-muted">
@@ -233,7 +250,7 @@ export function MatchStation({ station, onDone }: MatchStationProps) {
         <GlowButton
           type="button"
           onClick={handleCheck}
-          className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-terracotta px-5 py-2 text-sm font-semibold text-on-accent transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Kiểm tra
         </GlowButton>

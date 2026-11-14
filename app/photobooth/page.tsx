@@ -9,8 +9,8 @@ export default function PhotoboothPage() {
   return (
     <main className="space-y-4 pb-6">
       <PageHeader
-        title="Check-in"
-        subtitle="Chụp ảnh tại điểm tham quan, nhận dấu đã đến"
+        title="Check-in địa điểm"
+        subtitle="Chụp ảnh lưu niệm tại điểm di sản và ghi nhận dấu đã đến."
         backHref="/"
       />
 
@@ -19,7 +19,7 @@ export default function PhotoboothPage() {
           <div
             role="status"
             aria-live="polite"
-            className="rounded-lg border border-ink/15 bg-white/80 p-5 text-sm text-muted"
+            className="rounded-xl border border-border bg-surface/90 p-5 text-sm text-muted backdrop-blur-md"
           >
             Đang tải trình check-in…
           </div>

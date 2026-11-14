@@ -28,6 +28,8 @@ const layers: SceneLayer[] = [
 
 export const home: SceneKit = {
   id,
+  photo: "/background/caurong.jpeg",
+  subtitle: "Nhịp cầu bên bờ sông Hàn",
   sky: "url(/scenes/home/ai-sky.webp) center / cover no-repeat, linear-gradient(180deg, #F6EFE4 0%, #EBD29B 45%, #C99A2E 75%, #C87A55 100%)",
   layers,
   ambient: ["waves", "drift", "fireworks"],

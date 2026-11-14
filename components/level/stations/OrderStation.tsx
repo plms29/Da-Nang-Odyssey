@@ -79,10 +79,10 @@ function SortableOrderRow({
     <li
       ref={setNodeRef}
       style={style}
-      className={`relative flex items-center justify-between gap-2 rounded-md border px-3 py-2 transition-shadow motion-reduce:transition-none ${
+      className={`relative flex items-center justify-between gap-2 rounded-xl border px-3 py-2.5 transition-colors motion-reduce:transition-none ${
         isDragging
-          ? "z-10 border-terracotta bg-sand ring-2 ring-gold shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-          : "border-ink/15 bg-sand/60 focus-within:border-terracotta focus-within:ring-2 focus-within:ring-gold focus-within:shadow-[0_0_16px_rgba(201,154,46,0.35)]"
+          ? "z-10 border-terracotta bg-surface ring-2 ring-gold/70 shadow-md"
+          : "border-border bg-sand/70 focus-within:border-terracotta focus-within:ring-2 focus-within:ring-gold/70"
       }`}
     >
       <div className="flex min-w-0 flex-1 items-center gap-2">
@@ -93,9 +93,21 @@ function SortableOrderRow({
           {...attributes}
           {...listeners}
           aria-label={`Kéo để sắp xếp: ${item.label}`}
-          className="touch-none inline-flex min-h-11 min-w-11 shrink-0 cursor-grab select-none items-center justify-center rounded-md border border-ink/20 bg-white text-base font-bold text-muted transition-colors motion-reduce:transition-none hover:border-terracotta hover:bg-sand hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta active:cursor-grabbing"
+          className="touch-none inline-flex min-h-11 min-w-11 shrink-0 cursor-grab select-none items-center justify-center rounded-lg border border-border bg-surface text-base font-bold text-muted transition-colors motion-reduce:transition-none hover:border-terracotta hover:bg-sand/70 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta active:cursor-grabbing"
         >
-          <span aria-hidden="true">⋮⋮</span>
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className="h-4 w-4"
+          >
+            <circle cx="5.5" cy="3.5" r="1.2" />
+            <circle cx="10.5" cy="3.5" r="1.2" />
+            <circle cx="5.5" cy="8" r="1.2" />
+            <circle cx="10.5" cy="8" r="1.2" />
+            <circle cx="5.5" cy="12.5" r="1.2" />
+            <circle cx="10.5" cy="12.5" r="1.2" />
+          </svg>
         </button>
         <span className="text-sm font-medium text-ink">
           <span className="mr-2 font-bold text-terracotta">{index + 1}.</span>
@@ -108,18 +120,44 @@ function SortableOrderRow({
           aria-label="Đưa lên"
           disabled={index === 0}
           onClick={() => onMove(index, -1)}
-          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border border-ink/20 bg-white text-sm font-bold text-ink transition-colors motion-reduce:transition-none hover:bg-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-border bg-surface text-sm font-bold text-ink transition-colors motion-reduce:transition-none hover:bg-sand/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-40"
         >
-          ▲
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="h-4 w-4"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4 10l4-4 4 4"
+            />
+          </svg>
         </button>
         <button
           type="button"
           aria-label="Đưa xuống"
           disabled={index === total - 1}
           onClick={() => onMove(index, 1)}
-          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border border-ink/20 bg-white text-sm font-bold text-ink transition-colors motion-reduce:transition-none hover:bg-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-border bg-surface text-sm font-bold text-ink transition-colors motion-reduce:transition-none hover:bg-sand/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:cursor-not-allowed disabled:opacity-40"
         >
-          ▼
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="h-4 w-4"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4 6l4 4 4-4"
+            />
+          </svg>
         </button>
       </div>
     </li>
@@ -251,17 +289,15 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
 
   return (
     <section
-      className={`rounded-lg border border-ink/15 bg-white/80 p-4 transition-shadow hover:shadow-sm ${
-        solvedGlow
-          ? "ring-2 ring-gold ring-offset-2 shadow-[0_0_16px_rgba(201,154,46,0.35)]"
-          : ""
+      className={`rounded-xl border border-border bg-surface/95 p-4 transition-colors sm:p-5 ${
+        solvedGlow ? "border-terracotta ring-2 ring-gold/70" : ""
       }`}
     >
       <p className="text-base font-medium leading-relaxed text-ink">
         {station.instruction}
       </p>
       <p className="mt-1 text-xs text-muted">
-        Giữ nút kéo để sắp xếp hoặc dùng nút ▲ / ▼.
+        Giữ nút kéo để sắp xếp hoặc dùng nút đưa lên và đưa xuống.
       </p>
 
       <DndContext
@@ -301,7 +337,7 @@ export function OrderStation({ station, onDone }: OrderStationProps) {
         <GlowButton
           type="button"
           onClick={handleCheck}
-          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md bg-terracotta px-5 py-2 text-sm font-semibold text-sand transition-opacity motion-reduce:transition-none hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-terracotta px-5 py-2 text-sm font-semibold text-on-accent transition-opacity motion-reduce:transition-none hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Kiểm tra
         </GlowButton>
