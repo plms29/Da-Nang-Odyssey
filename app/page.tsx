@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ThemedHomeBackdrop } from "@/components/fx/AppTheme";
+import { AccountPanel } from "@/components/passport/AccountPanel";
 import { GlassPanel } from "@/components/fx/Glass";
 import { GlowLink } from "@/components/fx/GlowButton";
 import { KineticText } from "@/components/fx/KineticText";
@@ -39,6 +40,8 @@ export default function HomePage() {
           </GlowLink>
         </div>
       </section>
+
+      <AccountPanel />
 
       <div className="space-y-6 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-y-0">
         <section
