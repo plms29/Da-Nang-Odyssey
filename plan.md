@@ -42,7 +42,7 @@ Quy tắc chung: chỉ đọc khóa qua `lib/level/unlock.ts`; không đọc sto
 | U5 Kit 3 thế giới mới | `lib/scene/kits/lang-nghe.ts`, `am-thuc.ts`, `do-thi-song-le-hoi.ts` theo mẫu kit có sẵn, đăng ký trong `kits/index.ts`, thêm preset shader | `lib/scene/kits/*`, `components/fx/shaders/*` (preset) | ui-flash | E3 |
 
 Thứ tự: E1 → (E2 ∥ E3 ∥ U1 ∥ U2 ∥ U3 ∥ U4a) → U4b, U5.
-**Tiến độ 2026-11-14:** U1, U2, U3, U4a xong, reviewer (sonnet) duyệt sau ≤ 1 vòng sửa, kiểm trình duyệt với khóa thử tạm (đã gỡ). Còn: E2, E3, U4b, U5. Không task nào chung file trong cùng đợt.
+**Tiến độ 2026-11-14:** U1, U2, U3, U4a xong, reviewer (sonnet) duyệt sau ≤ 1 vòng sửa, kiểm trình duyệt với khóa thử tạm (đã gỡ). U4b xong (reviewer duyệt ngay). E2 nháp đã vào. Còn: E3 (tranh), U5 (kit 3 thế giới mới), đội nội dung điền Màn 4–6. Không task nào chung file trong cùng đợt.
 Review: `reviewer` gọi bằng model sonnet, tối đa 2 vòng sửa. Review U1–U3 kiểm kỹ: không lộ nội dung màn khóa, không chớp trạng thái khóa trước hydrate, cờ `?mo-khoa=tat-ca` không ghi vào hộ chiếu.
 Kiểm cuối (phiên chính): tsc, eslint, vitest, `next build` (dừng dev trước); trình duyệt 375px và 1440px: hộ chiếu trống → chơi xong Màn 3 → thấy Màn 4 mở; thử `?mo-khoa=tat-ca`; tour 10 phút chỉ đi qua điểm đã mở.
 

@@ -6,6 +6,7 @@ import { Celebrate } from "@/components/fx/Celebrate";
 import { GlassPanel } from "@/components/fx/Glass";
 import { GlowLink } from "@/components/fx/GlowButton";
 import { StampPress } from "@/components/fx/StampPress";
+import { ThemeScope } from "@/components/fx/ThemeScope";
 import { PhotoBooth } from "@/components/photobooth/PhotoBooth";
 import { usePassport } from "@/lib/passport/store";
 import type { CaptionResult, Spot } from "@/lib/types";
@@ -100,31 +101,34 @@ export function OnsiteBooth({ spot, headingRef, onReset }: OnsiteBoothProps) {
   }
 
   return (
-    <section className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start lg:gap-6">
-      <div className="space-y-4 lg:sticky lg:top-24 lg:col-span-5 lg:col-start-8 lg:row-start-1">
-        <GlassPanel
-          tone="light"
-          className="border border-river/25 p-4 lg:p-5"
-        >
-          <h2
-            ref={headingRef}
-            tabIndex={-1}
-            className="text-base font-bold text-river focus:outline-none lg:text-lg"
-          >
-            Bạn đang ở {spot.name}
-          </h2>
-          <p className="mt-1 text-xs text-muted">
-            Chụp ảnh và chọn &ldquo;Dùng ảnh này&rdquo; để nhận dấu ĐÃ ĐẾN vào
-            hộ chiếu.
-          </p>
-        </GlassPanel>
-
-        {captured && (
+    <ThemeScope spotId={spot.id} className="rounded-2xl p-2.5 lg:p-4">
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start lg:gap-6">
+        <div className="space-y-4 lg:sticky lg:top-24 lg:col-span-5 lg:col-start-8 lg:row-start-1">
           <GlassPanel
             tone="light"
-            role="status"
-            className="relative space-y-3 overflow-hidden border border-gold/60 bg-gold/15 p-4 lg:p-5"
+            className="border p-4 lg:p-5"
+            style={{ borderColor: "var(--world-accent, #B5532F)" }}
           >
+            <h2
+              ref={headingRef}
+              tabIndex={-1}
+              className="text-base font-bold text-river focus:outline-none lg:text-lg"
+            >
+              Bạn đang ở {spot.name}
+            </h2>
+            <p className="mt-1 text-xs text-muted">
+              Chụp ảnh và chọn &ldquo;Dùng ảnh này&rdquo; để nhận dấu ĐÃ ĐẾN vào
+              hộ chiếu.
+            </p>
+          </GlassPanel>
+
+          {captured && (
+            <GlassPanel
+              tone="light"
+              role="status"
+              className="relative space-y-3 overflow-hidden border bg-gold/15! p-4 lg:p-5"
+              style={{ borderColor: "var(--world-accent, #B5532F)" }}
+            >
             <Celebrate kind="gold-burst" play={captured} />
             <div className="flex flex-wrap items-center gap-3">
               <StampPress play={captured}>
@@ -252,5 +256,6 @@ export function OnsiteBooth({ spot, headingRef, onReset }: OnsiteBoothProps) {
         </div>
       </div>
     </section>
+    </ThemeScope>
   );
 }
