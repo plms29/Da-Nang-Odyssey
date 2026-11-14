@@ -128,7 +128,7 @@ export function BottomNav() {
   return (
     <>
       <GlassFilterDefs />
-      <div className={`fixed bottom-[calc(12px+env(safe-area-inset-bottom))] left-1/2 z-50 w-[min(456px,calc(100%-24px))] -translate-x-1/2 lg:top-4 lg:bottom-auto lg:w-max lg:max-w-[720px] lg:transition-transform lg:duration-300 ${hidden ? "lg:-translate-y-24" : ""}`}>
+      <div className={`fixed bottom-[calc(12px+env(safe-area-inset-bottom))] left-1/2 z-50 w-[min(456px,calc(100%-24px))] -translate-x-1/2 lg:top-4 lg:bottom-auto lg:w-max lg:max-w-[900px] lg:transition-transform lg:duration-300 ${hidden ? "lg:-translate-y-24" : ""}`}>
         <GlassPanel
           as="nav"
           tone="light"
@@ -144,7 +144,7 @@ export function BottomNav() {
             <span className="hidden text-xs font-bold whitespace-nowrap text-ink lg:block">
               Hành trình văn hóa Đà Nẵng
             </span>
-            <ul className="grid grid-cols-5 gap-1 px-2 py-1.5 lg:flex lg:items-center lg:gap-2 lg:px-0 lg:whitespace-nowrap">
+            <ul className="grid grid-cols-6 gap-1 px-2 py-1.5 lg:flex lg:items-center lg:gap-2 lg:px-0 lg:whitespace-nowrap">
               {navItems.map((item) => {
                 const isActive =
                   pathname === item.href || pathname.startsWith(`${item.href}/`);
