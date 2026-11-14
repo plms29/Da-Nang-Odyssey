@@ -1,3 +1,4 @@
+import { requireUser } from "@/lib/supabase/requireUser";
 import { NextResponse } from "next/server";
 import { captionFor } from "@/lib/caption/caption";
 import { getSpots } from "@/lib/content";
@@ -7,6 +8,9 @@ export const runtime = "nodejs";
 const MAX_BODY_BYTES = 1024;
 
 export async function POST(request: Request) {
+  const denied = await requireUser(request);
+  if (denied) return denied;
+
   const contentLengthHeader = request.headers.get("content-length");
   if (contentLengthHeader !== null) {
     const contentLength = Number(contentLengthHeader);
