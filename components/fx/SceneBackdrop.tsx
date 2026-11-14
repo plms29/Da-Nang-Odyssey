@@ -29,6 +29,9 @@ const KIT_SHADER_PRESETS: Record<string, ShaderPreset> = {
   "di-san-cham": "sunset",
   "nghe-thuat-dan-gian": "night",
   "lich-su-giu-thanh": "aurora",
+  "lang-nghe": "river",
+  "am-thuc": "sunset",
+  "do-thi-song-le-hoi": "night",
 };
 
 const GOD_RAYS: ReadonlyArray<{
@@ -67,7 +70,12 @@ export function getShaderPresetForKit(id: SceneId | string): ShaderPreset {
 }
 
 export function isSunlitKit(id: SceneId | string): boolean {
-  return id === "home" || id === "di-san-cham";
+  return (
+    id === "home" ||
+    id === "di-san-cham" ||
+    id === "lang-nghe" ||
+    id === "am-thuc"
+  );
 }
 
 export function SceneGodRays(): JSX.Element {
