@@ -2,7 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { LatLng } from "@/lib/types";
+import { LeafletMap, type MapLandmark } from "./LeafletMap";
 import { loadMaps } from "./loadMaps";
+
+export type { MapLandmark };
 
 export interface MapViewProps {
   center: LatLng;
@@ -12,6 +15,8 @@ export interface MapViewProps {
   label?: string;
   apiKey?: string;
   onError?: () => void;
+  landmarks?: MapLandmark[];
+  onCenterChange?: (center: LatLng) => void;
 }
 
 export function MapView({
@@ -19,31 +24,45 @@ export function MapView({
   zoom = 13,
   pin,
   onPick,
+  label = "Bản đồ Đà Nẵng, chạm để đặt ghim",
   apiKey,
   onError,
+  landmarks,
+  onCenterChange,
 }: MapViewProps) {
+  const resolvedKey = (
+    apiKey ??
+    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ??
+    ""
+  ).trim();
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
   const mapsApiRef = useRef<typeof google.maps | null>(null);
   const markerRef = useRef<google.maps.Marker | null>(null);
+  const landmarkMarkersRef = useRef<google.maps.Marker[]>([]);
+  const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
   const initialCenterRef = useRef<LatLng>(center);
   const initialZoomRef = useRef<number>(zoom);
   const onPickRef = useRef(onPick);
-  const onErrorRef = useRef(onError);
+  const onCenterChangeRef = useRef(onCenterChange);
   const [status, setStatus] = useState<"loading" | "ready" | "error">(
-    "loading",
+    resolvedKey ? "loading" : "error",
   );
 
   useEffect(() => {
     onPickRef.current = onPick;
-    onErrorRef.current = onError;
-  }, [onPick, onError]);
+    onCenterChangeRef.current = onCenterChange;
+  }, [onPick, onCenterChange]);
 
   useEffect(() => {
+    if (!resolvedKey) {
+      return;
+    }
+
     let cancelled = false;
     let clickListener: google.maps.MapsEventListener | null = null;
-    const resolvedKey =
-      apiKey ?? process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "";
+    let centerListener: google.maps.MapsEventListener | null = null;
 
     setStatus("loading");
 
@@ -81,12 +100,22 @@ export function MapView({
           },
         );
 
+        const notifyCenter = () => {
+          const current = map.getCenter();
+          if (!current) return;
+          onCenterChangeRef.current?.({
+            lat: current.lat(),
+            lng: current.lng(),
+          });
+        };
+        centerListener = map.addListener("center_changed", notifyCenter);
+        notifyCenter();
+
         setStatus("ready");
       })
       .catch(() => {
         if (cancelled) return;
         setStatus("error");
-        onErrorRef.current?.();
       });
 
     return () => {
@@ -95,6 +124,16 @@ export function MapView({
         clickListener.remove();
         clickListener = null;
       }
+      if (centerListener) {
+        centerListener.remove();
+        centerListener = null;
+      }
+      for (const lmMarker of landmarkMarkersRef.current) {
+        lmMarker.setMap(null);
+      }
+      landmarkMarkersRef.current = [];
+      infoWindowRef.current?.close();
+      infoWindowRef.current = null;
       if (mapRef.current && mapsApiRef.current?.event?.clearInstanceListeners) {
         mapsApiRef.current.event.clearInstanceListeners(mapRef.current);
       }
@@ -104,7 +143,7 @@ export function MapView({
       }
       mapRef.current = null;
     };
-  }, [apiKey]);
+  }, [resolvedKey]);
 
   useEffect(() => {
     if (status !== "ready" || !mapRef.current || !mapsApiRef.current) return;
@@ -121,17 +160,90 @@ export function MapView({
       markerRef.current = new mapsApiRef.current.Marker({
         position: pin,
         map: mapRef.current,
+        clickable: false,
       });
     } else {
       markerRef.current.setPosition(pin);
     }
   }, [pin, status]);
 
-  if (status === "error") {
+  useEffect(() => {
+    if (status !== "ready" || !mapRef.current || !mapsApiRef.current) return;
+    const maps = mapsApiRef.current;
+    const map = mapRef.current;
+
+    for (const lmMarker of landmarkMarkersRef.current) {
+      lmMarker.setMap(null);
+    }
+    landmarkMarkersRef.current = [];
+
+    if (!landmarks || landmarks.length === 0) return;
+
+    if (!infoWindowRef.current) {
+      infoWindowRef.current = new maps.InfoWindow();
+    }
+    const infoWindow = infoWindowRef.current;
+
+    landmarkMarkersRef.current = landmarks.map((lm) => {
+      const marker = new maps.Marker({
+        position: { lat: lm.lat, lng: lm.lng },
+        map,
+        title: lm.name,
+        label: {
+          text: lm.name,
+          color: "#1F1A17",
+          fontSize: "11px",
+          fontWeight: "600",
+        },
+        icon: {
+          path: maps.SymbolPath.CIRCLE,
+          scale: 6,
+          fillColor: "#1F4E6B",
+          fillOpacity: 1,
+          strokeColor: "#F6EFE4",
+          strokeWeight: 2,
+        },
+      });
+
+      marker.addListener("click", () => {
+        const popupEl = document.createElement("div");
+        const titleEl = document.createElement("div");
+        titleEl.textContent = lm.name;
+        titleEl.style.fontWeight = "700";
+        titleEl.style.fontSize = "12px";
+        titleEl.style.marginBottom = "4px";
+        const noteEl = document.createElement("div");
+        noteEl.textContent = lm.note;
+        noteEl.style.fontSize = "12px";
+        popupEl.append(titleEl, noteEl);
+        infoWindow.setContent(popupEl);
+        infoWindow.open({ anchor: marker, map });
+      });
+
+      return marker;
+    });
+
+    return () => {
+      for (const lmMarker of landmarkMarkersRef.current) {
+        lmMarker.setMap(null);
+      }
+      landmarkMarkersRef.current = [];
+    };
+  }, [landmarks, status]);
+
+  // Fall back to Leaflet + OpenStreetMap whenever there is no API key or Google Maps fails.
+  if (!resolvedKey || status === "error") {
     return (
-      <p role="alert" className="text-sm font-medium text-terracotta">
-        Không tải được bản đồ
-      </p>
+      <LeafletMap
+        center={center}
+        zoom={zoom}
+        pin={pin}
+        onPick={onPick}
+        label={label}
+        landmarks={landmarks}
+        onError={onError}
+        onCenterChange={onCenterChange}
+      />
     );
   }
 
@@ -140,7 +252,7 @@ export function MapView({
       <div
         ref={containerRef}
         role="application"
-        aria-label="Bản đồ Đà Nẵng, chạm để đặt ghim"
+        aria-label={label}
         className="h-72 w-full rounded-lg border border-ink/15 bg-sand/40"
       />
       {status === "loading" && (

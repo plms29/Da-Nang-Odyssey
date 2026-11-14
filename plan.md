@@ -1,3 +1,47 @@
+# Kế hoạch: màn 1 "Giữ thành" (Thành Điện Hải) cho demo hackathon (2026-11-14)
+
+Đổi hướng: demo chỉ màn Thành Điện Hải. Đã làm: Điện Hải lên màn 1, Chăm xuống màn 2 (sửa lời dẫn nối màn). Việc màn Chăm (ghép ảnh, tranh SVG) giữ nguyên trong cây làm việc, dừng ở đó; vòng sửa W2 (focus dialog) để sau.
+Cùng nguyên tắc: dạy trước, hỏi sau. Bản đồ OSM + la bàn (W1) dùng chung cho mọi màn nên Điện Hải đã có.
+
+Phiên chính làm (nội dung + hợp đồng):
+- C4 `content/levels.json` màn Điện Hải: thêm `landmarks` (sông Hàn, Cầu Rồng, Bảo tàng Đà Nẵng trong khuôn viên thành, chợ Hàn…); mỗi sự kiện của trạm Xếp có `note` (1–2 câu giải thích); trạm 3 đổi sang `learn_retell`: thẻ kiến thức (đồn 1813, thành gạch 1823, cửa biển, Nguyễn Tri Phương, 1858) → điền chỗ trống vào lá thư người lính giữ thành → nghe đọc.
+- C5 `lib/types.ts`: OrderStation item có `note?`.
+
+| Task | File (chỉ sửa) | Worker |
+|---|---|---|
+| W1b Xong vòng sửa bản đồ: la bàn cập nhật theo `moveend`, aria la bàn, hàm hướng/khoảng cách ra `lib/geo/direction.ts` (phiên chính viết test), "Bạn đang ở ngay đây!" khi < 10 m | `components/map/LeafletMap.tsx`, `components/level/stations/MapPinStation.tsx`, `lib/geo/direction.ts` (mới) | ui-hydrogen-high |
+| W5 Trạm Xếp có học: mỗi thẻ sự kiện có nút "i" mở `note` trước khi xếp; xếp sai thì chỉ ra cặp sai kèm note; xếp đúng hiện dòng thời gian có note | `components/level/stations/OrderStation.tsx` | ui-hydrogen-high |
+
+RetellStation (đã được reviewer duyệt) dùng lại cho trạm 3, không cần sửa code.
+W1b, W5 không chung file → song song. Reviewer mỗi task, tối đa 2 vòng sửa.
+Chấp nhận: tsc, eslint, vitest, validate-content qua; chơi trọn màn Điện Hải trên trình duyệt 375px và 1440px không có khóa Maps.
+
+---
+
+# Kế hoạch: màn 1 "Dấu ấn Chăm" theo hướng học (2026-11-14)
+
+Vấn đề: trạm Tìm không có bản đồ (máy không có khóa Google Maps), trạm Ghép chỉ hiện số (ảnh `images/man-1-phu-dieu.jpg` không tồn tại), trạm Thể hiện là bài tự luận chấm qua API — người chưa biết gì về Đà Nẵng không làm được.
+Nguyên tắc: **dạy trước, hỏi sau**. Mỗi trạm cho người chơi thấy/đọc kiến thức rồi mới làm; sai thì giải thích, không chỉ báo "sai".
+
+Phiên chính làm trước (hợp đồng, không phải UI):
+- C1 Thêm `leaflet` + `@types/leaflet` (bản đồ OpenStreetMap, không cần khóa).
+- C2 Kiểu trạm mới `learn_retell` trong `lib/types.ts`: `cards[]` (tiêu đề, nội dung, ảnh tùy chọn) + `blanks[]` (câu thuyết minh có chỗ trống, mỗi chỗ có đáp án + 2 lựa chọn nhiễu + lời giải thích khi chọn sai). Hàm chấm `checkRetell` trong `lib/activities/scoring.ts` + test; `validate-content.mjs` nhận kiểu mới; `LevelPlayer` route kiểu mới.
+- C3 `content/levels.json` màn 1: trạm 3 đổi sang `learn_retell`; thêm `landmarks` (Cầu Rồng, sông Hàn, Bạch Đằng…) cho trạm Tìm; ảnh ghép đổi sang `images/man-1-phu-dieu.svg`.
+
+| Task | File (chỉ sửa) | Worker |
+|---|---|---|
+| W1 Bản đồ không khóa: `MapView` dùng Leaflet+OSM khi không có khóa Google; hiện các mốc (landmarks) có nhãn, chạm mốc ra 1 câu giới thiệu. **Mũi tên chỉ hướng**: la bàn nổi trên bản đồ chỉ từ ghim (hoặc tâm bản đồ khi chưa ghim) về đích, kèm "còn ~800 m về phía Đông Bắc"; ghim sai thì báo gần/xa hơn lần trước | `components/map/MapView.tsx`, `components/map/LeafletMap.tsx` (mới), `components/level/stations/MapPinStation.tsx` | ui-hydrogen-high |
+| W2 Ghép hình bằng ảnh: mỗi mảnh là một phần ảnh (`background-position`), có ảnh mẫu nhỏ để nhìn theo, nút "Xem ảnh gốc"; ghép xong hiện thẻ "Bạn vừa ghép: Đài thờ Trà Kiệu…" | `components/level/stations/JigsawStation.tsx` | ui-argon (hết hạn mức → hydrogen-high) |
+| W3 Ảnh phù điêu vũ nữ dạng SVG minh họa (vuông, đủ chi tiết để ghép 3×3) | `public/images/man-1-phu-dieu.svg` (mới) | ui-argon |
+| W4 Trạm mới "Học rồi kể": lật lần lượt thẻ kiến thức (tên, chất liệu sa thạch, vũ nữ Apsara, bảo tàng 1919) → điền chỗ trống vào bài thuyết minh bằng chip chọn, chọn sai hiện giải thích → đọc to bài hoàn chỉnh (nút Nghe bằng `useSpeech`, ghi âm tùy chọn). Chấm cục bộ, không gọi API | `components/level/stations/RetellStation.tsx` (mới) | ui-hydrogen-high |
+
+Mẫu tham chiếu: `components/level/stations/MatchStation.tsx`, `HintBox`, `components/tour/useSpeech.ts`, `components/tour/TourRiverMap.tsx`.
+W1–W4 không chung file → song song, sau C1–C3. Mỗi task `reviewer`, tối đa 2 vòng sửa. Agent `ui-*` gọi `model: "haiku"`, reviewer `sonnet`.
+Chấp nhận: tsc, eslint, vitest, validate-content qua; chơi trọn màn 1 trên trình duyệt ở 375px và 1440px, không có khóa Maps.
+Không làm: ảnh chụp thật của phù điêu (cần quyền ảnh), đổi trạm 3 của các màn khác (làm sau nếu màn 1 ổn).
+
+---
+
 # Kế hoạch: hoàn thành Khám phá, đủ 6 màn và cốt truyện (2026-11-14)
 
 Chủ máy đã chốt: làm **đủ 6 màn**; cốt truyện xuyên suốt có **người dẫn đường**; nội dung lịch sử do phiên chính viết từ kiến thức phổ biến, kèm nguồn công khai, **giữ `status: draft`** để đội nội dung kiểm chứng.
