@@ -3,45 +3,156 @@
     "id": "bao-tang-cham",
     "name": "Bảo tàng Điêu khắc Chăm",
     "theme": "di-san-cham",
-    "checkin": { "lat": 0.0, "lng": 0.0, "radius_m": 200 },
-    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về bảo tàng: lịch sử hình thành, hiện vật tiêu biểu. Đội nội dung điền sau khi đối chiếu hai nguồn.",
+    "checkin": {
+      "lat": 16.0605,
+      "lng": 108.2235,
+      "radius_m": 200
+    },
+    "story": "Bảo tàng Điêu khắc Chăm nằm ở góc đường Bạch Đằng và đường 2 Tháng 9, bên bờ tây sông Hàn. Bảo tàng do Trường Viễn Đông Bác cổ Pháp xây dựng từ năm 1915 và mở cửa năm 1919, kiến trúc mô phỏng đường nét tháp Chăm. Đây là nơi lưu giữ sưu tập điêu khắc Chăm lớn nhất, phần lớn tạc bằng đá sa thạch, có niên đại khoảng từ thế kỷ 7 đến thế kỷ 15. Các phòng trưng bày được đặt tên theo nơi tìm thấy hiện vật như Mỹ Sơn, Trà Kiệu, Đồng Dương, Tháp Mẫm. Hiện vật nổi bật là Đài thờ Trà Kiệu, một bảo vật quốc gia, quanh chân đài chạm các vũ nữ Apsara và nhạc công cùng cảnh kể chuyện trong sử thi Ramayana.",
     "tour_seconds": 60,
-    "route_order": 1,
+    "route_order": 4,
     "image": "images/bao-tang-cham.jpg",
     "frame": "frames/bao-tang-cham.png",
-    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho Bảo tàng Điêu khắc Chăm.",
-    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho Bảo tàng Điêu khắc Chăm.",
-    "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }],
+    "caption_fallback": "Nghìn năm đá sa thạch vẫn còn kể chuyện Champa bên sông Hàn.",
+    "narration_fallback": "Đây là Bảo tàng Điêu khắc Chăm, mở cửa năm 1919 bên bờ sông Hàn. Bên trong là sưu tập điêu khắc Chăm lớn nhất, phần nhiều bằng đá sa thạch. Đừng bỏ qua Đài thờ Trà Kiệu với những vũ nữ Apsara đang múa quanh chân đài.",
+    "sources": [
+      {
+        "title": "Bảo tàng Điêu khắc Chăm Đà Nẵng (trang chính thức)",
+        "url": "https://chammuseum.danang.vn"
+      }
+    ],
     "status": "draft"
   },
   {
     "id": "thanh-dien-hai",
     "name": "Thành Điện Hải",
     "theme": "lich-su-giu-thanh",
-    "checkin": { "lat": 0.0, "lng": 0.0, "radius_m": 200 },
-    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về thành Điện Hải. Đội nội dung điền sau khi đối chiếu hai nguồn.",
+    "checkin": {
+      "lat": 16.0759,
+      "lng": 108.2217,
+      "radius_m": 200
+    },
+    "story": "Năm 1813, triều Nguyễn cho xây đồn Điện Hải gần cửa sông Hàn để canh giữ cửa biển Đà Nẵng. Năm 1823, đồn được dời vào trong đất liền, xây lại bằng gạch và đổi tên thành thành Điện Hải. Năm 1847, tàu chiến Pháp nổ súng bắn phá cửa biển Đà Nẵng. Ngày 1 tháng 9 năm 1858, liên quân Pháp và Tây Ban Nha nổ súng tấn công Đà Nẵng; quân dân trong thành dưới sự chỉ huy của Nguyễn Tri Phương đắp lũy, giữ thành, cầm chân đối phương nhiều tháng liền. Ngày nay di tích nằm trên đường Trần Phú, gần sông Hàn.",
     "tour_seconds": 60,
-    "route_order": 2,
+    "route_order": 1,
     "image": "images/thanh-dien-hai.jpg",
     "frame": "frames/thanh-dien-hai.png",
-    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho Thành Điện Hải.",
-    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho Thành Điện Hải.",
-    "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }],
+    "caption_fallback": "Nơi quân dân Đà Nẵng giữ thành từ năm 1858.",
+    "narration_fallback": "Thành Điện Hải được xây lại năm 1823 để canh cửa biển Đà Nẵng. Năm 1858, khi liên quân Pháp và Tây Ban Nha nổ súng, quân dân trong thành theo Nguyễn Tri Phương đắp lũy giữ thành suốt nhiều tháng.",
+    "sources": [
+      {
+        "title": "Cổng thông tin Sở Văn hóa và Thể thao Đà Nẵng",
+        "url": "https://svhtt.danang.gov.vn"
+      }
+    ],
     "status": "draft"
   },
   {
     "id": "diem-bai-choi",
-    "name": "[Địa điểm diễn bài chòi — đội xác minh]",
+    "name": "Phố cổ Hội An, sân diễn bài chòi",
     "theme": "nghe-thuat-dan-gian",
-    "checkin": { "lat": 0.0, "lng": 0.0, "radius_m": 200 },
-    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về nghệ thuật bài chòi và nơi diễn. Đội nội dung điền sau khi xác minh địa điểm và lịch diễn.",
+    "checkin": {
+      "lat": 15.8768,
+      "lng": 108.3285,
+      "radius_m": 300
+    },
+    "story": "Bài chòi là lối chơi và diễn xướng dân gian của miền Trung, thường tổ chức dịp Tết. Người chơi ngồi trong các chòi tre dựng quanh sân, mỗi người cầm thẻ có tên ba con bài. Anh hiệu hoặc chị hiệu rút thẻ trong ống tre rồi hô câu thai, thường là thơ lục bát, cuối câu là tên con bài. Ai có đủ ba con bài trên thẻ thì báo tới, trống mõ đổ hồi chúc mừng. Năm 2017, UNESCO ghi danh Nghệ thuật Bài Chòi Trung Bộ Việt Nam là di sản văn hóa phi vật thể đại diện của nhân loại. Ở phố cổ Hội An, bài chòi được diễn vào buổi tối bên sông Hoài.",
     "tour_seconds": 60,
-    "route_order": 3,
+    "route_order": 6,
     "image": "images/diem-bai-choi.jpg",
     "frame": "frames/diem-bai-choi.png",
-    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho điểm bài chòi.",
-    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho điểm bài chòi.",
-    "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }],
+    "caption_fallback": "Một tiếng hô bài chòi, cả phố cổ cùng chờ con bài.",
+    "narration_fallback": "Ở phố cổ Hội An, mỗi tối bên sông Hoài lại vang tiếng hô bài chòi. Anh hiệu rút thẻ, hô câu thai lục bát, ai đủ ba con bài thì trống mõ đổ hồi. Bài chòi được UNESCO ghi danh năm 2017.",
+    "sources": [
+      {
+        "title": "UNESCO: Art of Bài Chòi in Central Viet Nam",
+        "url": "https://ich.unesco.org/en/RL/art-of-bai-choi-in-central-viet-nam-01296"
+      }
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "lang-da-non-nuoc",
+    "name": "Làng đá mỹ nghệ Non Nước",
+    "theme": "lang-nghe",
+    "checkin": {
+      "lat": 16.0035,
+      "lng": 108.2635,
+      "radius_m": 400
+    },
+    "story": "Làng đá mỹ nghệ Non Nước nằm dưới chân Ngũ Hành Sơn, quận Ngũ Hành Sơn. Theo truyền lại, nghề chạm đá ở đây có từ thế kỷ 18, khi ông Huỳnh Bá Quát từ Thanh Hóa vào lập nghiệp. Thợ đá làm theo các bước: chọn đá, phác hình lên khối đá, đục thô cho ra dáng, chạm khắc chi tiết rồi mài bóng. Hoa văn thường gặp là sóng nước, mây, hoa sen. Cùng với làng đá, Đà Nẵng còn làng nước mắm Nam Ô ở phía bắc thành phố, nơi cá cơm được trộn muối và ủ trong thùng gỗ khoảng một năm.",
+    "tour_seconds": 60,
+    "route_order": 5,
+    "image": "images/lang-da-non-nuoc.jpg",
+    "frame": "frames/lang-da-non-nuoc.png",
+    "caption_fallback": "Tiếng đục đá Non Nước vang dưới chân Ngũ Hành Sơn.",
+    "narration_fallback": "Dưới chân Ngũ Hành Sơn là làng đá Non Nước. Mỗi tác phẩm đi qua năm bước: chọn đá, phác hình, đục thô, chạm chi tiết và mài bóng. Hoa văn sóng nước, mây, hoa sen hiện lên dưới tay người thợ.",
+    "sources": [
+      {
+        "title": "Cổng thông tin điện tử thành phố Đà Nẵng",
+        "url": "https://danang.gov.vn"
+      },
+      {
+        "title": "Cổng du lịch Đà Nẵng",
+        "url": "https://danangfantasticity.com"
+      }
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "cho-han",
+    "name": "Chợ Hàn",
+    "theme": "am-thuc",
+    "checkin": {
+      "lat": 16.0682,
+      "lng": 108.2245,
+      "radius_m": 200
+    },
+    "story": "Chợ Hàn nằm bên bờ tây sông Hàn, là một trong những chợ lâu đời của Đà Nẵng và có nhiều quầy món ăn địa phương. Mì Quảng là món tiêu biểu của đất Quảng. Sợi mì làm từ gạo, thường có màu vàng nhờ nghệ. Tô mì lót rau sống dưới đáy, rồi đến sợi mì, rồi tôm, thịt, trứng, sau đó chan nước nhân xâm xấp chứ không ngập như phở. Trên cùng rắc đậu phộng rang, ăn kèm bánh tráng nướng mè bẻ vụn.",
+    "tour_seconds": 60,
+    "route_order": 2,
+    "image": "images/cho-han.jpg",
+    "frame": "frames/cho-han.png",
+    "caption_fallback": "Một tô mì Quảng xâm xấp nước, giòn tiếng bánh tráng.",
+    "narration_fallback": "Ghé Chợ Hàn, đừng quên một tô mì Quảng. Sợi mì vàng màu nghệ, rau sống lót đáy, tôm thịt bên trên, nước nhân chỉ xâm xấp. Rắc đậu phộng, bẻ bánh tráng mè, thế là đủ vị Quảng.",
+    "sources": [
+      {
+        "title": "Cổng thông tin điện tử thành phố Đà Nẵng",
+        "url": "https://danang.gov.vn"
+      },
+      {
+        "title": "Cổng du lịch Đà Nẵng",
+        "url": "https://danangfantasticity.com"
+      }
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "cau-rong",
+    "name": "Cầu Rồng và bờ sông Hàn",
+    "theme": "do-thi-song-le-hoi",
+    "checkin": {
+      "lat": 16.0612,
+      "lng": 108.2272,
+      "radius_m": 250
+    },
+    "story": "Sông Hàn chia Đà Nẵng thành hai bờ. Cầu sông Hàn khánh thành năm 2000, là cây cầu quay đầu tiên của Việt Nam, ban đêm quay ngang để tàu thuyền qua lại. Cầu Rồng khánh thành năm 2013, dài 666 mét, hình con rồng uốn lượn; tối thứ Bảy và Chủ nhật rồng phun lửa và phun nước. Dọc hai bờ sông ngày nay là đường đi bộ, đèn chiếu sáng, du thuyền và nhiều nhà cao tầng. Đi về phía nam là Ngũ Hành Sơn, năm ngọn núi đá vôi mang tên Kim, Mộc, Thủy, Hỏa, Thổ.",
+    "tour_seconds": 60,
+    "route_order": 3,
+    "image": "images/cau-rong.jpg",
+    "frame": "frames/cau-rong.png",
+    "caption_fallback": "Rồng vàng vắt qua sông Hàn, thành phố sáng đèn hai bờ.",
+    "narration_fallback": "Đây là Cầu Rồng, khánh thành năm 2013, dài 666 mét. Cuối tuần rồng phun lửa và phun nước. Gần đó là cầu sông Hàn, cây cầu quay đầu tiên của Việt Nam.",
+    "sources": [
+      {
+        "title": "Cổng thông tin điện tử thành phố Đà Nẵng",
+        "url": "https://danang.gov.vn"
+      },
+      {
+        "title": "Cổng du lịch Đà Nẵng",
+        "url": "https://danangfantasticity.com"
+      }
+    ],
     "status": "draft"
   }
 ]

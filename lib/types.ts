@@ -84,6 +84,28 @@ export interface MatchStation {
   hints: Hints;
 }
 
+/** Cook a dish (màn Vị Quảng): `steps` are the right ingredients in the right order; `distractors` never belong. */
+export interface RecipeStation {
+  id: string;
+  type: "recipe";
+  instruction: string;
+  steps: { id: string; label: string }[];
+  distractors: { id: string; label: string }[];
+  hints: Hints;
+}
+
+/** Then and now (màn Thành phố bên sông). Spot x, y, r are percents of the picture width/height (r of width). */
+export interface SpotDiffStation {
+  id: string;
+  type: "spot_diff";
+  instruction: string;
+  /** Paths under /public, same aspect ratio. Spots are marked on `after`. */
+  before: string;
+  after: string;
+  spots: { id: string; label: string; x: number; y: number; r: number }[];
+  hints: Hints;
+}
+
 export interface RubricCriterion {
   id: string;
   desc: string;
@@ -96,12 +118,20 @@ export interface ExpressStation {
   prompt: string;
   /** Model sentence for the voice station (bài chòi), optional. */
   sample?: string;
+  /** Pattern to copy for `open_drawing`, path under /public. */
+  sample_image?: string;
   max_seconds?: number;
   max_chars: number;
   rubric: RubricCriterion[];
 }
 
-export type ActivityStation = MapPinStation | JigsawStation | OrderStation | MatchStation;
+export type ActivityStation =
+  | MapPinStation
+  | JigsawStation
+  | OrderStation
+  | MatchStation
+  | RecipeStation
+  | SpotDiffStation;
 export type Station = ActivityStation | ExpressStation;
 
 /** C2 — one fixed level: intro, three stations (Tìm, Làm, Thể hiện), reveal. */
@@ -109,6 +139,8 @@ export interface Level {
   id: string;
   order: number;
   title: string;
+  /** Name of the notebook page this level recovers (cốt truyện "Sổ tay sông Hàn"). */
+  page?: string;
   spot_ids: string[];
   intro: { text: string; audio?: string; image?: string };
   stations: [MapPinStation, ActivityStation, ExpressStation];
@@ -142,6 +174,15 @@ export interface JudgeRequest {
   text: string;
   /** Voice answer (KH mục 7). Never stored or logged; forwarded to Gemini then dropped. */
   audio?: { mime: string; data_base64: string };
+  /** Drawing for `open_drawing` (PNG/JPEG). Never stored or logged. */
+  image?: { mime: string; data_base64: string };
+}
+
+/** content/story.json: the campaign frame shown on /kham-pha. */
+export interface Story {
+  guide: { name: string; role: string };
+  prologue: string[];
+  epilogue: string[];
 }
 
 export type StampKind = "level" | "tour" | "visited";

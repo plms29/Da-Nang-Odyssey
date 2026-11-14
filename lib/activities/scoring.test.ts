@@ -5,9 +5,18 @@ import {
   checkMapPin,
   checkMatch,
   checkOrder,
+  checkRecipe,
+  checkSpotDiff,
+  hitSpot,
   finalResult,
 } from "@/lib/activities/scoring";
-import type { MapPinStation, MatchStation, OrderStation } from "@/lib/types";
+import type {
+  MapPinStation,
+  MatchStation,
+  OrderStation,
+  RecipeStation,
+  SpotDiffStation,
+} from "@/lib/types";
 
 describe("attemptScore and finalResult", () => {
   it("returns 100 with no hints or wrong attempts", () => {
@@ -149,5 +158,38 @@ describe("checkMatch", () => {
         extra: "extra",
       })
     ).toBe(false);
+  });
+});
+
+describe("checkRecipe, hitSpot, checkSpotDiff", () => {
+  const recipe: RecipeStation = {
+    id: "lam", type: "recipe", instruction: "",
+    steps: [{ id: "a", label: "A" }, { id: "b", label: "B" }],
+    distractors: [{ id: "x", label: "X" }],
+    hints: ["", "", ""],
+  };
+  const diff: SpotDiffStation = {
+    id: "lam", type: "spot_diff", instruction: "", before: "", after: "",
+    spots: [{ id: "cau", label: "Cầu", x: 50, y: 50, r: 10 }, { id: "nha", label: "Nhà", x: 10, y: 10, r: 5 }],
+    hints: ["", "", ""],
+  };
+
+  it("accepts only the steps in order with no distractor", () => {
+    expect(checkRecipe(recipe, ["a", "b"])).toBe(true);
+    expect(checkRecipe(recipe, ["b", "a"])).toBe(false);
+    expect(checkRecipe(recipe, ["a", "b", "x"])).toBe(false);
+    expect(checkRecipe(recipe, ["a", "x"])).toBe(false);
+  });
+
+  it("hits a spot inside its radius and misses outside", () => {
+    expect(hitSpot(diff, 55, 55)).toBe("cau");
+    expect(hitSpot(diff, 70, 50)).toBeNull();
+    // with aspect 0.5 a 16% vertical offset is 8% of width, inside r = 10
+    expect(hitSpot(diff, 50, 66, 0.5)).toBe("cau");
+  });
+
+  it("needs every spot found", () => {
+    expect(checkSpotDiff(diff, ["cau"])).toBe(false);
+    expect(checkSpotDiff(diff, ["nha", "cau", "cau"])).toBe(true);
   });
 });

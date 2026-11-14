@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getLevel } from "@/lib/content";
-import { MAX_AUDIO_REQUEST_BYTES, validateAudio } from "@/lib/judge/audio";
-import { gradeFallback } from "@/lib/judge/fallback";
+import { MAX_AUDIO_REQUEST_BYTES, validateAudio, validateImage } from "@/lib/judge/audio";
+import { gradeDrawingFallback, gradeFallback } from "@/lib/judge/fallback";
 import { gradeWithGemini } from "@/lib/judge/gemini";
 import type { ExpressStation, JudgeRequest } from "@/lib/types";
 
@@ -67,20 +67,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Request body must be an object" }, { status: 400 });
   }
 
-  const { level_id, station_id, text, audio } = body as Partial<
+  const { level_id, station_id, text, audio, image } = body as Partial<
     Record<keyof JudgeRequest, unknown>
   >;
 
   // `audio: null` is treated as present and is rejected by validateAudio.
   const hasAudioField = audio !== undefined;
-  if ((audio === undefined || audio === null) && rawBytes > MAX_CONTENT_LENGTH_BYTES) {
+  const hasImageField = image !== undefined;
+  const hasMedia = hasAudioField || hasImageField;
+  if (!hasMedia && rawBytes > MAX_CONTENT_LENGTH_BYTES) {
     return NextResponse.json({ error: "Request body too large" }, { status: 413 });
   }
 
   if (
     typeof level_id !== "string" ||
     typeof station_id !== "string" ||
-    (hasAudioField ? text !== undefined && typeof text !== "string" : typeof text !== "string")
+    (hasMedia ? text !== undefined && typeof text !== "string" : typeof text !== "string")
   ) {
     return NextResponse.json(
       { error: "level_id, station_id, and text must be strings" },
@@ -114,6 +116,17 @@ export async function POST(request: Request) {
     }
   }
 
+  if (hasAudioField && hasImageField) {
+    return NextResponse.json({ error: "Send audio or image, not both" }, { status: 400 });
+  }
+
+  if (hasImageField) {
+    const imageError = validateImage(image, station);
+    if (imageError !== null) {
+      return NextResponse.json({ error: imageError }, { status: 400 });
+    }
+  }
+
   const hasGemini = Boolean(
     process.env.GEMINI_API_KEY?.trim() && process.env.GEMINI_MODEL?.trim(),
   );
@@ -134,6 +147,24 @@ export async function POST(request: Request) {
       // Never fall back to keyword grading for audio; never log audio.
       return NextResponse.json({ error: VOICE_GRADE_ERROR_MESSAGE }, { status: 422 });
     }
+  }
+
+  if (hasImageField) {
+    if (hasGemini) {
+      try {
+        const result = await gradeWithGemini(
+          level,
+          station,
+          safeText,
+          undefined,
+          image as NonNullable<JudgeRequest["image"]>,
+        );
+        return NextResponse.json(result);
+      } catch {
+        // Fall through to the drawing fallback; never log the image.
+      }
+    }
+    return NextResponse.json(gradeDrawingFallback(level, station));
   }
 
   if (hasGemini) {

@@ -147,3 +147,49 @@ describe("POST /api/judge", () => {
     expect(data.graded_by).toBeUndefined();
   });
 });
+
+describe("POST /api/judge with a drawing", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  const drawingLevel = getLevels().find((l) => l.stations[2].type === "open_drawing");
+  if (!drawingLevel) throw new Error("Expected a level with an open_drawing station");
+  const png = { mime: "image/png", data_base64: "iVBORw0KGgo=" };
+  const post = (body: unknown) =>
+    POST(new Request("http://x/api/judge", { method: "POST", body: JSON.stringify(body) }));
+
+  it("grades a drawing with the fallback when Gemini is not configured", async () => {
+    vi.stubEnv("GEMINI_API_KEY", "");
+    const res = await post({ level_id: drawingLevel.id, station_id: drawingLevel.stations[2].id, image: png });
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json.graded_by).toBe("fallback");
+    expect(json.stars).toBe(2);
+  });
+
+  it("rejects a drawing sent to a text station, and a non-image mime", async () => {
+    expect((await post({ level_id: voiceLevel.id, station_id: voiceStation.id, image: png })).status).toBe(400);
+    const bad = { ...png, mime: "text/html" };
+    expect((await post({ level_id: drawingLevel.id, station_id: drawingLevel.stations[2].id, image: bad })).status).toBe(400);
+  });
+
+  it("sends the image to Gemini when configured", async () => {
+    vi.stubEnv("GEMINI_API_KEY", "k");
+    vi.stubEnv("GEMINI_MODEL", "m");
+    const rubric = (drawingLevel.stations[2] as ExpressStation).rubric;
+    const fetchMock = vi.fn(async () =>
+      new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: JSON.stringify({
+        criteria: rubric.map((r) => ({ id: r.id, score: 3, evidence: "" })),
+        praise: "Tốt", addition: "Thêm",
+      }) }] } }] })),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    const res = await post({ level_id: drawingLevel.id, station_id: drawingLevel.stations[2].id, image: png });
+    const json = await res.json();
+    expect(json.graded_by).toBe("gemini");
+    const sent = JSON.parse((fetchMock.mock.calls[0] as unknown as [string, RequestInit])[1].body as string);
+    expect(sent.contents[0].parts[1].inline_data.mime_type).toBe("image/png");
+  });
+});

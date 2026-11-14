@@ -1,3 +1,34 @@
+# Kế hoạch: hoàn thành Khám phá, đủ 6 màn và cốt truyện (2026-11-14)
+
+Chủ máy đã chốt: làm **đủ 6 màn**; cốt truyện xuyên suốt có **người dẫn đường**; nội dung lịch sử do phiên chính viết từ kiến thức phổ biến, kèm nguồn công khai, **giữ `status: draft`** để đội nội dung kiểm chứng.
+
+## Cốt truyện
+Người dẫn đường là **Hàn**, cháu của một người lái đò già trên sông Hàn. Ông Hàn có cuốn **"Sổ tay sông Hàn"** gồm 6 trang, mỗi trang ghi về một nét văn hóa. Một đêm gió mùa, sáu trang bị gió cuốn đi, mỗi trang rơi xuống một nơi. Người chơi đi cùng Hàn tìm lại từng trang:
+1. Dấu ấn Chăm → 2. Giữ thành → 3. Hô bài chòi → 4. Bàn tay làng nghề → 5. Vị Quảng → 6. Thành phố bên sông.
+Truyện dẫn của mỗi màn mở bằng lời Hàn. Phần tri thức cuối màn là "trang sổ tay tìm lại được" và nhá trước màn sau. Có đoạn mở đầu trên trang `/kham-pha` và đoạn kết hiện ra khi xong cả 6 màn (sổ tay lành lại).
+
+## Phiên chính làm (nội dung + giao kèo, không phải code giao diện)
+- **C1 Nội dung**: `content/spots.json` thêm 3 điểm (làng đá Non Nước, chợ Hàn/mì Quảng, cầu Rồng). `content/levels.json` viết thật cả 6 màn: truyện dẫn, manh mối, tọa độ, 3 gợi ý, đáp án, rubric, phần tri thức, nguồn. Thêm `content/story.json` (người dẫn đường, mở đầu, kết).
+- **C2 Giao kèo**: trong `lib/types.ts` thêm `RecipeStation` (chọn đúng nguyên liệu và xếp đúng thứ tự, có nguyên liệu nhiễu) và `SpotDiffStation` (hai ảnh xưa/nay, các điểm khác nhau tính bằng tọa độ %). `JudgeRequest.image?` để chấm bài vẽ. Trong `lib/activities/scoring.ts` thêm `checkRecipe`, `checkSpotDiff`. `lib/story.ts` thêm `isLevelUnlocked`, `pagesFound`. Gemini chấm ảnh có đường dự phòng; cập nhật `scripts/validate-content.mjs`. Viết test cho mọi phần trên.
+- **C3 Nối dây**: thêm hai `case` vào `LevelPlayer` và hai file trạm rỗng (chỉ có props) để worker điền vào.
+
+## Worker (argon hết hạn mức đến khoảng 18/11, nên dùng hydrogen)
+| Task | File (chỉ sửa) | Worker |
+|---|---|---|
+| W1 Trạm "Nấu" (RecipeStation): chọn nguyên liệu vào tô, xếp thứ tự, nút Kiểm tra, rung/nảy, gợi ý | `components/level/stations/RecipeStation.tsx` | ui-hydrogen-high |
+| W2 Trạm "Xưa và nay" (SpotDiffStation): hai tranh SVG vẽ tay bờ sông Hàn xưa/nay, chạm vào chỗ đã đổi, đếm số chỗ tìm được | `components/level/stations/SpotDiffStation.tsx`, `public/scenes/do-thi-song-le-hoi/xua.svg`, `nay.svg` | ui-hydrogen-high |
+| W3 Bảng vẽ cho `open_drawing`: canvas vẽ bằng ngón tay/chuột, có hoa văn mẫu, nút xóa, gửi ảnh PNG đi chấm | `components/level/stations/ExpressStation.tsx`, `components/level/DrawingPad.tsx` (mới), `public/patterns/hoa-van-song.svg` | ui-hydrogen-high |
+| W4 Cốt truyện trên `/kham-pha`: thẻ Hàn + mở đầu, thanh "đã tìm x/6 trang", thẻ màn bị khóa đến khi xong màn trước, đoạn kết khi đủ 6 | `app/kham-pha/page.tsx`, `components/shell/LevelCard.tsx`, `components/story/*` (mới) | ui-hydrogen |
+| W5 Scene kit cho 3 chủ đề mới (lang-nghe, am-thuc, do-thi-song-le-hoi) bằng lớp SVG | `lib/scene/kits/*`, `public/scenes/lang-nghe/*`, `public/scenes/am-thuc/*` | ui-hydrogen |
+
+Mọi agent `ui-*` gọi với `model: "haiku"` (chỉ điều phối, Gemini viết code); `reviewer` giữ `sonnet`.
+Các task W1–W5 không sửa chung file nên chạy song song, sau khi C1–C3 xong. Mỗi task có `reviewer` chấm, tối đa 2 vòng sửa.
+Điều kiện chấp nhận: `npx tsc --noEmit`, `npx eslint app components lib scripts`, `npx vitest run`, `node scripts/validate-content.mjs` đều qua; chơi hết 6 màn trên trình duyệt ở 375px và 1440px.
+
+**Không làm trong đợt này** (ghi lại để làm sau): trò phụ "kéo hiện vật về đúng phòng" (màn 1) và "gõ theo nhịp" (màn 3); trạm Tìm có hai ghim (màn 4 chỉ ghim làng đá, làng Nam Ô nhắc trong truyện); ảnh thật cho trò ghép hình; tranh AI cho 3 kit mới (đợi hạn mức ảnh); chặn mở màn khóa bằng đường dẫn trực tiếp (chỉ khóa trên danh sách).
+
+---
+
 # Kế hoạch: làm đẹp /tour + bản máy tính (mục 3.3 báo cáo)
 
 Mẫu phong cách: trang chủ/màn chơi hiện có (`components/fx/*`: Glass, GlowButton, TiltCard, KineticText, PhaseTransition, StampPress, Celebrate, ShaderBackdrop; `components/level/LevelPlayer.tsx` cho bố cục máy tính `lg:` 2 cột, cảnh trái sticky).
