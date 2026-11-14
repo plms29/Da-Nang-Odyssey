@@ -46,7 +46,8 @@ Kiểm cuối: tsc, eslint, vitest, `next build` (dừng dev trước); trình d
 
 ---
 
-# Kế hoạch: làm lại màn hình check-in, chụp được mọi điểm đã mở
+# Kế hoạch: làm lại màn hình check-in, chụp được mọi điểm đã mở — XONG 2026-11-14 (nhánh `claude/phase-f-accounts`)
+C1 (ui-hydrogen-high, 1 vòng sửa lỗi tsc), reviewer duyệt. Kiểm trình duyệt 375px: hộ chiếu trống chụp được ngay Bảo tàng Chăm, 5 điểm còn lại khóa theo chuỗi; chụp từ lưới không ghi dấu; `?spot=cau-rong` làm nổi + cuộn tới.
 
 Chủ máy chốt (2026-11-14):
 - Màn hình check-in hiện luôn danh sách **mọi điểm đã mở** (điểm của Màn 1–3 có sẵn, điểm của Màn 4–6 mở theo chuỗi màn). Bấm điểm nào thì chụp ngay với khung của điểm đó, **không cần định vị, không cần dấu hoàn thành màn hay nghe tour** (bỏ luật cũ `level || tour`).

@@ -18,7 +18,7 @@ export interface CheckinFeedbackProps {
   state: CheckinFeedbackState;
   headingRef: RefObject<HTMLHeadingElement | null>;
   onRetry: () => void;
-  onRemote: () => void;
+  onBack: () => void;
 }
 
 const SECONDARY_GLASS_BTN_CLASS =
@@ -28,7 +28,7 @@ export function CheckinFeedback({
   state,
   headingRef,
   onRetry,
-  onRemote,
+  onBack,
 }: CheckinFeedbackProps) {
   const reduceMotion = useReducedMotion();
   const lastHapticKindRef = useRef<CheckinFeedbackState["kind"] | null>(null);
@@ -167,10 +167,10 @@ export function CheckinFeedback({
 
           <button
             type="button"
-            onClick={onRemote}
+            onClick={onBack}
             className={SECONDARY_GLASS_BTN_CLASS}
           >
-            Ghé thăm từ xa
+            Chụp ảnh với khung điểm
           </button>
         </div>
       </GlassPanel>
@@ -211,10 +211,10 @@ export function CheckinFeedback({
 
           <button
             type="button"
-            onClick={onRemote}
+            onClick={onBack}
             className={SECONDARY_GLASS_BTN_CLASS}
           >
-            Ghé thăm từ xa
+            Chụp ảnh với khung điểm
           </button>
         </div>
       </GlassPanel>
@@ -245,10 +245,10 @@ export function CheckinFeedback({
       <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap">
         <GlowButton
           type="button"
-          onClick={onRemote}
+          onClick={onBack}
           className="min-h-11 px-5 py-2.5 text-sm"
         >
-          Ghé thăm từ xa
+          Chụp ảnh với khung điểm
         </GlowButton>
 
         <button

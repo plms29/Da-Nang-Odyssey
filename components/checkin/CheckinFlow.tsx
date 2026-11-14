@@ -25,8 +25,7 @@ type CheckinStep =
   | { kind: "inside"; spot: Spot }
   | { kind: "outside"; spot: Spot; distance_m: number }
   | { kind: "inaccurate"; accuracy_m: number }
-  | { kind: "error"; message: string }
-  | { kind: "remote" };
+  | { kind: "error"; message: string };
 
 function describeGeoError(err: unknown): string {
   if (
@@ -37,16 +36,16 @@ function describeGeoError(err: unknown): string {
   ) {
     const code = (err as { code: number }).code;
     if (code === 1) {
-      return "Bạn chưa cấp quyền vị trí nên chưa thể check-in tại chỗ. Hãy bật quyền vị trí trong trình duyệt để thử lại, hoặc chọn ghé thăm từ xa.";
+      return "Bạn chưa cấp quyền vị trí nên chưa thể check-in tại chỗ. Hãy bật quyền vị trí trong trình duyệt để thử lại, hoặc chụp ảnh với khung điểm.";
     }
     if (code === 2) {
-      return "Không thể lấy tín hiệu vị trí lúc này. Hãy kiểm tra GPS rồi thử lại, hoặc chọn ghé thăm từ xa.";
+      return "Không thể lấy tín hiệu vị trí lúc này. Hãy kiểm tra GPS rồi thử lại, hoặc chụp ảnh với khung điểm.";
     }
     if (code === 3) {
-      return "Hết thời gian chờ xác định vị trí. Hãy ra chỗ thoáng hơn rồi thử lại, hoặc chọn ghé thăm từ xa.";
+      return "Hết thời gian chờ xác định vị trí. Hãy ra chỗ thoáng hơn rồi thử lại, hoặc chụp ảnh với khung điểm.";
     }
   }
-  return "Thiết bị hoặc trình duyệt chưa hỗ trợ định vị. Bạn vẫn có thể ghé thăm từ xa.";
+  return "Thiết bị hoặc trình duyệt chưa hỗ trợ định vị. Bạn vẫn có thể chụp ảnh với khung điểm.";
 }
 
 export function CheckinFlow({ spots }: CheckinFlowProps) {
@@ -95,7 +94,7 @@ export function CheckinFlow({ spots }: CheckinFlowProps) {
         setStep({
           kind: "error",
           message:
-            "Hiện chưa có điểm tham quan nào để kiểm tra vị trí. Bạn có thể ghé thăm từ xa.",
+            "Hiện chưa có điểm tham quan nào để kiểm tra vị trí. Bạn có thể chụp ảnh với khung điểm.",
         });
         return;
       }
@@ -115,11 +114,6 @@ export function CheckinFlow({ spots }: CheckinFlowProps) {
       if (requestId !== requestIdRef.current) return;
       setStep({ kind: "error", message: describeGeoError(err) });
     }
-  }
-
-  function handleOpenRemote() {
-    requestIdRef.current += 1;
-    setStep({ kind: "remote" });
   }
 
   function handleResetToIntro() {
@@ -144,12 +138,17 @@ export function CheckinFlow({ spots }: CheckinFlowProps) {
       )}
 
       {step.kind === "intro" && (
-        <CheckinIntro
-          requestedSpot={requestedSpot}
-          headingRef={headingRef}
-          onLocate={handleLocate}
-          onRemote={handleOpenRemote}
-        />
+        <>
+          <CheckinIntro
+            requestedSpot={requestedSpot}
+            headingRef={headingRef}
+            onLocate={handleLocate}
+          />
+          <RemoteModeView
+            spots={spots}
+            highlightSpotId={requestedSpotId}
+          />
+        </>
       )}
 
       {(step.kind === "locating" ||
@@ -160,7 +159,7 @@ export function CheckinFlow({ spots }: CheckinFlowProps) {
           state={step}
           headingRef={headingRef}
           onRetry={handleLocate}
-          onRemote={handleOpenRemote}
+          onBack={handleResetToIntro}
         />
       )}
 
@@ -170,14 +169,6 @@ export function CheckinFlow({ spots }: CheckinFlowProps) {
           spot={step.spot}
           headingRef={headingRef}
           onReset={handleResetToIntro}
-        />
-      )}
-
-      {step.kind === "remote" && (
-        <RemoteModeView
-          spots={spots}
-          headingRef={headingRef}
-          onBack={handleResetToIntro}
         />
       )}
     </div>
