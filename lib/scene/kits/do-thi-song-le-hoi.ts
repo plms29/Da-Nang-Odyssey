@@ -28,6 +28,7 @@ export const doThiSongLeHoi: SceneKit = {
   transition: "river-wipe",
   celebrate: "fireworks",
   ink: "light",
+  accent: "#6B3FA0",
 };
 
 export default doThiSongLeHoi;

@@ -202,6 +202,8 @@ export interface TourPlan {
 export interface TourRequest {
   seconds: number;
   themes: Theme[];
+  /** Spots the player has unlocked; missing = every spot. */
+  spot_ids?: string[];
 }
 
 export interface CaptionResult {

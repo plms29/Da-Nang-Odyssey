@@ -13,6 +13,7 @@ const FALLBACK: SceneKit = {
   transition: "river-wipe",
   celebrate: "gold-burst",
   ink: "dark",
+  accent: "#1F4E6B",
 };
 
 /** Kit của scene; id chưa có kit thì trả kit "home". */
@@ -20,8 +21,12 @@ export function getSceneKit(id: SceneId): SceneKit {
   return kits[id] ?? kits.home ?? FALLBACK;
 }
 
+/** Thế giới của một điểm = theme của điểm; id lạ thì "home". */
+export function sceneIdForSpot(spotId: string): SceneId {
+  return getSpot(spotId)?.theme ?? "home";
+}
+
 /** Theme của spot đầu tiên trong level; không tìm thấy thì "home". */
 export function sceneIdForLevel(level: Pick<Level, "spot_ids">): SceneId {
-  const spot = level.spot_ids[0] ? getSpot(level.spot_ids[0]) : undefined;
-  return spot?.theme ?? "home";
+  return level.spot_ids[0] ? sceneIdForSpot(level.spot_ids[0]) : "home";
 }
