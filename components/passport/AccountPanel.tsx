@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { GlassPanel } from "@/components/fx/Glass";
@@ -14,7 +15,7 @@ export function ProgressSyncBoot() {
 }
 
 /** undefined while loading, null when logged out. */
-function useUser(): User | null | undefined {
+export function useUser(): User | null | undefined {
   const [user, setUser] = useState<User | null | undefined>(undefined);
   useEffect(() => {
     if (!supabase) return;
@@ -40,6 +41,7 @@ export function LoginGate({ children }: { children: ReactNode }) {
 /** Google login. Hidden when Supabase is not configured. */
 export function AccountPanel() {
   const user = useUser();
+  const pathname = usePathname();
   const [error, setError] = useState(false);
 
   if (!supabase || user === undefined) return null;
@@ -61,13 +63,23 @@ export function AccountPanel() {
           <span>
             Đã lưu tiến trình cho <strong>{user.email}</strong>
           </span>
-          <button
-            type="button"
-            onClick={() => db.auth.signOut()}
-            className="rounded-full px-3 py-1.5 font-semibold underline-offset-2 hover:underline focus-visible:outline-2"
-          >
-            Đăng xuất
-          </button>
+          <div className="flex shrink-0 items-center gap-2">
+            {pathname !== "/ho-so" && (
+              <Link
+                href="/ho-so"
+                className="inline-flex min-h-11 items-center rounded-full px-3 py-1.5 font-semibold underline-offset-2 hover:underline focus-visible:outline-2"
+              >
+                Hồ sơ
+              </Link>
+            )}
+            <button
+              type="button"
+              onClick={() => db.auth.signOut()}
+              className="inline-flex min-h-11 items-center rounded-full px-3 py-1.5 font-semibold underline-offset-2 hover:underline focus-visible:outline-2"
+            >
+              Đăng xuất
+            </button>
+          </div>
         </div>
       ) : (
         <div className="space-y-3 text-center">

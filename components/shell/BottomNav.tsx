@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useState, type ReactNode } from "react";
+import { useAppTheme } from "@/components/fx/AppTheme";
 import { GlassFilterDefs, GlassPanel } from "@/components/fx/Glass";
 
 interface NavItem {
@@ -97,6 +98,7 @@ const navItems: NavItem[] = [
 export function BottomNav() {
   const pathname = usePathname();
   const reduce = useReducedMotion();
+  const theme = useAppTheme();
   const [hidden, setHidden] = useState(false);
 
   // Desktop: hide the top nav while scrolling down, show it again on scroll up.
@@ -143,7 +145,9 @@ export function BottomNav() {
                       whileTap={reduce ? undefined : { scale: 0.94 }}
                       className={`relative flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-1 rounded-[1.25rem] px-2 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta lg:min-h-[44px] lg:flex-row lg:px-4 ${
                         isActive
-                          ? "text-terracotta"
+                          ? theme === "home"
+                            ? "text-terracotta"
+                            : "text-ink"
                           : "text-muted hover:text-ink"
                       }`}
                     >
@@ -151,7 +155,15 @@ export function BottomNav() {
                         <motion.span
                           layoutId={reduce ? undefined : "nav-indicator"}
                           transition={{ type: "spring", stiffness: 500, damping: 40 }}
-                          className="absolute inset-0 rounded-[1.25rem] bg-terracotta/15 shadow-[0_0_16px_rgba(168,72,37,0.35),inset_0_1px_0_rgba(255,255,255,0.45)]"
+                          className="absolute inset-0 rounded-[1.25rem] border"
+                          style={{
+                            backgroundColor:
+                              "color-mix(in srgb, var(--app-accent, #A84825) 15%, transparent)",
+                            borderColor:
+                              "color-mix(in srgb, var(--app-accent, #A84825) 30%, transparent)",
+                            boxShadow:
+                              "0 0 16px color-mix(in srgb, var(--app-accent, #A84825) 35%, transparent), inset 0 1px 0 rgba(255,255,255,0.45)",
+                          }}
                           aria-hidden="true"
                         />
                       )}

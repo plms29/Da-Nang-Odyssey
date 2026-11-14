@@ -28,7 +28,8 @@ G1–G3: mang nguyên bản đã review từ nhánh cũ (main không sửa các 
 | G3 Thế giới ở check-in + hộ chiếu | Áp lại U4b lên photobooth (đã cherry-pick) và `StampCard` của main | `components/checkin/OnsiteBooth.tsx`, `RemoteModeView.tsx`, `components/passport/StampCard.tsx` | ui-hydrogen |
 `LevelCard` của main đã có khóa: không đổi, chỉ thêm hiệu ứng mở khóa một lần nếu còn thiếu (đọc `seen_unlocks`).
 
-## F2. Giao diện app theo tài khoản (worker, sau F1)
+## F2. Giao diện app theo tài khoản (worker, sau F1) — XONG 2026-11-14
+T1 (`components/fx/AppTheme.tsx`: `useAppTheme`, `AppThemeFrame`, `ThemedHomeBackdrop`; thanh điều hướng + hero trang chủ theo giao diện) và T2 (`/ho-so`, `components/profile/*`) xong, reviewer duyệt (T2 sau 1 vòng sửa). Kiểm trình duyệt: chọn "Giữ thành" → `--app-accent` #8A3324, hero trang chủ đổi cảnh; sửa tay localStorage sang thế giới chưa mở → về giao diện mặc định. Chưa thử đồng bộ Supabase thật.
 | Task | Nội dung | File | Worker |
 |---|---|---|---|
 | T1 Áp giao diện đã chọn | `components/fx/AppTheme.tsx` (mới): đọc `usePrefs().theme` sau hydrate, đặt biến CSS `--app-accent` + nền trời mờ của kit lên `body`/khung app; thanh điều hướng, hero trang chủ, bìa hộ chiếu dùng kit đã chọn (trang chủ: kit chọn thay `home`). Trước hydrate giữ `home`, không chớp. Màu nhấn không làm màu chữ | `components/fx/AppTheme.tsx`, `app/layout.tsx` (chỉ gắn component), `components/shell/BottomNav.tsx`, `app/page.tsx` | ui-hydrogen-high (ui-argon nếu đã hồi, khoảng 18/11) |
