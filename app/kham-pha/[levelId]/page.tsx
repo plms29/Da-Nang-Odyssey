@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getLevel, getLevels } from "@/lib/content";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { LevelPlayer } from "@/components/level/LevelPlayer";
+import { LevelGate } from "@/components/level/LockedLevel";
 
 export function generateStaticParams() {
   return getLevels().map((level) => ({ levelId: level.id }));
@@ -26,7 +27,9 @@ export default async function LevelPage({
         backHref="/kham-pha"
         backLabel="Chiến dịch khám phá"
       />
-      <LevelPlayer level={level} />
+      <LevelGate level={level}>
+        <LevelPlayer level={level} />
+      </LevelGate>
     </main>
   );
 }

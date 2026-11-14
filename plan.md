@@ -1,3 +1,70 @@
+# Kế hoạch giai đoạn F: gộp về main + tài khoản (tiến độ, giao diện, hồ sơ)
+
+Chủ máy chốt (2026-11-14):
+- **Lấy `main` làm gốc.** `main` đã có: 6 màn nội dung thật, trạm recipe/spot_diff/vẽ, cốt truyện "Sổ tay sông Hàn", khóa màn tuần tự (`lib/story.ts` `isLevelUnlocked`: xong màn trước thì mở màn sau), kit 3 thế giới mới bằng SVG, đăng nhập Google qua Supabase (`LoginGate`, `AccountPanel`) và đồng bộ hộ chiếu (`lib/supabase/sync.ts`, bảng `danang_progress`). Nhánh `claude/next-build-plan-af2ff9` chỉ mang sang phần `main` chưa có; **bỏ** nháp Màn 4–6, `Level.unlock` và khóa kiểu dữ liệu của nhánh này.
+- **Theme theo tài khoản** gồm cả ba: (1) tiến độ đi theo tài khoản (màn, thế giới đã mở, dấu, hiệu ứng mở khóa đã xem), (2) chọn giao diện app trong các thế giới đã mở, (3) trang hồ sơ người chơi.
+
+## F0. Nhánh mới từ main, mang phần còn thiếu sang (Claude, phiên chính) — XONG 2026-11-14
+Nhánh `claude/phase-f-accounts` (từ `origin/main` 223b4e8). Đã có: photobooth đẹp (cherry-pick), `ThemeScope`, `accent` cho cả 7 kit, `sceneIdForSpot`, tranh AI làng nghề/ẩm thực (chưa gắn kit), prompt tranh, `lib/level/unlock.ts` mới trên luật tuyến tính (`isLevelOpen(level, levels, passport, unlockAll)`, `newlyUnlocked`, `isSpotUnlocked`, `unlockedSpotIds`, `requiredLevel` = màn liền trước, `demoUnlockAll`), `pickStops(..., allowedIds?)`, `/api/tour/plan` nhận `spot_ids`. Giai đoạn E của nhánh cũ (`claude/next-build-plan-af2ff9`) giữ làm tham khảo cho G1–G3.
+- Tạo nhánh mới từ `main` (worktree riêng). Cherry-pick `e03aa62` (làm đẹp photobooth); sửa xung đột nếu có.
+- Mang sang nguyên trạng (code đã review): `components/fx/ThemeScope.tsx`, `SceneKit.accent` + màu nhấn cho **mọi** kit (cả 3 kit SVG của main), `sceneIdForSpot`, prompt tranh trong `scripts/gen-scene-art.mjs`, tranh AI `public/scenes/lang-nghe/ai-*`, `am-thuc/ai-*` (chưa gắn vào kit của main; xem F4).
+- Viết lại `lib/level/unlock.ts` thành lớp mỏng trên luật của main: `isSpotUnlocked`, `unlockedSpotIds`, `newlyUnlocked(levels, before, after)`, `requiredLevel` (= màn liền trước), `demoUnlockAll` (`?mo-khoa=tat-ca`), tất cả gọi `isLevelUnlocked` của `lib/story.ts`. Test lại.
+- `pickStops(..., allowedIds?)` + `/api/tour/plan` nhận `spot_ids` (như E1).
+- Chấp nhận: tsc, eslint, vitest, `validate-content` qua trên nhánh mới.
+
+## F1. Dữ liệu tài khoản (Claude, phiên chính, song song F0b) — XONG 2026-11-14
+Đã có: `lib/prefs/{logic,store}.ts` (`{theme, theme_at}`, bỏ `seen_unlocks` vì `LevelCard` của main không dùng hiệu ứng một lần), `lib/theme` (`availableThemes`, `playerTitle` chữ giữ chỗ), `sanitizePassport` (chỉ id dạng slug, tối đa 200 khóa, điểm ≤ 1.000.000), `theme_at` tương lai > 1 ngày bị coi là 0, sync đẩy `{...passport, prefs}`, tải lỗi thì không đẩy đè. **T1 phải kiểm `theme` lúc dùng** bằng `availableThemes` (localStorage có thể bị sửa tay). Đăng nhập tài khoản khác trên cùng máy sẽ gộp tiến độ local vào tài khoản đó (giữ như main).
+G1–G3: mang nguyên bản đã review từ nhánh cũ (main không sửa các file này), `LevelPlayer` gộp 3 chiều; reviewer duyệt.
+- `lib/prefs/store.ts` (zustand persist `dn-prefs`): `{ theme: SceneId; seen_unlocks: string[] }`, mặc định `home`. Logic thuần trong `lib/prefs/logic.ts` + test: `sanitizePrefs(raw)` (chỉ nhận theme là id kit có thật và **đã mở** với tiến độ hiện tại, ngược lại về `home`; `seen_unlocks` lọc id màn có thật), `mergePrefs(local, cloud)`.
+- `lib/theme/index.ts` + test: `availableThemes(levels, passport)` = `home` + thế giới của mọi màn đã mở; `playerTitle(levels, passport)` danh hiệu theo số trang sổ tay đã tìm (chữ danh hiệu là giữ chỗ, đội nội dung chốt).
+- `lib/supabase/sync.ts`: dữ liệu trong cột `data` thành `{ ...passport, prefs }` (giữ tương thích bản cũ: thiếu `prefs` thì dùng local). Lúc tải từ mây: `mergePassports` như cũ + `mergePrefs` + `sanitizePrefs` (dữ liệu từ mây là ranh giới tin cậy, phải kiểm hình dạng). Đẩy lên khi passport **hoặc** prefs đổi. Không cần đổi `supabase/schema.sql` (cột jsonb, RLS theo `user_id` đã có).
+- Không lưu thêm thông tin cá nhân: tên và ảnh lấy từ phiên Google (`user.user_metadata`) lúc hiển thị, không ghi vào bảng.
+
+## F0b. Gắn lại giao diện giai đoạn E lên component của main (worker)
+| Task | Nội dung | File | Worker |
+|---|---|---|---|
+| G1 Thế giới theo tour | Áp lại U4a lên tour của main: ThemeScope cho điểm đang nghe, `var(--world-accent, …)` không làm màu chữ, TourSetup gửi `spot_ids` đã mở | `components/tour/TourPlayer.tsx`, `TourStopStation.tsx`, `TourSetup.tsx` | ui-hydrogen |
+| G2 Mở khóa sau màn + chặn màn khóa | Áp lại U3 (`UnlockReveal`) vào `LevelPlayer` của main (đã có thêm trạm mới) và U2 (`LevelGate`/`LockedLevel`) vào trang màn; dùng `seen_unlocks` từ prefs thay localStorage | `components/level/LevelPlayer.tsx`, `components/level/UnlockReveal.tsx`, `components/level/LockedLevel.tsx`, `app/kham-pha/[levelId]/page.tsx` | ui-hydrogen-high |
+| G3 Thế giới ở check-in + hộ chiếu | Áp lại U4b lên photobooth (đã cherry-pick) và `StampCard` của main | `components/checkin/OnsiteBooth.tsx`, `RemoteModeView.tsx`, `components/passport/StampCard.tsx` | ui-hydrogen |
+`LevelCard` của main đã có khóa: không đổi, chỉ thêm hiệu ứng mở khóa một lần nếu còn thiếu (đọc `seen_unlocks`).
+
+## F2. Giao diện app theo tài khoản (worker, sau F1) — XONG 2026-11-14
+T1 (`components/fx/AppTheme.tsx`: `useAppTheme`, `AppThemeFrame`, `ThemedHomeBackdrop`; thanh điều hướng + hero trang chủ theo giao diện) và T2 (`/ho-so`, `components/profile/*`) xong, reviewer duyệt (T2 sau 1 vòng sửa). Kiểm trình duyệt: chọn "Giữ thành" → `--app-accent` #8A3324, hero trang chủ đổi cảnh; sửa tay localStorage sang thế giới chưa mở → về giao diện mặc định. Chưa thử đồng bộ Supabase thật.
+| Task | Nội dung | File | Worker |
+|---|---|---|---|
+| T1 Áp giao diện đã chọn | `components/fx/AppTheme.tsx` (mới): đọc `usePrefs().theme` sau hydrate, đặt biến CSS `--app-accent` + nền trời mờ của kit lên `body`/khung app; thanh điều hướng, hero trang chủ, bìa hộ chiếu dùng kit đã chọn (trang chủ: kit chọn thay `home`). Trước hydrate giữ `home`, không chớp. Màu nhấn không làm màu chữ | `components/fx/AppTheme.tsx`, `app/layout.tsx` (chỉ gắn component), `components/shell/BottomNav.tsx`, `app/page.tsx` | ui-hydrogen-high (ui-argon nếu đã hồi, khoảng 18/11) |
+| T2 Hồ sơ người chơi | Trang `/ho-so`: ảnh + tên Google (khi đăng nhập), danh hiệu, số sao, số dấu, số trang sổ tay; lưới chọn giao diện: thế giới đã mở bấm được (xem trước cảnh nhỏ), thế giới khóa hiện ổ khóa + "Hoàn thành Màn X"; nút đăng xuất (tái dùng AccountPanel). Liên kết từ hộ chiếu và từ thanh điều hướng (ảnh đại diện nhỏ) | `app/ho-so/page.tsx`, `components/profile/*` (mới), `components/passport/AccountPanel.tsx` (chỉ thêm link) | ui-hydrogen |
+
+## F3. Sau đó
+- C1 làm lại màn hình check-in (kế hoạch ngay dưới) chạy trên nhánh mới.
+- F4: quyết định dùng tranh AI hay SVG của main cho làng nghề/ẩm thực; tạo 6 ảnh còn thiếu khi hạn mức hồi (06:33 UTC).
+
+Thứ tự: F0 → (F1 ∥ G1 ∥ G2 ∥ G3) → (T1 ∥ T2) → C1. Review: `reviewer` model sonnet, tối đa 2 vòng sửa; review F1/T1/T2 kiểm kỹ: dữ liệu từ mây được kiểm hình dạng, không lưu thêm dữ liệu cá nhân, không chớp giao diện trước hydrate, đăng xuất không làm mất tiến độ local.
+Kiểm cuối: tsc, eslint, vitest, `next build` (dừng dev trước); trình duyệt 375px/1440px; thử đăng nhập Google thật (chủ máy tự đăng nhập, Claude không nhập mật khẩu), đổi giao diện trên máy này rồi tải lại → giữ nguyên; đăng nhập máy khác/cửa sổ ẩn danh → giao diện và tiến độ về theo tài khoản.
+
+**Cần chủ máy:** xác nhận Supabase đã bật Google provider và chạy `supabase/schema.sql`; chốt chữ danh hiệu; có giữ cờ `?mo-khoa=tat-ca` cho demo khi đã bắt đăng nhập không.
+
+---
+
+# Kế hoạch: làm lại màn hình check-in, chụp được mọi điểm đã mở — XONG 2026-11-14 (nhánh `claude/phase-f-accounts`)
+C1 (ui-hydrogen-high, 1 vòng sửa lỗi tsc), reviewer duyệt. Kiểm trình duyệt 375px: hộ chiếu trống chụp được ngay Bảo tàng Chăm, 5 điểm còn lại khóa theo chuỗi; chụp từ lưới không ghi dấu; `?spot=cau-rong` làm nổi + cuộn tới.
+
+Chủ máy chốt (2026-11-14):
+- Màn hình check-in hiện luôn danh sách **mọi điểm đã mở** (điểm của Màn 1–3 có sẵn, điểm của Màn 4–6 mở theo chuỗi màn). Bấm điểm nào thì chụp ngay với khung của điểm đó, **không cần định vị, không cần dấu hoàn thành màn hay nghe tour** (bỏ luật cũ `level || tour`).
+- Dấu **ĐÃ ĐẾN** vẫn **chỉ cấp khi check-in tại chỗ** (định vị đúng nơi hoặc cờ `?demo=`). Ảnh chụp từ danh sách không ghi dấu.
+
+Bố cục mới của `/photobooth` (một màn hình chính thay cho bước "intro" + bước "từ xa"):
+1. Thẻ **"Check-in tại chỗ"** (nhỏ gọn, trên cùng): giải thích "Đứng tại điểm tham quan để nhận dấu ĐÃ ĐẾN", nút "Xác định vị trí". Luồng định vị → tại chỗ giữ nguyên như hiện nay.
+2. Lưới **"Chụp ảnh với khung điểm"**: mỗi điểm một thẻ trong thế giới của nó (màu nhấn, cảnh), tên điểm, chip "Đã đến" nếu đã có dấu visited. Điểm đã mở: nút "Chụp ảnh". Điểm thuộc màn đang khóa: ổ khóa + "Hoàn thành Màn X: … để mở" + nút tới màn đó. Có `?spot=<id>` thì thẻ đó được làm nổi và cuộn tới.
+3. Bấm "Chụp ảnh" → khung chụp (PhotoBooth chế độ remote) trong ThemeScope của điểm, nút "Chọn điểm khác" quay lại lưới. Không đóng dấu.
+4. Phản hồi định vị "ngoài vùng / lỗi": nút phụ đổi thành "Chụp ảnh với khung điểm" → quay về màn hình chính (lưới), không còn bước "từ xa" riêng.
+Máy tính (`lg:`): thẻ tại chỗ + lưới 3 cột; khi đang chụp: 2 cột như hiện nay.
+
+| Task | Nội dung | File (chỉ sửa) | Worker |
+|---|---|---|---|
+| C1 Màn hình check-in mới | Gộp intro + danh sách thành màn hình chính như trên; bỏ luật `level || tour`, mở theo `isSpotUnlocked` (+ cờ `?mo-khoa=tat-ca`); `?spot=` làm nổi thẻ; giữ nguyên luồng định vị, OnsiteBooth, cờ `?demo=`, chỉ `spot_id` rời máy; focus: tiêu đề mỗi màn nhận focus khi đổi bước (mỗi màn một ref riêng, không dùng chung một ref cho hai tiêu đề cùng lúc) | `components/checkin/CheckinFlow.tsx`, `components/checkin/CheckinIntro.tsx`, `components/checkin/RemoteModeView.tsx`, `components/checkin/CheckinFeedback.tsx` (chỉ chữ/nút phụ) | ui-hydrogen-high |
+
+Một task (các file dính chặt với nhau). Review: `reviewer` model sonnet, tối đa 2 vòng sửa. Kiểm: tsc, eslint, vitest; trình duyệt 375px + 1440px: hộ chiếu trống chụp được 3 điểm Màn 1–3 ngay, Màn 4–6 khóa; chụp từ lưới không thêm dấu vào hộ chiếu; `?demo=bao-tang-cham` vẫn nhận dấu ĐÃ ĐẾN.
 # Kế hoạch: màn 1 "Giữ thành" (Thành Điện Hải) cho demo hackathon (2026-11-14)
 
 Đổi hướng: demo chỉ màn Thành Điện Hải. Đã làm: Điện Hải lên màn 1, Chăm xuống màn 2 (sửa lời dẫn nối màn). Việc màn Chăm (ghép ảnh, tranh SVG) giữ nguyên trong cây làm việc, dừng ở đó; vòng sửa W2 (focus dialog) để sau.

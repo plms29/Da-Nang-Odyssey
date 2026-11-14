@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { GlassPanel } from "@/components/fx/Glass";
 import {
   demoPosition,
   getCurrentPosition,
@@ -24,8 +25,7 @@ type CheckinStep =
   | { kind: "inside"; spot: Spot }
   | { kind: "outside"; spot: Spot; distance_m: number }
   | { kind: "inaccurate"; accuracy_m: number }
-  | { kind: "error"; message: string }
-  | { kind: "remote" };
+  | { kind: "error"; message: string };
 
 function describeGeoError(err: unknown): string {
   if (
@@ -36,16 +36,16 @@ function describeGeoError(err: unknown): string {
   ) {
     const code = (err as { code: number }).code;
     if (code === 1) {
-      return "Bạn chưa cấp quyền vị trí nên chưa thể check-in tại chỗ. Hãy bật quyền vị trí trong trình duyệt để thử lại, hoặc chọn ghé thăm từ xa.";
+      return "Bạn chưa cấp quyền vị trí nên chưa thể check-in tại chỗ. Hãy bật quyền vị trí trong trình duyệt để thử lại, hoặc chụp ảnh với khung điểm.";
     }
     if (code === 2) {
-      return "Không thể lấy tín hiệu vị trí lúc này. Hãy kiểm tra GPS rồi thử lại, hoặc chọn ghé thăm từ xa.";
+      return "Không thể lấy tín hiệu vị trí lúc này. Hãy kiểm tra GPS rồi thử lại, hoặc chụp ảnh với khung điểm.";
     }
     if (code === 3) {
-      return "Hết thời gian chờ xác định vị trí. Hãy ra chỗ thoáng hơn rồi thử lại, hoặc chọn ghé thăm từ xa.";
+      return "Hết thời gian chờ xác định vị trí. Hãy ra chỗ thoáng hơn rồi thử lại, hoặc chụp ảnh với khung điểm.";
     }
   }
-  return "Thiết bị hoặc trình duyệt chưa hỗ trợ định vị. Bạn vẫn có thể ghé thăm từ xa.";
+  return "Thiết bị hoặc trình duyệt chưa hỗ trợ định vị. Bạn vẫn có thể chụp ảnh với khung điểm.";
 }
 
 export function CheckinFlow({ spots }: CheckinFlowProps) {
@@ -94,7 +94,7 @@ export function CheckinFlow({ spots }: CheckinFlowProps) {
         setStep({
           kind: "error",
           message:
-            "Hiện chưa có điểm tham quan nào để kiểm tra vị trí. Bạn có thể ghé thăm từ xa.",
+            "Hiện chưa có điểm tham quan nào để kiểm tra vị trí. Bạn có thể chụp ảnh với khung điểm.",
         });
         return;
       }
@@ -116,34 +116,39 @@ export function CheckinFlow({ spots }: CheckinFlowProps) {
     }
   }
 
-  function handleOpenRemote() {
-    requestIdRef.current += 1;
-    setStep({ kind: "remote" });
-  }
-
   function handleResetToIntro() {
     requestIdRef.current += 1;
     setStep({ kind: "intro" });
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 lg:space-y-6">
       {demoSpot && (
-        <div
+        <GlassPanel
+          tone="light"
           role="status"
-          className="rounded-lg border border-gold bg-gold/20 px-4 py-3 text-sm font-semibold text-ink"
+          className="inline-flex items-center gap-2 rounded-full! border border-gold/70 bg-gold/25! px-4 py-2 text-sm font-semibold text-ink shadow-[0_0_16px_rgba(201,154,46,0.25)]!"
         >
-          Chế độ demo: giả lập đang đứng tại {demoSpot.name}
-        </div>
+          <span
+            aria-hidden="true"
+            className="h-2 w-2 shrink-0 rounded-full bg-gold"
+          />
+          <span>Chế độ demo: giả lập đang đứng tại {demoSpot.name}</span>
+        </GlassPanel>
       )}
 
       {step.kind === "intro" && (
-        <CheckinIntro
-          requestedSpot={requestedSpot}
-          headingRef={headingRef}
-          onLocate={handleLocate}
-          onRemote={handleOpenRemote}
-        />
+        <>
+          <CheckinIntro
+            requestedSpot={requestedSpot}
+            headingRef={headingRef}
+            onLocate={handleLocate}
+          />
+          <RemoteModeView
+            spots={spots}
+            highlightSpotId={requestedSpotId}
+          />
+        </>
       )}
 
       {(step.kind === "locating" ||
@@ -154,7 +159,7 @@ export function CheckinFlow({ spots }: CheckinFlowProps) {
           state={step}
           headingRef={headingRef}
           onRetry={handleLocate}
-          onRemote={handleOpenRemote}
+          onBack={handleResetToIntro}
         />
       )}
 
@@ -164,14 +169,6 @@ export function CheckinFlow({ spots }: CheckinFlowProps) {
           spot={step.spot}
           headingRef={headingRef}
           onReset={handleResetToIntro}
-        />
-      )}
-
-      {step.kind === "remote" && (
-        <RemoteModeView
-          spots={spots}
-          headingRef={headingRef}
-          onBack={handleResetToIntro}
         />
       )}
     </div>

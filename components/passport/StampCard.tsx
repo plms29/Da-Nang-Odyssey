@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { StampPress } from "@/components/fx/StampPress";
 import { TiltCard } from "@/components/fx/TiltCard";
 import type { PassportState } from "@/lib/passport/logic";
+import { getSceneKit, sceneIdForSpot } from "@/lib/scene";
 import type { Spot, StampKind } from "@/lib/types";
 import { HoloFoil } from "./HoloFoil";
 
@@ -90,12 +91,19 @@ export function StampCard({
     isFreshVisited,
   ]);
 
+  const worldAccent = getSceneKit(sceneIdForSpot(spot.id)).accent;
+
   const card = (
     <TiltCard
       as="article"
       max={10}
       className="rounded-lg border border-ink/15 bg-white/80 p-4 lg:flex lg:h-full lg:min-h-56 lg:flex-col lg:justify-between lg:p-6"
     >
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-1 rounded-t-[7px]"
+        style={{ backgroundColor: worldAccent }}
+      />
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-base font-bold text-ink">{spot.name}</h3>
         {!visitedDate && (

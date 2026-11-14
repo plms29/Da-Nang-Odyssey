@@ -1,11 +1,14 @@
 "use client";
 
 import { authFetch } from "@/lib/supabase/client";
-import { useState, type Dispatch } from "react";
+import { useEffect, useState, type Dispatch } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { GlassPanel } from "@/components/fx/Glass";
 import { GlowButton } from "@/components/fx/GlowButton";
 import { KineticText } from "@/components/fx/KineticText";
+import { getLevels } from "@/lib/content";
+import { demoUnlockAll, unlockedSpotIds } from "@/lib/level/unlock";
+import { usePassport } from "@/lib/passport/store";
 import { TOUR_STOPS } from "@/lib/tour/config";
 import { fallbackPlan, pickStops } from "@/lib/tour/plan";
 import type { TourAction } from "@/lib/tour/player";
@@ -85,7 +88,26 @@ export function TourSetup({
   const [themes, setThemes] = useState<Theme[]>([]);
   const [isStarting, setIsStarting] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
+  const [hydrated, setHydrated] = useState(false);
+  const [demoUnlock, setDemoUnlock] = useState(false);
+  const levels = usePassport((s) => s.levels);
   const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    setDemoUnlock(demoUnlockAll(window.location.search));
+    const done = () => setHydrated(true);
+    if (usePassport.persist.hasHydrated()) done();
+    return usePassport.persist.onFinishHydration(done);
+  }, []);
+
+  const allowed = hydrated
+    ? unlockedSpotIds(
+        spots.map((s) => s.id),
+        getLevels(),
+        { levels },
+        demoUnlock,
+      )
+    : undefined;
 
   const availableThemes = THEME_OPTIONS.filter((opt) =>
     spots.some((spot) => spot.theme === opt.value),
@@ -123,7 +145,11 @@ export function TourSetup({
       const res = await authFetch("/api/tour/plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ seconds, themes }),
+        body: JSON.stringify(
+          allowed !== undefined
+            ? { seconds, themes, spot_ids: allowed }
+            : { seconds, themes },
+        ),
         signal: controller.signal,
       });
 
@@ -138,7 +164,7 @@ export function TourSetup({
 
       plan = body;
     } catch {
-      plan = fallbackPlan(pickStops(spots, seconds, themes));
+      plan = fallbackPlan(pickStops(spots, seconds, themes, allowed));
     } finally {
       clearTimeout(timeoutId);
     }
@@ -146,7 +172,7 @@ export function TourSetup({
     let sanitizedStops = sanitizeStops(plan.stops, spots);
 
     if (sanitizedStops.length === 0) {
-      plan = fallbackPlan(pickStops(spots, seconds, themes));
+      plan = fallbackPlan(pickStops(spots, seconds, themes, allowed));
       sanitizedStops = sanitizeStops(plan.stops, spots);
     }
 

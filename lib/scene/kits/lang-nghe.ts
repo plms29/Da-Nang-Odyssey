@@ -33,6 +33,7 @@ export const langNghe: SceneKit = {
   transition: "dust-sweep",
   celebrate: "gold-burst",
   ink: "dark",
+  accent: "#2F6F6A",
 };
 
 export default langNghe;

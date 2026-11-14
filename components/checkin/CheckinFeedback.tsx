@@ -1,4 +1,10 @@
-import type { RefObject } from "react";
+"use client";
+
+import { useEffect, useRef, type RefObject } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { GlassPanel } from "@/components/fx/Glass";
+import { GlowButton } from "@/components/fx/GlowButton";
+import { haptic } from "@/lib/haptics";
 import type { Spot } from "@/lib/types";
 import { formatDistance } from "./formatDistance";
 
@@ -12,40 +18,106 @@ export interface CheckinFeedbackProps {
   state: CheckinFeedbackState;
   headingRef: RefObject<HTMLHeadingElement | null>;
   onRetry: () => void;
-  onRemote: () => void;
+  onBack: () => void;
 }
+
+const SECONDARY_GLASS_BTN_CLASS =
+  "fx-glass fx-glass--light inline-flex min-h-11 cursor-pointer items-center justify-center rounded-xl! border border-ink/15 px-5 py-2.5 text-sm font-semibold text-ink transition-colors motion-reduce:transition-none hover:bg-gold/20! focus-visible:outline-2 focus-visible:outline-river focus-visible:outline-offset-[3px]";
 
 export function CheckinFeedback({
   state,
   headingRef,
   onRetry,
-  onRemote,
+  onBack,
 }: CheckinFeedbackProps) {
+  const reduceMotion = useReducedMotion();
+  const lastHapticKindRef = useRef<CheckinFeedbackState["kind"] | null>(null);
+
+  useEffect(() => {
+    if (
+      state.kind === "outside" ||
+      state.kind === "inaccurate" ||
+      state.kind === "error"
+    ) {
+      if (lastHapticKindRef.current !== state.kind) {
+        lastHapticKindRef.current = state.kind;
+        haptic("error");
+      }
+    } else {
+      lastHapticKindRef.current = null;
+    }
+  }, [state.kind]);
+
   if (state.kind === "locating") {
     return (
-      <section
+      <GlassPanel
+        as="section"
+        tone="light"
         role="status"
-        className="flex flex-col items-center gap-3 rounded-lg border border-ink/15 bg-white/80 p-6 text-center"
+        aria-live="polite"
+        className="flex flex-col items-center gap-4 rounded-2xl p-6 text-center lg:mx-auto lg:max-w-2xl lg:p-10"
       >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2.5}
-          className="h-8 w-8 animate-spin text-terracotta"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="9" className="opacity-25" />
-          <path d="M21 12a9 9 0 0 0-9-9" strokeLinecap="round" />
-        </svg>
+        <div className="relative flex h-20 w-20 items-center justify-center">
+          {reduceMotion ? (
+            <span
+              aria-hidden="true"
+              className="absolute inset-2 rounded-full border border-terracotta/30"
+            />
+          ) : (
+            <>
+              <motion.span
+                aria-hidden="true"
+                className="absolute inset-0 rounded-full border-2 border-terracotta/50"
+                initial={{ scale: 0.55, opacity: 0.75 }}
+                animate={{ scale: 1.35, opacity: 0 }}
+                transition={{
+                  duration: 1.8,
+                  repeat: Infinity,
+                  ease: "easeOut",
+                }}
+              />
+              <motion.span
+                aria-hidden="true"
+                className="absolute inset-0 rounded-full border-2 border-gold/60"
+                initial={{ scale: 0.55, opacity: 0.75 }}
+                animate={{ scale: 1.35, opacity: 0 }}
+                transition={{
+                  duration: 1.8,
+                  repeat: Infinity,
+                  ease: "easeOut",
+                  delay: 0.9,
+                }}
+              />
+            </>
+          )}
+
+          <span
+            aria-hidden="true"
+            className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-terracotta/30 bg-terracotta/15 text-terracotta shadow-sm"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-5 w-5"
+            >
+              <path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10Z" />
+              <circle cx="12" cy="11" r="2.25" />
+            </svg>
+          </span>
+        </div>
+
         <h2
           ref={headingRef}
           tabIndex={-1}
-          className="text-base font-semibold text-ink focus:outline-none"
+          className="text-base font-semibold text-ink focus:outline-none lg:text-lg"
         >
           Đang xác định vị trí…
         </h2>
-      </section>
+      </GlassPanel>
     );
   }
 
@@ -53,57 +125,69 @@ export function CheckinFeedback({
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${state.spot.checkin.lat},${state.spot.checkin.lng}`;
 
     return (
-      <section className="space-y-4 rounded-lg border border-ink/15 bg-white/80 p-5">
+      <GlassPanel
+        as="section"
+        tone="light"
+        className="space-y-4 rounded-2xl p-5 lg:mx-auto lg:max-w-2xl lg:p-8"
+      >
         <h2
           ref={headingRef}
           tabIndex={-1}
-          className="text-lg font-bold text-ink focus:outline-none"
+          className="text-lg font-bold text-ink focus:outline-none lg:text-xl"
         >
           Chưa ở trong điểm tham quan
         </h2>
 
-        <p className="text-sm leading-relaxed text-ink">
-          Bạn còn cách <strong>{state.spot.name}</strong> khoảng{" "}
-          <strong>{formatDistance(state.distance_m)}</strong>
-        </p>
+        <div className="rounded-xl border border-ink/10 bg-sand/60 p-4">
+          <p className="text-sm leading-relaxed text-ink">
+            Bạn còn cách <strong>{state.spot.name}</strong> khoảng
+          </p>
+          <p className="mt-1 text-3xl font-bold tracking-tight text-terracotta lg:text-4xl">
+            {formatDistance(state.distance_m)}
+          </p>
+        </div>
 
         <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap">
           <a
             href={mapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center justify-center rounded-md bg-river px-5 py-2.5 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            className="inline-flex min-h-11 items-center justify-center rounded-xl bg-river px-5 py-2.5 text-sm font-semibold text-sand transition-opacity motion-reduce:transition-none hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
           >
             Chỉ đường đến đây
           </a>
 
-          <button
+          <GlowButton
             type="button"
             onClick={onRetry}
-            className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2.5 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            className="min-h-11 px-5 py-2.5 text-sm"
           >
             Thử lại
-          </button>
+          </GlowButton>
 
           <button
             type="button"
-            onClick={onRemote}
-            className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-sand px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            onClick={onBack}
+            className={SECONDARY_GLASS_BTN_CLASS}
           >
-            Ghé thăm từ xa
+            Chụp ảnh với khung điểm
           </button>
         </div>
-      </section>
+      </GlassPanel>
     );
   }
 
   if (state.kind === "inaccurate") {
     return (
-      <section className="space-y-4 rounded-lg border border-gold/60 bg-white/80 p-5">
+      <GlassPanel
+        as="section"
+        tone="light"
+        className="space-y-4 rounded-2xl border border-terracotta/50 bg-terracotta/10! p-5 lg:mx-auto lg:max-w-2xl lg:p-8"
+      >
         <h2
           ref={headingRef}
           tabIndex={-1}
-          className="text-lg font-bold text-ink focus:outline-none"
+          className="text-lg font-bold text-ink focus:outline-none lg:text-xl"
         >
           Độ chính xác vị trí chưa đủ
         </h2>
@@ -117,32 +201,36 @@ export function CheckinFeedback({
         </p>
 
         <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap">
-          <button
+          <GlowButton
             type="button"
             onClick={onRetry}
-            className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2.5 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            className="min-h-11 px-5 py-2.5 text-sm"
           >
             Thử lại
-          </button>
+          </GlowButton>
 
           <button
             type="button"
-            onClick={onRemote}
-            className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-sand px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            onClick={onBack}
+            className={SECONDARY_GLASS_BTN_CLASS}
           >
-            Ghé thăm từ xa
+            Chụp ảnh với khung điểm
           </button>
         </div>
-      </section>
+      </GlassPanel>
     );
   }
 
   return (
-    <section className="space-y-4 rounded-lg border border-terracotta/40 bg-white/80 p-5">
+    <GlassPanel
+      as="section"
+      tone="light"
+      className="space-y-4 rounded-2xl border border-terracotta/50 bg-terracotta/10! p-5 lg:mx-auto lg:max-w-2xl lg:p-8"
+    >
       <h2
         ref={headingRef}
         tabIndex={-1}
-        className="text-lg font-bold text-ink focus:outline-none"
+        className="text-lg font-bold text-ink focus:outline-none lg:text-xl"
       >
         Chưa lấy được vị trí
       </h2>
@@ -155,22 +243,22 @@ export function CheckinFeedback({
       </p>
 
       <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap">
-        <button
+        <GlowButton
           type="button"
-          onClick={onRemote}
-          className="inline-flex min-h-11 items-center justify-center rounded-md bg-river px-5 py-2.5 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          onClick={onBack}
+          className="min-h-11 px-5 py-2.5 text-sm"
         >
-          Ghé thăm từ xa
-        </button>
+          Chụp ảnh với khung điểm
+        </GlowButton>
 
         <button
           type="button"
           onClick={onRetry}
-          className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-sand px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          className={SECONDARY_GLASS_BTN_CLASS}
         >
           Thử lại
         </button>
       </div>
-    </section>
+    </GlassPanel>
   );
 }

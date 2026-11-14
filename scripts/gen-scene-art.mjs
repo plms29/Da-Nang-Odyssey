@@ -45,6 +45,24 @@ const KITS = {
     { name: "den-long", keyed: true, aspect: "3:4", prompt: "A single round red-terracotta Vietnamese paper lantern with gold trim and a gold tassel, glowing warmly from inside, hanging from a short cord that starts exactly at the top edge of the image." },
     { name: "trong", keyed: true, aspect: "1:1", prompt: "A traditional Vietnamese festival drum (trống) with a red lacquered wooden body, gold rim studs and a pale drum skin, lit warmly, seen at a slight angle." },
   ],
+  "lang-nghe": [
+    { name: "sky", keyed: false, aspect: "9:16", prompt: "Full-frame soft early-morning sky over the coast of central Vietnam: pale peach and warm cream near the horizon fading to clear light blue at the top, thin wispy clouds. Only sky." },
+    { name: "nui-da", keyed: true, aspect: "16:9", prompt: "A wide band of distant limestone and marble karst peaks rising from flat land, pale grey-green with trees on the slopes, soft morning haze, low contrast, full width, lower half of the image." },
+    { name: "xuong-da", keyed: true, aspect: "16:9", prompt: "An open-air stone carving workshop yard: rough pale marble blocks, half-finished carved stone lanterns, lions and lotus urns on wooden pallets, a simple tiled-roof workshop shed behind, chisels and stone dust, warm morning light, full width, sitting at the bottom of the image." },
+    { name: "chum-mam", keyed: true, aspect: "16:9", prompt: "Foreground: a row of large dark brown glazed clay jars with wooden lids along a sandy fishing-village yard, a round woven bamboo basket boat leaning on its side at the right edge, fishing nets draped on a pole, warm light, spanning the full width at the bottom." },
+  ],
+  "am-thuc": [
+    { name: "sky", keyed: false, aspect: "9:16", prompt: "Full-frame warm late-morning sky over a Vietnamese town: soft golden haze near the horizon fading to bright pale blue, a few puffy clouds. Only sky." },
+    { name: "pho-cho", keyed: true, aspect: "16:9", prompt: "A lively Vietnamese market street of two-storey shophouses with tiled roofs, colourful awnings, hanging baskets and produce stalls, slightly hazy, no readable signs or letters, full width, lower half of the image." },
+    { name: "ganh-hang", keyed: true, aspect: "4:3", prompt: "A street food vendor setup: a bamboo shoulder pole with two round woven baskets, one holding a steaming pot, the other stacked bowls, small low plastic stools beside it, gentle steam rising, warm light, no person." },
+    { name: "to-mi", keyed: true, aspect: "16:9", prompt: "Foreground close-up of a bowl of mì Quảng on a wooden table: wide flat yellow rice noodles with a small amount of rich broth, shrimp, sliced pork, a quail egg, roasted peanuts, fresh herbs and a large toasted sesame rice cracker on top, a small dish of lime and chili beside it, spanning the full width at the bottom." },
+  ],
+  "do-thi-song-le-hoi": [
+    { name: "sky", keyed: false, aspect: "9:16", prompt: "Full-frame festive night sky over a riverside city: deep indigo at the top to violet near the horizon, a few bursts of gold, red and teal fireworks with sparkling trails, warm city glow at the bottom edge. Only sky." },
+    { name: "thanh-pho-dem", keyed: true, aspect: "16:9", prompt: "A modern riverside city skyline at night, mid-rise and high-rise buildings with warm and cool lit windows, soft glow and haze, full width, lower half of the image." },
+    { name: "cau-rong-dem", keyed: true, aspect: "16:9", prompt: "The Đà Nẵng Dragon Bridge at night: a steel dragon sculpture undulating in five or six arches over a road deck, lit with glowing golden and colour-changing lights, a detailed dragon head with mane on the left end, reflections implied, full width side view." },
+    { name: "bo-song-dem", keyed: true, aspect: "16:9", prompt: "Foreground riverside promenade at night: dark river edge with stone railing, ornate glowing lamp posts, palm tree silhouettes, small festival flags on a string, warm lights, spanning the full width at the bottom." },
+  ],
   home: [
     { name: "sky", keyed: false, aspect: "9:16", prompt: "Full-frame golden-hour sky over Đà Nẵng: soft gold and peach near the horizon fading to light blue at the top, gentle clouds lit warm. Only sky." },
     { name: "son-tra", keyed: true, aspect: "16:9", prompt: "Distant Sơn Trà mountain peninsula silhouette in blue-purple haze, low contrast, full width, lower half of the image." },

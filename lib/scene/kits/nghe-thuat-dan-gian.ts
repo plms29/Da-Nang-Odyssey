@@ -50,6 +50,7 @@ export const ngheThuatDanGian: SceneKit = {
   transition: "card-flip",
   celebrate: "drum-confetti",
   ink: "light",
+  accent: "#C99A2E",
 };
 
 export default ngheThuatDanGian;

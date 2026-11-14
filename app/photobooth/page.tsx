@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { CheckinFlow } from "@/components/checkin/CheckinFlow";
+import { GlassPanel } from "@/components/fx/Glass";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { getSpots } from "@/lib/content";
 
@@ -7,7 +8,7 @@ export default function PhotoboothPage() {
   const spots = getSpots();
 
   return (
-    <main className="space-y-4 pb-6">
+    <main className="space-y-4 pb-6 lg:space-y-8 lg:pb-12">
       <PageHeader
         title="Check-in"
         subtitle="Chụp ảnh tại điểm tham quan, nhận dấu đã đến"
@@ -16,13 +17,14 @@ export default function PhotoboothPage() {
 
       <Suspense
         fallback={
-          <div
+          <GlassPanel
+            tone="light"
             role="status"
             aria-live="polite"
-            className="rounded-lg border border-ink/15 bg-white/80 p-5 text-sm text-muted"
+            className="rounded-2xl p-5 text-sm text-muted lg:mx-auto lg:max-w-2xl lg:p-8"
           >
             Đang tải trình check-in…
-          </div>
+          </GlassPanel>
         }
       >
         <CheckinFlow spots={spots} />

@@ -39,6 +39,7 @@ export const diSanCham: SceneKit = {
   transition: "dust-sweep",
   celebrate: "gold-burst",
   ink: "light",
+  accent: "#B5532F",
 };
 
 export default diSanCham;

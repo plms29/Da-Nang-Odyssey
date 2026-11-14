@@ -57,6 +57,12 @@ describe("pickStops", () => {
     const picked = pickStops(twoSpots, 600, ["di-san-cham"]);
     expect(picked.map((s) => s.id)).toEqual(["s2", "s4"]);
   });
+
+  it("only uses allowed (unlocked) spots and ignores unknown ids", () => {
+    const picked = pickStops(spots, 600, ["am-thuc"], ["s1", "s3", "khong-co"]);
+    expect(picked.map((s) => s.id)).toEqual(["s1", "s3"]);
+    expect(pickStops(spots, 300, [], [])).toEqual([]);
+  });
 });
 
 describe("fallbackPlan", () => {

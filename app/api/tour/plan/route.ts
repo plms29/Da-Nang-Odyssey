@@ -21,7 +21,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Request body must be an object" }, { status: 400 });
   }
 
-  const { seconds, themes } = body as { seconds?: unknown; themes?: unknown };
+  const { seconds, themes, spot_ids } = body as {
+    seconds?: unknown;
+    themes?: unknown;
+    spot_ids?: unknown;
+  };
 
   if (
     typeof seconds !== "number" ||
@@ -42,6 +46,20 @@ export async function POST(request: Request) {
     );
   }
 
-  const stops = pickStops(getSpots(), seconds, themes as Theme[]);
+  const spots = getSpots();
+  if (
+    spot_ids !== undefined &&
+    (!Array.isArray(spot_ids) ||
+      spot_ids.length > spots.length ||
+      !spot_ids.every((id): id is string => typeof id === "string"))
+  ) {
+    return NextResponse.json(
+      { error: "spot_ids must be an array of spot id strings" },
+      { status: 400 },
+    );
+  }
+
+  // Unknown ids are simply ignored by pickStops (it filters the known spot list).
+  const stops = pickStops(spots, seconds, themes as Theme[], spot_ids as string[] | undefined);
   return NextResponse.json(await narrate(stops, seconds));
 }

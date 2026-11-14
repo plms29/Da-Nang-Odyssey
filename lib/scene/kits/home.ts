@@ -34,6 +34,7 @@ export const home: SceneKit = {
   transition: "river-wipe",
   celebrate: "fireworks",
   ink: "dark",
+  accent: "#1F4E6B",
 };
 
 export default home;

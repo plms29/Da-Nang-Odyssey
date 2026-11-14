@@ -1,19 +1,18 @@
 import Link from "next/link";
+import { ThemedHomeBackdrop } from "@/components/fx/AppTheme";
 import { AccountPanel } from "@/components/passport/AccountPanel";
 import { GlassPanel } from "@/components/fx/Glass";
 import { GlowLink } from "@/components/fx/GlowButton";
 import { KineticText } from "@/components/fx/KineticText";
 import { MotionPermissionButton } from "@/components/fx/MotionPermissionButton";
-import { SceneBackdrop } from "@/components/fx/SceneBackdrop";
 import { TiltCard } from "@/components/fx/TiltCard";
 import { EntryCard, RevealItem } from "@/components/shell/EntryCard";
-import { getSceneKit } from "@/lib/scene";
 
 export default function HomePage() {
   return (
     <main className="space-y-6 pb-4 lg:space-y-10 lg:pb-12">
       <section className="relative -mx-4 -mt-5 flex h-[min(68dvh,560px)] flex-col justify-end overflow-hidden rounded-b-[2rem] lg:-mx-8 lg:-mt-24 lg:h-[min(78dvh,760px)] lg:rounded-b-[2.5rem]">
-        <SceneBackdrop kit={getSceneKit("home")} />
+        <ThemedHomeBackdrop />
         <MotionPermissionButton className="absolute top-4 right-4 z-20 lg:hidden" />
         <div
           aria-hidden="true"

@@ -1,6 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { motion, useAnimate, useReducedMotion } from "motion/react";
+import { GlassPanel } from "@/components/fx/Glass";
+import { GlowButton } from "@/components/fx/GlowButton";
+import { TiltCard } from "@/components/fx/TiltCard";
+import { haptic } from "@/lib/haptics";
 import type { Spot } from "@/lib/types";
 import {
   captureRawFrame,
@@ -19,6 +24,9 @@ export interface PhotoBoothProps {
 }
 
 type BoothPhase = "idle" | "live" | "countdown" | "review" | "error";
+
+const GLASS_BUTTON_CLASS =
+  "fx-glass fx-glass--light inline-flex min-h-11 items-center justify-center rounded-xl border border-ink/15 px-4 py-2 text-sm font-semibold text-ink transition-colors motion-reduce:transition-none hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta";
 
 function formatDateIso(date: Date): string {
   const yyyy = String(date.getFullYear());
@@ -74,6 +82,10 @@ export function PhotoBooth({
   const [canShareFile, setCanShareFile] = useState(false);
   const [usedPhoto, setUsedPhoto] = useState(false);
   const [captureError, setCaptureError] = useState<string | null>(null);
+  const [showFlash, setShowFlash] = useState(false);
+
+  const reducedMotion = Boolean(useReducedMotion());
+  const [countdownScope, animateCountdown] = useAnimate();
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -83,12 +95,55 @@ export function PhotoBooth({
   const captureDateRef = useRef<Date | null>(null);
   const composedCaptionRef = useRef<string | undefined>(undefined);
   const captionRef = useRef<string | undefined>(caption);
+  const prevPhaseRef = useRef<BoothPhase>(phase);
+  const reducedMotionRef = useRef(reducedMotion);
 
   const isMirrored = facingMode === "user";
 
   useEffect(() => {
     captionRef.current = caption;
   }, [caption]);
+
+  useEffect(() => {
+    reducedMotionRef.current = reducedMotion;
+  }, [reducedMotion]);
+
+  // Brief white capture flash when transitioning into review (skipped when reduced motion)
+  useEffect(() => {
+    const prevPhase = prevPhaseRef.current;
+    prevPhaseRef.current = phase;
+
+    if (phase === "review" && prevPhase !== "review") {
+      haptic("tap");
+      if (reducedMotionRef.current) {
+        return;
+      }
+      setShowFlash(true);
+      const timer = window.setTimeout(() => {
+        setShowFlash(false);
+      }, 160);
+      return () => {
+        window.clearTimeout(timer);
+      };
+    }
+
+    setShowFlash(false);
+  }, [phase]);
+
+  // Pop animation per countdown tick without changing React key
+  useLayoutEffect(() => {
+    if (phase !== "countdown" || countdown === null) {
+      return;
+    }
+    if (reducedMotion || !countdownScope.current) {
+      return;
+    }
+    void animateCountdown(
+      countdownScope.current,
+      { scale: [0.55, 1.12, 1], opacity: [0, 1, 1] },
+      { duration: 0.35, ease: "easeOut" },
+    );
+  }, [phase, countdown, reducedMotion, animateCountdown, countdownScope]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -413,7 +468,11 @@ export function PhotoBooth({
 
   if (phase === "idle") {
     return (
-      <section className="space-y-4 rounded-lg border border-ink/15 bg-white/80 p-5">
+      <GlassPanel
+        as="section"
+        tone="light"
+        className="space-y-4 rounded-2xl p-5"
+      >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-lg font-bold text-ink">{spot.name}</h2>
           <span
@@ -430,16 +489,16 @@ export function PhotoBooth({
         </p>
 
         <div className="pt-1">
-          <button
+          <GlowButton
             type="button"
             onClick={handleOpenCamera}
             disabled={isStarting}
-            className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-6 py-2.5 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:opacity-50"
+            className="min-h-11 px-6 py-2.5 text-sm disabled:cursor-not-allowed disabled:opacity-50"
           >
             Mở camera
-          </button>
+          </GlowButton>
         </div>
-      </section>
+      </GlassPanel>
     );
   }
 
@@ -450,9 +509,11 @@ export function PhotoBooth({
       "Không thể truy cập camera trên thiết bị này. Vui lòng thử lại.";
 
     return (
-      <section
+      <GlassPanel
+        as="section"
+        tone="light"
         role="alert"
-        className="space-y-4 rounded-lg border border-terracotta/50 bg-white/85 p-5"
+        className="space-y-4 rounded-2xl border border-terracotta/50 p-5 ring-1 ring-terracotta/25 shadow-[0_10px_30px_-12px_rgba(168,72,37,0.3)]"
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-lg font-bold text-ink">{spot.name}</h2>
@@ -463,27 +524,31 @@ export function PhotoBooth({
           </span>
         </div>
 
-        <p className="text-sm font-medium leading-relaxed text-terracotta">
+        <p className="rounded-xl border border-terracotta/35 bg-terracotta/10 px-4 py-3 text-sm font-medium leading-relaxed text-terracotta">
           {errorMessage}
         </p>
 
         <div className="pt-1">
-          <button
+          <GlowButton
             type="button"
             onClick={handleOpenCamera}
             disabled={isStarting}
-            className="inline-flex min-h-11 items-center justify-center rounded-md bg-terracotta px-5 py-2.5 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:opacity-50"
+            className="min-h-11 px-5 py-2.5 text-sm disabled:cursor-not-allowed disabled:opacity-50"
           >
             Mở camera
-          </button>
+          </GlowButton>
         </div>
-      </section>
+      </GlassPanel>
     );
   }
 
   if (phase === "review" && reviewUrl) {
     return (
-      <section className="space-y-4 rounded-lg border border-ink/15 bg-white/80 p-4">
+      <GlassPanel
+        as="section"
+        tone="light"
+        className="space-y-4 rounded-2xl p-4 lg:p-5"
+      >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-base font-bold text-ink">{spot.name}</h2>
           <span
@@ -493,29 +558,44 @@ export function PhotoBooth({
           </span>
         </div>
 
-        <div className="relative aspect-[9/16] w-full overflow-hidden rounded-lg border border-ink/15 bg-ink">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={reviewUrl}
-            alt={`Ảnh check-in tại ${spot.name}`}
-            className="h-full w-full object-cover"
-          />
-        </div>
+        <TiltCard
+          max={4}
+          className="rounded-2xl border border-white/60 bg-sand/70 p-1.5 shadow-[0_14px_34px_-14px_rgba(31,26,23,0.38)]"
+        >
+          <div className="relative aspect-[9/16] w-full overflow-hidden rounded-xl border border-ink/15 bg-ink">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={reviewUrl}
+              alt={`Ảnh check-in tại ${spot.name}`}
+              className="h-full w-full object-cover"
+            />
+
+            {showFlash && !reducedMotion && (
+              <motion.div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 z-20 bg-white"
+                initial={{ opacity: 0.95 }}
+                animate={{ opacity: 0 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+              />
+            )}
+          </div>
+        </TiltCard>
 
         <div className="flex flex-wrap items-center gap-2.5">
-          <button
+          <GlowButton
             type="button"
             onClick={handleUsePhoto}
             disabled={usedPhoto}
-            className="inline-flex min-h-11 flex-1 items-center justify-center rounded-md bg-terracotta px-4 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:opacity-60"
+            className="min-h-11 flex-1 px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60"
           >
             Dùng ảnh này
-          </button>
+          </GlowButton>
 
           <a
             href={reviewUrl}
             download={downloadName}
-            className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-sand px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            className={GLASS_BUTTON_CLASS}
           >
             Tải ảnh
           </a>
@@ -524,7 +604,7 @@ export function PhotoBooth({
             <button
               type="button"
               onClick={handleShare}
-              className="inline-flex min-h-11 items-center justify-center rounded-md border border-river/30 bg-river/10 px-4 py-2 text-sm font-semibold text-river transition-colors hover:bg-river/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+              className="fx-glass fx-glass--light inline-flex min-h-11 items-center justify-center rounded-xl border border-river/35 px-4 py-2 text-sm font-semibold text-river transition-colors motion-reduce:transition-none hover:bg-river/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
             >
               Chia sẻ
             </button>
@@ -533,23 +613,30 @@ export function PhotoBooth({
           <button
             type="button"
             onClick={handleRetake}
-            className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-white px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            className={GLASS_BUTTON_CLASS}
           >
             Chụp lại
           </button>
         </div>
 
         {usedPhoto && (
-          <p role="status" className="text-xs font-semibold text-river">
+          <p
+            role="status"
+            className="rounded-xl border border-river/25 bg-river/10 px-3 py-2 text-xs font-semibold text-river"
+          >
             Đã chọn ảnh check-in này.
           </p>
         )}
-      </section>
+      </GlassPanel>
     );
   }
 
   return (
-    <section className="space-y-4 rounded-lg border border-ink/15 bg-white/80 p-4">
+    <GlassPanel
+      as="section"
+      tone="light"
+      className="space-y-4 rounded-2xl p-4 lg:p-5"
+    >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-base font-bold text-ink">{spot.name}</h2>
         <span
@@ -559,65 +646,70 @@ export function PhotoBooth({
         </span>
       </div>
 
-      <div className="relative aspect-[9/16] w-full overflow-hidden rounded-lg border border-ink/15 bg-ink">
-        <video
-          ref={videoRef}
-          aria-label="Xem trước camera"
-          playsInline
-          muted
-          autoPlay
-          onLoadedMetadata={(e) => {
-            if (e.currentTarget.videoWidth > 0) {
-              setVideoReady(true);
-            }
-          }}
-          onPlaying={(e) => {
-            if (e.currentTarget.videoWidth > 0) {
-              setVideoReady(true);
-            }
-          }}
-          onResize={(e) => {
-            if (e.currentTarget.videoWidth > 0) {
-              setVideoReady(true);
-            }
-          }}
-          className={`h-full w-full object-cover ${
-            isMirrored ? "-scale-x-100" : ""
-          }`}
-        />
+      <div className="fx-glass fx-glass--light rounded-2xl p-1.5 shadow-[0_14px_34px_-14px_rgba(31,26,23,0.4)] ring-1 ring-white/40">
+        <div className="relative aspect-[9/16] w-full overflow-hidden rounded-xl border border-ink/15 bg-ink">
+          <video
+            ref={videoRef}
+            aria-label="Xem trước camera"
+            playsInline
+            muted
+            autoPlay
+            onLoadedMetadata={(e) => {
+              if (e.currentTarget.videoWidth > 0) {
+                setVideoReady(true);
+              }
+            }}
+            onPlaying={(e) => {
+              if (e.currentTarget.videoWidth > 0) {
+                setVideoReady(true);
+              }
+            }}
+            onResize={(e) => {
+              if (e.currentTarget.videoWidth > 0) {
+                setVideoReady(true);
+              }
+            }}
+            className={`h-full w-full object-cover ${
+              isMirrored ? "-scale-x-100" : ""
+            }`}
+          />
 
-        <canvas
-          ref={overlayCanvasRef}
-          width={OUTPUT_WIDTH}
-          height={OUTPUT_HEIGHT}
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 h-full w-full"
-        />
-
-        {(isStarting || !videoReady) && (
-          <div
-            id="camera-loading-status"
-            role="status"
-            className="pointer-events-none absolute inset-0 flex items-center justify-center bg-ink/80 p-4 text-center text-sm font-semibold text-sand"
-          >
-            Đang mở camera…
-          </div>
-        )}
-
-        <div aria-live="assertive" aria-atomic="true" className="sr-only">
-          {phase === "countdown" && countdown !== null ? String(countdown) : ""}
-        </div>
-
-        {phase === "countdown" && countdown !== null && (
-          <div
+          <canvas
+            ref={overlayCanvasRef}
+            width={OUTPUT_WIDTH}
+            height={OUTPUT_HEIGHT}
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 flex items-center justify-center bg-ink/40"
-          >
-            <span className="text-8xl font-bold text-sand drop-shadow-md">
-              {countdown}
-            </span>
+            className="pointer-events-none absolute inset-0 h-full w-full"
+          />
+
+          {(isStarting || !videoReady) && (
+            <div
+              id="camera-loading-status"
+              role="status"
+              className="pointer-events-none absolute inset-0 flex items-center justify-center bg-ink/80 p-4 text-center text-sm font-semibold text-sand backdrop-blur-sm"
+            >
+              Đang mở camera…
+            </div>
+          )}
+
+          <div aria-live="assertive" aria-atomic="true" className="sr-only">
+            {phase === "countdown" && countdown !== null ? String(countdown) : ""}
           </div>
-        )}
+
+          {phase === "countdown" && countdown !== null && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 flex items-center justify-center bg-ink/40 backdrop-blur-[2px]"
+            >
+              <span
+                ref={countdownScope}
+                className="inline-block text-8xl font-extrabold tracking-tight text-sand drop-shadow-[0_6px_20px_rgba(31,26,23,0.65)]"
+              >
+                {countdown}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -625,23 +717,23 @@ export function PhotoBooth({
           type="button"
           onClick={handleSwitchCamera}
           disabled={phase === "countdown" || isStarting}
-          className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-sand px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:opacity-50"
+          className={`${GLASS_BUTTON_CLASS} disabled:cursor-not-allowed disabled:opacity-50`}
         >
           Đổi camera
         </button>
 
-        <button
+        <GlowButton
           type="button"
           onClick={handleStartCountdown}
           disabled={!videoReady || phase === "countdown" || isStarting}
           aria-describedby={
             !videoReady || isStarting ? "camera-loading-status" : undefined
           }
-          className="inline-flex min-h-11 flex-1 items-center justify-center rounded-md bg-terracotta px-6 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:opacity-50"
+          className="min-h-11 flex-1 px-6 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
         >
           Chụp
-        </button>
+        </GlowButton>
       </div>
-    </section>
+    </GlassPanel>
   );
 }

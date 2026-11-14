@@ -46,6 +46,7 @@ export const amThuc: SceneKit = {
   transition: "smoke-cover",
   celebrate: "gold-burst",
   ink: "dark",
+  accent: "#C2571A",
 };
 
 export default amThuc;
