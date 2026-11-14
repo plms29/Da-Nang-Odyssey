@@ -6,9 +6,14 @@ import { GlowLink } from "@/components/fx/GlowButton";
 import { KineticText } from "@/components/fx/KineticText";
 import { MotionPermissionButton } from "@/components/fx/MotionPermissionButton";
 import { TiltCard } from "@/components/fx/TiltCard";
+import { SceneBackdrop } from "@/components/fx/SceneBackdrop";
 import { EntryCard, RevealItem } from "@/components/shell/EntryCard";
+import { getLevels } from "@/lib/content";
+import { getSceneKit, sceneIdForLevel } from "@/lib/scene";
 
 export default function HomePage() {
+  const featuredLevels = getLevels().slice(0, 3);
+
   return (
     <main className="space-y-6 pb-4 lg:space-y-10 lg:pb-12">
       <section className="relative -mx-4 -mt-5 flex h-[min(68dvh,560px)] flex-col justify-end overflow-hidden rounded-b-[2rem] lg:-mx-8 lg:-mt-24 lg:h-[min(78dvh,760px)] lg:rounded-b-[2.5rem]">
@@ -19,25 +24,31 @@ export default function HomePage() {
           className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-sand via-sand/90 to-transparent"
         />
         <div className="relative z-10 p-5 lg:mx-auto lg:w-full lg:max-w-[1200px] lg:px-8 lg:pb-12">
-          <p className="text-xs font-semibold tracking-wider text-terracotta uppercase lg:text-sm">
-            Di sản &amp; Trải nghiệm
-          </p>
           <KineticText
             as="h1"
             shimmer
             className="mt-1 text-4xl leading-[1.05] font-bold tracking-tight text-ink sm:text-5xl lg:max-w-3xl lg:text-6xl xl:text-7xl"
           >
-            Hành trình văn hóa Đà Nẵng
+            Hành trình Văn hóa Đà Nẵng
           </KineticText>
-          <p className="mt-2 text-sm leading-relaxed text-ink lg:mt-4 lg:max-w-xl lg:text-xl">
-            Nghe, làm, thể hiện và đến tận nơi
+          <p className="mt-2.5 max-w-xl text-sm leading-relaxed text-ink/85 sm:text-base lg:mt-4 lg:text-lg">
+            Khám phá di sản qua bản đồ, thử thách tương tác và câu chuyện tại
+            từng điểm đến bên sông Hàn.
           </p>
-          <GlowLink
-            href="/kham-pha"
-            className="mt-5 min-h-11 px-6 text-base font-semibold lg:mt-6 lg:min-h-14! lg:px-8! lg:py-3.5! lg:text-lg"
-          >
-            Bắt đầu khám phá
-          </GlowLink>
+          <div className="mt-5 flex flex-wrap items-center gap-3 lg:mt-6">
+            <GlowLink
+              href="/kham-pha"
+              className="min-h-11 px-6 text-base font-semibold lg:min-h-14! lg:px-8! lg:py-3.5! lg:text-lg"
+            >
+              Bắt đầu khám phá
+            </GlowLink>
+            <Link
+              href="/tour"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-[0.625rem] border border-border bg-surface/85 px-5 py-2.5 text-sm font-semibold text-ink backdrop-blur-md transition-colors hover:border-ink/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta sm:text-base"
+            >
+              Nghe tour 5 phút
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -119,6 +130,57 @@ export default function HomePage() {
               }
             />
           </RevealItem>
+        </section>
+
+        <section aria-labelledby="featured-destinations-heading" className="lg:col-span-3">
+          <div className="mb-3 flex items-baseline justify-between gap-4 lg:mb-4">
+            <h2
+              id="featured-destinations-heading"
+              className="text-lg font-semibold tracking-tight text-ink lg:text-xl"
+            >
+              Các điểm đến nổi bật
+            </h2>
+            <Link
+              href="/kham-pha"
+              className="text-sm font-medium text-terracotta hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            >
+              Xem tất cả
+            </Link>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3 lg:gap-5">
+            {featuredLevels.map((level) => {
+              const kit = getSceneKit(sceneIdForLevel(level));
+              return (
+                <TiltCard key={level.id} max={6} className="h-full">
+                  <Link
+                    href={`/kham-pha/${level.id}`}
+                    className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-surface/90 backdrop-blur-md transition-colors hover:border-ink/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+                  >
+                    <div className="relative h-[140px] overflow-hidden rounded-t-xl bg-sand lg:h-56">
+                      <SceneBackdrop
+                        kit={kit}
+                        intensity="calm"
+                        className="transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                      />
+                      <span className="absolute top-2.5 left-2.5 z-10 rounded-full border border-white/20 bg-black/55 px-2.5 py-0.5 text-xs font-medium text-white backdrop-blur-sm">
+                        Màn {level.order}
+                      </span>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="text-base font-semibold text-ink transition-colors group-hover:text-terracotta">
+                        {level.title}
+                      </h3>
+                      {kit.subtitle && (
+                        <p className="mt-1 text-xs leading-relaxed text-muted">
+                          {kit.subtitle}
+                        </p>
+                      )}
+                    </div>
+                  </Link>
+                </TiltCard>
+              );
+            })}
+          </div>
         </section>
 
         <section aria-label="Hộ chiếu văn hóa" className="lg:col-span-3">
