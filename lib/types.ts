@@ -113,6 +113,8 @@ export interface Level {
   intro: { text: string; audio?: string; image?: string };
   stations: [MapPinStation, ActivityStation, ExpressStation];
   reveal: { text: string; sources: Source[] };
+  /** Locked until level `after` has at least `min_stars`. Missing = open from the start. */
+  unlock?: { after: string; min_stars: 1 | 2 | 3 };
   status: ContentStatus;
 }
 
@@ -161,6 +163,8 @@ export interface TourPlan {
 export interface TourRequest {
   seconds: number;
   themes: Theme[];
+  /** Spots the player has unlocked; missing = every spot. */
+  spot_ids?: string[];
 }
 
 export interface CaptionResult {

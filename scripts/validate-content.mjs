@@ -56,6 +56,26 @@ for (const l of levels) {
   checkStatus(w, l.status);
 }
 
+// Chain unlock: `unlock.after` must name a real level, min_stars 1..3, and the chain must not loop.
+const unlockAfter = new Map();
+for (const l of levels) {
+  if (l.unlock === undefined) continue;
+  const w = `level ${l.id}`;
+  need(levelIds.has(l.unlock?.after) && l.unlock.after !== l.id, `${w}: unlock.after phải là id màn khác có thật`);
+  need([1, 2, 3].includes(l.unlock?.min_stars), `${w}: unlock.min_stars phải là 1|2|3`);
+  unlockAfter.set(l.id, l.unlock?.after);
+}
+for (const start of unlockAfter.keys()) {
+  const seen = new Set([start]);
+  for (let cur = unlockAfter.get(start); cur !== undefined; cur = unlockAfter.get(cur)) {
+    if (seen.has(cur)) {
+      errors.push(`level ${start}: chuỗi mở khóa bị vòng lặp`);
+      break;
+    }
+    seen.add(cur);
+  }
+}
+
 for (const m of warnings) console.warn("⚠", m);
 for (const m of errors) console.error("✗", m);
 if (errors.length) process.exit(1);

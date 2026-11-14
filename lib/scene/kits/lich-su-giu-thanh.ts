@@ -29,6 +29,7 @@ export const lichSuGiuThanh: SceneKit = {
   transition: "smoke-cover",
   celebrate: "flag-raise",
   ink: "dark",
+  accent: "#8A3324",
 };
 
 export default lichSuGiuThanh;

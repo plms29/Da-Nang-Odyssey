@@ -13,6 +13,10 @@ export default function KhamPhaPage() {
         backHref="/"
       />
 
+      <p className="mb-4 text-sm text-muted">
+        Hoàn thành màn trước để mở địa điểm mới.
+      </p>
+
       <ul className="space-y-3 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-y-0">
         {levels.map((level, index) => (
           <li key={level.id}>

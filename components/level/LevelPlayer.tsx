@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import { animate, motion, useReducedMotion } from "motion/react";
+import { getLevels } from "@/lib/content";
 import {
   codeScore,
   currentStation,
@@ -20,9 +21,11 @@ import {
   type LevelAction,
   type LevelState,
 } from "@/lib/level/engine";
+import { newlyUnlocked } from "@/lib/level/unlock";
 import { usePassport } from "@/lib/passport/store";
 import { getSceneKit, sceneIdForLevel } from "@/lib/scene";
 import type { Level, Station } from "@/lib/types";
+import { UnlockReveal } from "./UnlockReveal";
 import { Celebrate } from "@/components/fx/Celebrate";
 import { GlassPanel } from "@/components/fx/Glass";
 import { GlowButton, GlowLink } from "@/components/fx/GlowButton";
@@ -54,6 +57,7 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
     stationIndex: state.stationIndex,
   }));
   const [playing, setPlaying] = useState(false);
+  const [newlyUnlockedLevels, setNewlyUnlockedLevels] = useState<Level[]>([]);
 
   const stateRef = useRef(state);
   const recordedRevealRef = useRef(false);
@@ -115,6 +119,7 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
   useEffect(() => {
     if (state.phase !== "reveal") {
       recordedRevealRef.current = false;
+      setNewlyUnlockedLevels((prev) => (prev.length === 0 ? prev : []));
       return;
     }
     if (recordedRevealRef.current) return;
@@ -125,7 +130,12 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
       passport.stamp(spotId, "level");
     }
     if (stars !== null) {
+      const before = { levels: passport.levels };
       passport.recordLevel(level.id, stars, score);
+      const after = usePassport.getState().levels;
+      setNewlyUnlockedLevels(
+        newlyUnlocked(getLevels(), before, { levels: after }),
+      );
     }
   }, [state.phase, level.id, level.spot_ids, stars, score]);
 
@@ -418,6 +428,10 @@ export function LevelPlayer({ level }: LevelPlayerProps) {
               Đã ghi nhận dấu hoàn thành màn chơi vào hộ chiếu của bạn.
             </p>
           </div>
+
+          {newlyUnlockedLevels.length > 0 && (
+            <UnlockReveal levels={newlyUnlockedLevels} />
+          )}
 
           <div className="flex flex-wrap items-center gap-3 pt-1">
             <GlowLink

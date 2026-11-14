@@ -41,4 +41,6 @@ export interface SceneKit {
   celebrate: CelebrateKind;
   /** Màu chữ đặt trực tiếp trên cảnh. */
   ink: "light" | "dark";
+  /** Màu nhấn của thế giới (viền, nút, chip) khi đang ở điểm này, mã hex. */
+  accent: string;
 }

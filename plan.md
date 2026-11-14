@@ -1,3 +1,82 @@
+# Kế hoạch giai đoạn E: mỗi địa điểm một thế giới + mở khóa theo chuỗi màn
+
+Chủ máy chốt (2026-11-14):
+- **Theme theo địa điểm** = mỗi địa điểm (màn) là một thế giới riêng: cảnh lớp, trời shader, màu nhấn, hiệu ứng chuyển cảnh và ăn mừng. Thế giới đó đi theo người chơi ra ngoài màn chơi: điểm dừng tour, check-in, thẻ hộ chiếu của điểm đó. Không làm giao diện chung chọn được cho cả app.
+- **Mở khóa theo chuỗi màn**: 3 màn P0 (Chăm, Giữ thành, Bài chòi) mở sẵn. Màn 4 mở khi xong Màn 3 (≥ 1 sao), Màn 5 khi xong Màn 4, Màn 6 khi xong Màn 5.
+
+Đã có sẵn để dùng lại: `lib/scene` (kit theo `Theme`: `di-san-cham`, `lich-su-giu-thanh`, `nghe-thuat-dan-gian`, `home`), `components/fx/SceneBackdrop.tsx` (`SceneBackdrop`, `getShaderPresetForKit`), `ParallaxScene`, `PhaseTransition`, `Celebrate`, `ZoomNavigate`, passport `levels[levelId].stars`, RemoteModeView đã có luật "đã mở khóa = có dấu level hoặc tour".
+
+Ngoài phạm vi (theo thứ tự cắt của KH): trạm vẽ `open_drawing`, hoạt động mới "ảnh xưa và nay", giao diện chung chọn được, đồng bộ Firestore. Màn 4–6 chỉ dùng các dạng trạm đã có (`map_pin`, `jigsaw`, `order`, `match`, `open_text_or_voice`).
+
+## E1. Giao kèo + luật mở khóa (Claude, phiên chính) — XONG 2026-11-14
+Đã có: `Level.unlock`, `TourRequest.spot_ids?`, `SceneKit.accent`, `lib/level/unlock.ts` (`demoUnlockAll`, `isLevelUnlocked`, `unlockedLevelIds`, `newlyUnlocked`, `isSpotUnlocked`, `unlockedSpotIds`, `requiredLevel`), `pickStops(..., allowedIds?)`, route nhận `spot_ids`, `sceneIdForSpot`, validator kiểm `unlock`.
+- `lib/types.ts`: `Level.unlock?: { after: string; min_stars: 1 | 2 | 3 }` (không có = mở sẵn). `SceneKit.accent: string` (màu nhấn của thế giới, dùng cho viền, nút, chip khi đang ở điểm đó).
+- `lib/level/unlock.ts` + test: `isLevelUnlocked(level, passport)`, `unlockedLevelIds(levels, passport)`, `newlyUnlocked(levels, before, after)` (màn vừa mở sau một lần ghi kết quả), `isSpotUnlocked(spotId, levels, passport)` (điểm thuộc ít nhất một màn đã mở).
+- Cờ demo cho giám khảo: `?mo-khoa=tat-ca` mở mọi màn trong phiên (giống cờ `?demo=` của check-in, không ghi vào hộ chiếu). Hàm `demoUnlockAll(search)` trong `unlock.ts`.
+- `lib/tour/plan.ts`: `pickStops` nhận thêm danh sách `spot_id` đã mở; tour chỉ đi qua điểm đã mở. Cập nhật test.
+- `lib/scene`: thêm `accent` cho 4 kit hiện có; `sceneIdForSpot(spotId)`.
+- `scripts/validate-content.mjs`: kiểm `unlock.after` trỏ tới màn có thật, không có vòng lặp.
+- Chấp nhận: tsc, eslint, vitest qua (test mới cho mọi hàm trên).
+
+## E2. Nội dung Màn 4–6 (Claude soạn nháp, đội nội dung kiểm chứng)
+- `content/spots.json`: thêm `lang-da-non-nuoc`, `lang-nuoc-mam-nam-o` (theme `lang-nghe`), một điểm mì Quảng do đội chọn (`am-thuc`), `cau-rong`, `ngu-hanh-son` (`do-thi-song-le-hoi`). Mọi `story` ghi `[CHỜ KIỂM CHỨNG]`, `status: "draft"`, kèm nguồn.
+- `content/levels.json`: `man-4-lang-nghe` (`unlock.after: man-3-ho-bai-choi`), `man-5-vi-quang` (after màn 4), `man-6-thanh-pho-ben-song` (after màn 5). Trạm Làm: màn 4 `order` (quy trình làm nghề), màn 5 `order` (nấu tô mì), màn 6 `match` (công trình ↔ đặc điểm). Trạm Thể hiện: `open_text_or_voice` có rubric.
+- Chấp nhận: `node scripts/validate-content.mjs` qua; nội dung nháp hiện nhãn "Nội dung nháp" như hiện nay.
+
+## E3. Tranh 3 thế giới mới (Claude điều phối tạo ảnh, song song với E2)
+- Kit `lang-nghe` (núi đá, xưởng đá, thuyền thúng, chum nước mắm), `am-thuc` (gánh hàng, tô mì, khói bếp), `do-thi-song-le-hoi` (cầu Rồng, sông Hàn đêm, pháo hoa). Mỗi kit 3–5 lớp, qua `invoke_subagent` → `image-generator` của agy, rồi `node scripts/gen-scene-art.mjs --kit <kit>`.
+- Hạn mức ảnh hồi 10:55 UTC mỗi lần hết; thiếu ảnh thì kit tạm dùng trời + shader + 1–2 lớp SVG.
+
+## E4. Giao diện (worker)
+Mẫu tham chiếu: `components/shell/LevelCard.tsx`, `components/level/LevelPlayer.tsx`, `components/tour/TourEnd.tsx`, `components/fx/SceneBackdrop.tsx`, `components/checkin/RemoteModeView.tsx` (đọc passport sau hydrate bằng `useSyncExternalStore`).
+Quy tắc chung: chỉ đọc khóa qua `lib/level/unlock.ts`; không đọc store trước hydrate (trước hydrate hiện khung trung tính, không chớp "bị khóa" rồi mở); không lộ nội dung màn bị khóa (tiêu đề và thế giới hiện dạng bóng mờ, không hiện câu hỏi/đáp án); tôn trọng reduced-motion; vá CSS kính bằng hậu tố `!` như đợt photobooth (hoặc chờ T7 sửa gốc `glass.css`).
+
+| Task | Nội dung | File (chỉ sửa) | Worker | Phụ thuộc |
+|---|---|---|---|---|
+| U1 Danh sách màn có khóa | Thẻ màn bị khóa: ổ khóa, cảnh mờ của thế giới, dòng "Hoàn thành Màn 3 để mở"; thẻ vừa mở lần đầu có hiệu ứng mở khóa một lần (nhớ bằng localStorage, bọc try/catch); bấm thẻ khóa thì rung nhẹ + giải thích, không điều hướng | `app/kham-pha/page.tsx`, `components/shell/LevelCard.tsx` | ui-hydrogen | E1 |
+| U2 Chặn vào màn bị khóa | Vào thẳng `/kham-pha/{id}` khi chưa mở: màn hình "Địa điểm chưa mở" (bóng thế giới mờ, điều kiện, nút tới màn cần chơi); không render LevelPlayer | `app/kham-pha/[levelId]/page.tsx`, `components/level/LockedLevel.tsx` (mới) | ui-hydrogen-high | E1 |
+| U3 Khoảnh khắc mở khóa | Sau reveal, nếu `newlyUnlocked` có màn mới: thẻ "Mở khóa địa điểm mới" xem trước thế giới đó (SceneBackdrop thu nhỏ), Celebrate theo kit mới, nút ZoomNavigate vào màn | `components/level/LevelPlayer.tsx`, `components/level/UnlockReveal.tsx` (mới) | ui-hydrogen-high (hoặc ui-argon nếu đã hồi quota, khoảng 18/11) | E1 |
+| U4a Thế giới đi theo tour | `components/fx/ThemeScope.tsx` (mới): bọc nội dung bằng trời/shader + biến CSS `--world-accent` theo `sceneIdForSpot`; áp vào điểm dừng đang nghe của tour (đổi thế giới khi sang điểm, dùng PhaseTransition của kit); TourSetup gửi `spot_ids: unlockedSpotIds(...)` trong body `/api/tour/plan` và truyền cùng danh sách vào `pickStops(..., allowedIds)` ở nhánh dự phòng | `components/fx/ThemeScope.tsx`, `components/tour/TourPlayer.tsx`, `components/tour/TourStopStation.tsx`, `components/tour/TourSetup.tsx` | ui-hydrogen | E1 |
+| U4b Thế giới ở check-in + hộ chiếu | Dùng `ThemeScope` cho OnsiteBooth, điểm đã chọn ở RemoteModeView, thẻ dấu hộ chiếu (viền/màu nhấn theo thế giới); điểm chưa mở trong RemoteModeView ghi rõ "Hoàn thành Màn X để mở" bằng `isSpotUnlocked` | `components/checkin/OnsiteBooth.tsx`, `components/checkin/RemoteModeView.tsx`, `components/passport/StampCard.tsx` | ui-hydrogen | U4a |
+| U5 Kit 3 thế giới mới | `lib/scene/kits/lang-nghe.ts`, `am-thuc.ts`, `do-thi-song-le-hoi.ts` theo mẫu kit có sẵn, đăng ký trong `kits/index.ts`, thêm preset shader | `lib/scene/kits/*`, `components/fx/shaders/*` (preset) | ui-flash | E3 |
+
+Thứ tự: E1 → (E2 ∥ E3 ∥ U1 ∥ U2 ∥ U3 ∥ U4a) → U4b, U5.
+**Tiến độ 2026-11-14:** U1, U2, U3, U4a xong, reviewer (sonnet) duyệt sau ≤ 1 vòng sửa, kiểm trình duyệt với khóa thử tạm (đã gỡ). Còn: E2, E3, U4b, U5. Không task nào chung file trong cùng đợt.
+Review: `reviewer` gọi bằng model sonnet, tối đa 2 vòng sửa. Review U1–U3 kiểm kỹ: không lộ nội dung màn khóa, không chớp trạng thái khóa trước hydrate, cờ `?mo-khoa=tat-ca` không ghi vào hộ chiếu.
+Kiểm cuối (phiên chính): tsc, eslint, vitest, `next build` (dừng dev trước); trình duyệt 375px và 1440px: hộ chiếu trống → chơi xong Màn 3 → thấy Màn 4 mở; thử `?mo-khoa=tat-ca`; tour 10 phút chỉ đi qua điểm đã mở.
+
+**Cần chủ máy/đội nội dung xác nhận:** điểm mì Quảng cụ thể cho Màn 5; Màn 6 dùng Cầu Rồng + Ngũ Hành Sơn hay thêm cầu sông Hàn; tour cho người bận chỉ đi qua điểm đã mở (kế hoạch hiện tại) hay mở mọi điểm.
+
+---
+
+# Kế hoạch: làm đẹp /photobooth (check-in) + bản máy tính (mục 3.3 báo cáo, phần còn lại)
+
+Mẫu phong cách (đọc trước khi làm): `components/tour/TourSetup.tsx`, `components/tour/TourEnd.tsx` (GlassPanel, GlowButton/GlowLink, KineticText, StampPress, Celebrate, TiltCard, motion + `useReducedMotion`), `components/level/LevelPlayer.tsx` (bố cục `lg:` 2 cột, cột trái sticky), `lib/haptics.ts`.
+
+Quy tắc chung (mọi task):
+- **Không đổi logic**: xác thực vị trí (`locateSpot`, `requestIdRef`), cờ demo `?demo=`, `?spot=`, gọi `/api/caption` (timeout 8 giây, dự phòng `caption_fallback`, ô sửa ≤ 100 ký tự), đóng dấu `stamp(spot.id, "visited")` đúng một lần, camera (`useCamera`), ghép ảnh (`compose.ts`, `frames.ts`: **không sửa**), tải ảnh về.
+- **Quyền riêng tư CK-06 giữ nguyên**: tọa độ và ảnh không rời máy, chỉ `spot_id` gửi lên. Không thêm request mạng nào.
+- Giữ focus: `headingRef` vẫn gắn vào tiêu đề mỗi bước (CheckinFlow focus khi đổi bước). Không đổi `key` để tạo hiệu ứng (mất focus), rung/nảy dùng `useAnimate`.
+- Tôn trọng reduced-motion; nút ≥ 44px; focus ring không bị cắt (`overflow-hidden` cẩn thận).
+- Điện thoại giữ 1 cột; máy tính từ `lg:`.
+- Không đọc store passport trong lúc render trước hydrate (giữ cách `useSyncExternalStore` đang có ở RemoteModeView).
+- Worker không chạy lệnh shell.
+
+Chấp nhận: `npx tsc --noEmit`, `npx eslint app components lib`, `npx vitest run` qua; reviewer duyệt; phiên chính kiểm trên trình duyệt ở 375px và 1440px với `/photobooth?demo=<spot>` (tại chỗ) và chế độ từ xa.
+
+| Task | Nội dung | File (chỉ sửa) | Worker |
+|---|---|---|---|
+| P1 Mở đầu + định vị | Trang rộng ra ở máy tính (giống `app/tour/page.tsx`); băng "Chế độ demo" thành chip kính vàng; **CheckinIntro**: GlassPanel, tiêu đề KineticText, nút "Xác định vị trí" là GlowButton, "Ghé thăm từ xa" nút kính phụ; **CheckinFeedback**: lúc đang định vị có vòng radar tỏa ra (tắt khi reduced-motion), ngoài vùng hiện khoảng cách nổi bật + nút thử lại / từ xa, lỗi dùng panel kính tông cảnh báo; `haptic()` nhẹ khi định vị xong | `app/photobooth/page.tsx`, `components/checkin/CheckinFlow.tsx` (chỉ phần JSX bọc ngoài và băng demo), `components/checkin/CheckinIntro.tsx`, `components/checkin/CheckinFeedback.tsx` | ui-hydrogen |
+| P2 Khung chụp | **PhotoBooth** (chỉ giao diện): khung ngắm bo tròn có viền kính, số đếm ngược lớn dạng nảy (KineticText hoặc motion scale), chớp trắng khi chụp (tắt khi reduced-motion), ảnh xem lại nằm trong TiltCard, các nút là GlowButton/nút kính; trạng thái lỗi camera là panel kính có hướng dẫn. Không đổi `BoothPhase`, props, `onCaptured`, logic camera/ghép ảnh/tải về | `components/photobooth/PhotoBooth.tsx` | ui-hydrogen-high |
+| P3 Tại chỗ + nhận dấu | **OnsiteBooth**: tiêu đề "Bạn đang ở …" là panel kính; khi nhận dấu: StampPress "ĐÃ ĐẾN" + Celebrate + `haptic("success")`, nút "Xem hộ chiếu" là GlowLink; ô chú thích là panel kính, trạng thái đang tạo chú thích có shimmer. Máy tính: 2 cột, khung chụp trái, chú thích + dấu phải (sticky) | `components/checkin/OnsiteBooth.tsx` | ui-hydrogen |
+| P4 Ghé thăm từ xa | **RemoteModeView**: danh sách điểm thành thẻ TiltCard có ảnh/tên/chip đã có dấu; chọn thẻ có vòng sáng vàng; máy tính lưới 3 cột, khi đã chọn điểm thì 2 cột (khung chụp trái, thông tin phải). Giữ nguyên cách đọc stamps sau hydrate | `components/checkin/RemoteModeView.tsx` | ui-hydrogen |
+
+P1–P4 không chung file → chạy song song. Sau mỗi task: `reviewer`, tối đa 2 vòng sửa. Brief để trong `.agy-tasks/p1..p4.md`.
+Hạn mức: argon hết đến khoảng 18/11, nên không dùng argon.
+Ngoài phạm vi: sửa khung ảnh (`frames.ts`), tách nền MediaPipe, dải 3 khung (đã cắt theo KH).
+
+---
+
 # Kế hoạch: làm đẹp /tour + bản máy tính (mục 3.3 báo cáo)
 
 Mẫu phong cách: trang chủ/màn chơi hiện có (`components/fx/*`: Glass, GlowButton, TiltCard, KineticText, PhaseTransition, StampPress, Celebrate, ShaderBackdrop; `components/level/LevelPlayer.tsx` cho bố cục máy tính `lg:` 2 cột, cảnh trái sticky).
