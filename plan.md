@@ -1,3 +1,32 @@
+# Kế hoạch: xóa phông photobooth, phông theo thế giới (theme) (2026-11-14)
+
+Mục tiêu: chụp ở photobooth thì tách người khỏi phông thật, ghép lên phông của thế giới (scene kit) của điểm đang chụp. Có nút "Chỉ giữ phông" = giữ phông thế giới, bỏ khung/viền/dải chữ theo theme. Tắt xóa phông thì như hiện tại.
+
+Ba chế độ trong màn review (và preview live):
+1. `frame` (mặc định, hiện tại): ảnh camera thật + khung theme (`drawFrame`).
+2. `world`: người tách nền + phông thế giới + khung theme.
+3. `bg-only` (nút "Chỉ giữ phông"): người tách nền + phông thế giới, không vẽ `drawFrame`. Vẫn giữ dòng ngày/tên điểm nhỏ? → KHÔNG, bỏ hết theme cho đúng ý; tem ĐÃ ĐẾN onsite cũng không vẽ ở chế độ này (tem vẫn được cấp trong passport, chỉ ảnh không có).
+
+Quyết định kỹ thuật:
+- Tách người: `@mediapipe/tasks-vision` `ImageSegmenter` (selfie_segmenter, ~250 KB), chạy hoàn toàn trên máy (giữ CK-06: ảnh không rời thiết bị). Thêm 1 dependency là cần thiết: không tự viết được segmentation. Model + wasm tự host trong `public/models/` (không gọi CDN lúc chạy). Nạp lười: chỉ import khi người dùng bật xóa phông lần đầu.
+- Chỉ tách trên khung đã chụp (`rawFrameRef`, 1080x1920), không tách realtime ở live → nhẹ cho máy yếu. Preview live ở chế độ world/bg-only chỉ vẽ phông mờ quanh viền, không tách (shortcut, nâng cấp sau nếu cần).
+- Phông: dùng sẵn `SceneKit` (`getSceneKit(sceneIdForSpot(spot.id))`): vẽ `kit.sky` (parse gradient → `createLinearGradient`) rồi các `layers` (svg/webp) theo thứ tự xa→gần, căn đáy như `className`. Không vẽ thêm art mới. Thế giới chưa có ai-*.webp (lang-nghe, am-thuc chưa nối) dùng svg.
+- Mép mask: làm mềm bằng `ctx.filter = "blur(2px)"` trên mask, ghép bằng `globalCompositeOperation` (destination-in).
+- Không tách được (model lỗi, không có người) → báo nhẹ "Không tách được phông, giữ ảnh gốc", quay về `frame`.
+- CK-04 ("không dùng PNG/ảnh ngoài cho khung") vẫn đúng cho khung; phông là ảnh của scene kit có sẵn trong /public.
+
+| Task | File (chỉ sửa) | Worker |
+|---|---|---|
+| P1 Logic ghép: `segmentPerson(canvas) → mask` (nạp lười model), `drawWorldBackground(ctx, kit, w, h)`, `composeFromCanvas` nhận `bg: "frame" \| "world" \| "bg-only"`; test vitest cho parse gradient của `kit.sky` và nhánh chọn chế độ | `components/photobooth/segment.ts` (mới), `components/photobooth/background.ts` (mới), `components/photobooth/compose.ts`, `components/photobooth/background.test.ts` (mới), `package.json`, `public/models/*` | ui-hydrogen-high |
+| P2 UI: nhóm nút 3 chế độ trong màn review (segmented control, mẫu theo `GLASS_BUTTON_CLASS`), nút "Chỉ giữ phông" có `aria-pressed`, trạng thái "Đang tách phông…", lỗi quay về `frame`, ảnh tải/chia sẻ theo chế độ đang chọn | `components/photobooth/PhotoBooth.tsx` | ui-hydrogen (sau P1) |
+
+P2 phụ thuộc API của P1 → chạy nối tiếp. Reviewer mỗi task, tối đa 2 vòng sửa.
+Chấp nhận: tsc, eslint, vitest qua; `next build` qua (wasm trong public); trên trình duyệt 375px/1440px chụp được ở cả 3 chế độ, tải về đúng ảnh; tắt mạng sau khi nạp trang vẫn tách được; chụp không có người → về ảnh gốc, không crash.
+Cần chủ máy quyết: (a) cho thêm `@mediapipe/tasks-vision`; (b) chế độ bg-only có bỏ cả tem ĐÃ ĐẾN trên ảnh không (kế hoạch đang bỏ).
+Phụ thuộc PR #3 (PhotoBooth.tsx thay đổi lớn ở đó) → làm sau khi PR #3 merge.
+
+---
+
 # Kế hoạch: màn 1 "Giữ thành" (Thành Điện Hải) cho demo hackathon (2026-11-14)
 
 Đổi hướng: demo chỉ màn Thành Điện Hải. Đã làm: Điện Hải lên màn 1, Chăm xuống màn 2 (sửa lời dẫn nối màn). Việc màn Chăm (ghép ảnh, tranh SVG) giữ nguyên trong cây làm việc, dừng ở đó; vòng sửa W2 (focus dialog) để sau.
