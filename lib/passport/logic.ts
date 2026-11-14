@@ -108,3 +108,34 @@ export function mergePassports(a: PassportState, b: PassportState): PassportStat
   }
   return merged;
 }
+
+// Ids are content slugs; anything else (incl. "__proto__") is dropped. Caps keep a hostile row small.
+const SAFE_ID = /^[a-z0-9][a-z0-9-]{0,63}$/;
+const MAX_KEYS = 200;
+const MAX_CODE_SCORE = 1_000_000;
+
+/** Untrusted passport (cloud row): keep only well-formed stamps and level results; recompute the total. */
+export function sanitizePassport(raw: unknown): PassportState {
+  const obj = (v: unknown) => (typeof v === "object" && v !== null && !Array.isArray(v) ? (v as Record<string, unknown>) : {});
+  const entries = (v: unknown) => Object.entries(obj(v)).filter(([id]) => SAFE_ID.test(id)).slice(0, MAX_KEYS);
+  const r = obj(raw);
+  const stamps: PassportState["stamps"] = {};
+  for (const [id, v] of entries(r.stamps)) {
+    const s = obj(v);
+    stamps[id] = {
+      ...(s.level === true ? { level: true } : {}),
+      ...(s.tour === true ? { tour: true } : {}),
+      ...(typeof s.visited === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s.visited) ? { visited: s.visited } : {}),
+    };
+  }
+  let state: PassportState = { stamps, levels: {}, total_code_score: 0 };
+  for (const [id, v] of entries(r.levels)) {
+    const l = obj(v);
+    const score =
+      typeof l.code_score === "number" && Number.isFinite(l.code_score)
+        ? Math.min(MAX_CODE_SCORE, Math.max(0, l.code_score))
+        : 0;
+    if (l.stars === 1 || l.stars === 2 || l.stars === 3) state = applyLevelResult(state, id, l.stars, score);
+  }
+  return state;
+}

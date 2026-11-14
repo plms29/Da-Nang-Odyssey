@@ -12,7 +12,9 @@ Nhánh `claude/phase-f-accounts` (từ `origin/main` 223b4e8). Đã có: photobo
 - `pickStops(..., allowedIds?)` + `/api/tour/plan` nhận `spot_ids` (như E1).
 - Chấp nhận: tsc, eslint, vitest, `validate-content` qua trên nhánh mới.
 
-## F1. Dữ liệu tài khoản (Claude, phiên chính, song song F0b)
+## F1. Dữ liệu tài khoản (Claude, phiên chính, song song F0b) — XONG 2026-11-14
+Đã có: `lib/prefs/{logic,store}.ts` (`{theme, theme_at}`, bỏ `seen_unlocks` vì `LevelCard` của main không dùng hiệu ứng một lần), `lib/theme` (`availableThemes`, `playerTitle` chữ giữ chỗ), `sanitizePassport` (chỉ id dạng slug, tối đa 200 khóa, điểm ≤ 1.000.000), `theme_at` tương lai > 1 ngày bị coi là 0, sync đẩy `{...passport, prefs}`, tải lỗi thì không đẩy đè. **T1 phải kiểm `theme` lúc dùng** bằng `availableThemes` (localStorage có thể bị sửa tay). Đăng nhập tài khoản khác trên cùng máy sẽ gộp tiến độ local vào tài khoản đó (giữ như main).
+G1–G3: mang nguyên bản đã review từ nhánh cũ (main không sửa các file này), `LevelPlayer` gộp 3 chiều; reviewer duyệt.
 - `lib/prefs/store.ts` (zustand persist `dn-prefs`): `{ theme: SceneId; seen_unlocks: string[] }`, mặc định `home`. Logic thuần trong `lib/prefs/logic.ts` + test: `sanitizePrefs(raw)` (chỉ nhận theme là id kit có thật và **đã mở** với tiến độ hiện tại, ngược lại về `home`; `seen_unlocks` lọc id màn có thật), `mergePrefs(local, cloud)`.
 - `lib/theme/index.ts` + test: `availableThemes(levels, passport)` = `home` + thế giới của mọi màn đã mở; `playerTitle(levels, passport)` danh hiệu theo số trang sổ tay đã tìm (chữ danh hiệu là giữ chỗ, đội nội dung chốt).
 - `lib/supabase/sync.ts`: dữ liệu trong cột `data` thành `{ ...passport, prefs }` (giữ tương thích bản cũ: thiếu `prefs` thì dùng local). Lúc tải từ mây: `mergePassports` như cũ + `mergePrefs` + `sanitizePrefs` (dữ liệu từ mây là ranh giới tin cậy, phải kiểm hình dạng). Đẩy lên khi passport **hoặc** prefs đổi. Không cần đổi `supabase/schema.sql` (cột jsonb, RLS theo `user_id` đã có).

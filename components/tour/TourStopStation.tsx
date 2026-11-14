@@ -55,7 +55,8 @@ export function TourStopStation({ spot, dispatch }: TourStopStationProps) {
     return (
       <GlassPanel
         tone="light"
-        className="overflow-hidden border border-gold/60 bg-gold/15"
+        className="overflow-hidden border bg-gold/15!"
+        style={{ borderColor: "var(--world-accent, #B5532F)" }}
       >
         <div className="relative p-5">
           <Celebrate kind="gold-burst" play={true} />
@@ -85,9 +86,13 @@ export function TourStopStation({ spot, dispatch }: TourStopStationProps) {
   }
 
   return (
-    <GlassPanel tone="light" className="space-y-4 p-4 lg:p-5">
+    <GlassPanel
+      tone="light"
+      className="space-y-4 border p-4 lg:p-5"
+      style={{ borderColor: "var(--world-accent, #B5532F)" }}
+    >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-bold uppercase tracking-wider text-river">
+        <span className="text-xs font-bold uppercase tracking-wider text-ink">
           Hoạt động tại điểm dừng
         </span>
       </div>

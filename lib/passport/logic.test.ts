@@ -3,6 +3,7 @@ import {
   applyLevelResult,
   applyStamp,
   countStamps,
+  sanitizePassport,
   emptyPassport,
   mergePassports,
   type PassportState,
@@ -103,5 +104,29 @@ describe("passport logic", () => {
     expect(m.stamps.s2).toEqual({ level: true });
     expect(m.levels.l1).toEqual({ stars: 3, code_score: 5 });
     expect(m.total_code_score).toBe(9);
+  });
+});
+
+describe("sanitizePassport", () => {
+  it("keeps well-formed data and drops junk", () => {
+    const p = sanitizePassport({
+      stamps: { a: { level: true, visited: "2026-11-14", evil: 1 }, b: "x", c: { visited: "bad" } },
+      levels: { l1: { stars: 2, code_score: 7 }, l2: { stars: 9, code_score: 5 }, l3: { stars: 1, code_score: -3 } },
+      total_code_score: 999999,
+    });
+    expect(p.stamps).toEqual({ a: { level: true, visited: "2026-11-14" }, b: {}, c: {} });
+    expect(p.levels).toEqual({ l1: { stars: 2, code_score: 7 }, l3: { stars: 1, code_score: 0 } });
+    expect(p.total_code_score).toBe(7);
+  });
+  it("returns an empty passport for non-objects", () => {
+    expect(sanitizePassport(null)).toEqual({ stamps: {}, levels: {}, total_code_score: 0 });
+    expect(sanitizePassport([1, 2])).toEqual({ stamps: {}, levels: {}, total_code_score: 0 });
+  });
+  it("drops __proto__ and non-slug ids, caps scores", () => {
+    const p = sanitizePassport(JSON.parse('{"stamps":{"__proto__":{"level":true},"ok-1":{"tour":true},"Bad Id":{}},"levels":{"__proto__":{"stars":3,"code_score":1},"l1":{"stars":1,"code_score":1e308},"l2":{"stars":1,"code_score":1e308}}}'));
+    expect(Object.keys(p.stamps)).toEqual(["ok-1"]);
+    expect(Object.getPrototypeOf(p.stamps)).toBe(Object.prototype);
+    expect(Object.keys(p.levels)).toEqual(["l1", "l2"]);
+    expect(p.total_code_score).toBe(2_000_000);
   });
 });
