@@ -4,6 +4,7 @@ import {
   applyStamp,
   countStamps,
   emptyPassport,
+  mergePassports,
   type PassportState,
 } from "./logic";
 
@@ -84,5 +85,23 @@ describe("passport logic", () => {
       tour: 2,
       visited: 1,
     });
+  });
+
+  it("mergePassports keeps union and best results", () => {
+    const a: PassportState = {
+      stamps: { s1: { level: true, visited: "2026-02-01" } },
+      levels: { l1: { stars: 1, code_score: 5 } },
+      total_code_score: 5,
+    };
+    const b: PassportState = {
+      stamps: { s1: { tour: true, visited: "2026-01-01" }, s2: { level: true } },
+      levels: { l1: { stars: 3, code_score: 2 }, l2: { stars: 2, code_score: 4 } },
+      total_code_score: 6,
+    };
+    const m = mergePassports(a, b);
+    expect(m.stamps.s1).toEqual({ level: true, tour: true, visited: "2026-01-01" });
+    expect(m.stamps.s2).toEqual({ level: true });
+    expect(m.levels.l1).toEqual({ stars: 3, code_score: 5 });
+    expect(m.total_code_score).toBe(9);
   });
 });

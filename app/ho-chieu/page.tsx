@@ -1,6 +1,7 @@
 import { getLevels, getSpots } from "@/lib/content";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { PassportView } from "@/components/passport/PassportView";
+import { AccountPanel } from "@/components/passport/AccountPanel";
 
 export default function HoChieuPage() {
   const spots = getSpots();
@@ -13,6 +14,8 @@ export default function HoChieuPage() {
         subtitle="Dấu hoàn thành màn, đã nghe tour và đã đến tận nơi"
         backHref="/"
       />
+
+      <AccountPanel />
 
       <PassportView spots={spots} levels={levels} />
     </main>

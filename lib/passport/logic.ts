@@ -89,3 +89,22 @@ export function countStamps(state: PassportState): {
 
   return { level, tour, visited };
 }
+
+/** Union of two passports: keeps every stamp, best stars/score per level, earliest visit date. */
+export function mergePassports(a: PassportState, b: PassportState): PassportState {
+  let merged: PassportState = { ...a, stamps: { ...a.stamps } };
+  for (const [spotId, s] of Object.entries(b.stamps)) {
+    const prev = merged.stamps[spotId] ?? {};
+    const visited = [prev.visited, s.visited].filter(Boolean).sort()[0];
+    merged.stamps[spotId] = {
+      ...prev,
+      ...(prev.level || s.level ? { level: true } : {}),
+      ...(prev.tour || s.tour ? { tour: true } : {}),
+      ...(visited ? { visited } : {}),
+    };
+  }
+  for (const [levelId, l] of Object.entries(b.levels)) {
+    merged = applyLevelResult(merged, levelId, l.stars, l.code_score);
+  }
+  return merged;
+}
