@@ -18,6 +18,10 @@ describe("story", () => {
     expect(pagesFound(levels, done)).toBe(1);
   });
 
+  it("keeps a finished level open even if the one before it is not done", () => {
+    expect(isLevelUnlocked(levels, { [levels[3].id]: { stars: 2 } }, levels[3].id)).toBe(true);
+  });
+
   it("has a guide, prologue and epilogue, and six pages", () => {
     const story = getStory();
     expect(story.guide.name).toBeTruthy();

@@ -29,6 +29,9 @@ const KIT_SHADER_PRESETS: Record<string, ShaderPreset> = {
   "di-san-cham": "sunset",
   "nghe-thuat-dan-gian": "night",
   "lich-su-giu-thanh": "aurora",
+  "lang-nghe": "sunset",
+  "am-thuc": "sunset",
+  "do-thi-song-le-hoi": "night",
 };
 
 const GOD_RAYS: ReadonlyArray<{

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" fill="none">
+  <defs>
+    <linearGradient id="mai-cho-roof" x1="600" y1="60" x2="600" y2="210" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#D46A3F" />
+      <stop offset="100%" stop-color="#9A3F20" />
+    </linearGradient>
+    <linearGradient id="mai-cho-facade" x1="600" y1="185" x2="600" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F7E3B8" />
+      <stop offset="100%" stop-color="#DFBE86" />
+    </linearGradient>
+  </defs>
+
+  <!-- Than nha long Cho Han -->
+  <rect x="80" y="190" width="1040" height="210" fill="url(#mai-cho-facade)" />
+
+  <!-- Mai ngoi nha long 2 tang -->
+  <polygon points="40,196 150,104 1050,104 1160,196" fill="url(#mai-cho-roof)" />
+  <rect x="40" y="186" width="1120" height="14" rx="4" fill="#7D3016" />
+  <!-- Noc mai giua -->
+  <polygon points="360,112 430,52 770,52 840,112" fill="#C45931" />
+  <rect x="424" y="46" width="352" height="10" rx="4" fill="#8C3619" />
+
+  <!-- Cua vom dac trung cho truyen thong -->
+  <g fill="#5C3B24">
+    <path d="M165 390 L165 268 A48 48 0 0 1 261 268 L261 390 Z" />
+    <path d="M335 390 L335 268 A48 48 0 0 1 431 268 L431 390 Z" />
+    <path d="M530 390 L530 250 A70 70 0 0 1 670 250 L670 390 Z" />
+    <path d="M769 390 L769 268 A48 48 0 0 1 865 268 L865 390 Z" />
+    <path d="M939 390 L939 268 A48 48 0 0 1 1035 268 L1035 390 Z" />
+  </g>
+
+  <!-- Anh den am ben trong cua vom -->
+  <g fill="#F4B860" fill-opacity="0.32">
+    <path d="M180 390 L180 274 A33 33 0 0 1 246 274 L246 390 Z" />
+    <path d="M550 390 L550 258 A50 50 0 0 1 650 258 L650 390 Z" />
+    <path d="M954 390 L954 274 A33 33 0 0 1 1020 274 L1020 390 Z" />
+  </g>
+
+  <!-- Bang hieu cho am ap -->
+  <rect x="465" y="136" width="270" height="38" rx="6" fill="#FBF2DD" stroke="#9A3F20" stroke-width="4" />
+  <rect x="485" y="149" width="230" height="12" rx="4" fill="#C45931" fill-opacity="0.7" />
+</svg>

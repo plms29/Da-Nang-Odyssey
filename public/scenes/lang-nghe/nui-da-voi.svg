@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" fill="none">
+  <defs>
+    <linearGradient id="nui-da-voi-far" x1="600" y1="60" x2="600" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#C89B6E" stop-opacity="0.78" />
+      <stop offset="65%" stop-color="#A87A52" stop-opacity="0.88" />
+      <stop offset="100%" stop-color="#8A5E3B" stop-opacity="0.96" />
+    </linearGradient>
+    <linearGradient id="nui-da-voi-mid" x1="600" y1="90" x2="600" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#9E6F49" />
+      <stop offset="60%" stop-color="#7D5436" />
+      <stop offset="100%" stop-color="#5E3D26" />
+    </linearGradient>
+    <linearGradient id="nui-da-voi-haze" x1="600" y1="240" x2="600" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F2D399" stop-opacity="0" />
+      <stop offset="100%" stop-color="#E6B873" stop-opacity="0.5" />
+    </linearGradient>
+  </defs>
+
+  <!-- 5 ngon Ngu Hanh Son xa (Kim, Moc, Thuy, Hoa, Tho) -->
+  <!-- Lop nui xa nhat: 2 ngon ben ngoai va 1 ngon giua -->
+  <path
+    d="M0 330 L65 248 L128 190 L185 215 L245 275 L310 235 L395 135 L468 175 L535 255 L615 108 L685 152 L755 248 L835 162 L905 198 L975 268 L1045 182 L1125 225 L1200 295 L1200 400 L0 400 Z"
+    fill="url(#nui-da-voi-far)"
+  />
+
+  <!-- Vien nang chieu vang tren dinh da voi -->
+  <path
+    d="M128 190 L185 215 M395 135 L468 175 M615 108 L685 152 M835 162 L905 198 M1045 182 L1125 225"
+    stroke="#F8DFAA"
+    stroke-opacity="0.55"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Lop nui da voi gan hon tao chieu sau 5 ngon ro net -->
+  <path
+    d="M0 360 L90 292 L162 232 L238 295 L325 262 L418 176 L495 232 L575 288 L648 148 L725 208 L805 282 L878 212 L960 278 L1065 236 L1145 290 L1200 335 L1200 400 L0 400 Z"
+    fill="url(#nui-da-voi-mid)"
+  />
+
+  <!-- Mang sang am phan chia khoi da voi -->
+  <path d="M162 232 L238 295 L182 335 L125 290 Z" fill="#B68358" fill-opacity="0.45" />
+  <path d="M418 176 L495 232 L442 292 L378 242 Z" fill="#B68358" fill-opacity="0.45" />
+  <path d="M648 148 L725 208 L672 286 L608 228 Z" fill="#B68358" fill-opacity="0.5" />
+  <path d="M878 212 L960 278 L904 322 L842 266 Z" fill="#B68358" fill-opacity="0.42" />
+  <path d="M1065 236 L1145 290 L1095 335 L1030 288 Z" fill="#B68358" fill-opacity="0.4" />
+
+  <!-- Suong vang chan nui -->
+  <rect x="0" y="240" width="1200" height="160" fill="url(#nui-da-voi-haze)" />
+</svg>

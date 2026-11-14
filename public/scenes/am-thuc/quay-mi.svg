@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" fill="none">
+  <defs>
+    <linearGradient id="quay-mi-counter" x1="600" y1="220" x2="600" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#B5653B" />
+      <stop offset="100%" stop-color="#783D1E" />
+    </linearGradient>
+    <linearGradient id="quay-mi-pot" x1="420" y1="120" x2="580" y2="230" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E8ECEF" />
+      <stop offset="55%" stop-color="#B9C2C9" />
+      <stop offset="100%" stop-color="#8A949C" />
+    </linearGradient>
+  </defs>
+
+  <!-- Mai hien bat soc quay hang -->
+  <polygon points="110,120 190,46 1010,46 1090,120" fill="#D45333" />
+  <g fill="#F8E2B8">
+    <polygon points="190,120 245,46 315,46 270,120" />
+    <polygon points="360,120 395,46 465,46 440,120" />
+    <polygon points="530,120 545,46 615,46 610,120" />
+    <polygon points="700,120 695,46 765,46 780,120" />
+    <polygon points="870,120 845,46 915,46 950,120" />
+  </g>
+  <!-- Cot chong quay -->
+  <rect x="150" y="120" width="18" height="270" fill="#6E3B1F" />
+  <rect x="1032" y="120" width="18" height="270" fill="#6E3B1F" />
+
+  <!-- Noi nuoc leo mi Quang to -->
+  <g>
+    <rect x="422" y="124" width="156" height="106" rx="14" fill="url(#quay-mi-pot)" />
+    <ellipse cx="500" cy="124" rx="78" ry="16" fill="#D9DFE3" />
+    <ellipse cx="500" cy="124" rx="64" ry="11" fill="#D98B2B" />
+    <!-- Quai noi -->
+    <rect x="404" y="152" width="20" height="14" rx="5" fill="#7D8790" />
+    <rect x="576" y="152" width="20" height="14" rx="5" fill="#7D8790" />
+    <!-- Can muoi muc nuoc leo -->
+    <path d="M518 122 L564 74" stroke="#8C969E" stroke-width="7" stroke-linecap="round" />
+  </g>
+
+  <!-- Chong to su va ro rau song tren quay -->
+  <g>
+    <path d="M250 205 L330 205 L318 228 L262 228 Z" fill="#F5EFE2" />
+    <path d="M254 182 L326 182 L316 204 L264 204 Z" fill="#EFE6D3" />
+    <path d="M258 160 L322 160 L314 181 L266 181 Z" fill="#FAF6ED" />
+    <!-- Ro rau song xanh -->
+    <path d="M680 198 C695 160, 795 160, 810 198 Z" fill="#5A9449" />
+    <circle cx="722" cy="182" r="18" fill="#6FAD5B" />
+    <circle cx="762" cy="180" r="20" fill="#4D823D" />
+    <path d="M668 198 L822 198 L804 228 L686 228 Z" fill="#C98F4B" />
+    <!-- Dia banh trang me -->
+    <circle cx="910" cy="202" r="34" fill="#F2D9A2" stroke="#C99A4E" stroke-width="3" />
+    <g fill="#5C4428">
+      <circle cx="898" cy="194" r="2" />
+      <circle cx="915" cy="190" r="2" />
+      <circle cx="924" cy="206" r="2" />
+      <circle cx="904" cy="212" r="2" />
+    </g>
+  </g>
+
+  <!-- Mat ban quay hang -->
+  <rect x="120" y="224" width="960" height="18" rx="4" fill="#E8B978" />
+  <rect x="136" y="242" width="928" height="158" fill="url(#quay-mi-counter)" />
+  <!-- Thanh go trang tri mat truoc quay -->
+  <rect x="166" y="266" width="868" height="106" rx="6" fill="#8C4825" />
+  <rect x="190" y="284" width="820" height="70" rx="4" fill="#F4DFB6" fill-opacity="0.16" />
+</svg>

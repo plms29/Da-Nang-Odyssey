@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" fill="none">
+  <defs>
+    <radialGradient id="bui-da-puff-1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFF8EA" stop-opacity="0.65" />
+      <stop offset="65%" stop-color="#F5DFB5" stop-opacity="0.28" />
+      <stop offset="100%" stop-color="#F5DFB5" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="bui-da-puff-2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFF4DC" stop-opacity="0.55" />
+      <stop offset="70%" stop-color="#EBC88D" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#EBC88D" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Cum bui da min bay quanh khoi da va tuong -->
+  <ellipse cx="320" cy="310" rx="190" ry="68" fill="url(#bui-da-puff-1)" />
+  <ellipse cx="480" cy="335" rx="160" ry="52" fill="url(#bui-da-puff-2)" />
+  <ellipse cx="770" cy="295" rx="210" ry="74" fill="url(#bui-da-puff-1)" />
+  <ellipse cx="950" cy="330" rx="150" ry="54" fill="url(#bui-da-puff-2)" />
+
+  <!-- Hat bui da lap lanh trong nang chieu -->
+  <g fill="#FFF9EC" fill-opacity="0.78">
+    <circle cx="245" cy="272" r="3" />
+    <circle cx="290" cy="252" r="2" />
+    <circle cx="348" cy="285" r="3.5" />
+    <circle cx="412" cy="264" r="2" />
+    <circle cx="688" cy="248" r="2.5" />
+    <circle cx="742" cy="222" r="3" />
+    <circle cx="818" cy="256" r="2" />
+    <circle cx="865" cy="238" r="3" />
+    <circle cx="924" cy="276" r="2.5" />
+  </g>
+</svg>

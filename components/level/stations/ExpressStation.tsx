@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useId, useState, type FormEvent } from "react";
+import { useCallback, useId, useRef, useState, type FormEvent } from "react";
+import Image from "next/image";
 import { motion, useAnimate, useReducedMotion } from "motion/react";
 import { GlowButton } from "@/components/fx/GlowButton";
 import { haptic } from "@/lib/haptics";
@@ -9,6 +10,7 @@ import type {
   JudgeRequest,
   JudgeResult,
 } from "@/lib/types";
+import { DrawingPad, type DrawingPadHandle } from "../DrawingPad";
 import { VoiceRecorder } from "../VoiceRecorder";
 
 export interface ExpressStationProps {
@@ -45,6 +47,7 @@ export function ExpressStation({
   const reduced = Boolean(prefersReducedMotion);
   const [scope, animate] = useAnimate();
 
+  const isDrawingStation = station.type === "open_drawing";
   const maxSeconds =
     station.type === "open_text_or_voice" &&
     typeof station.max_seconds === "number" &&
@@ -57,20 +60,24 @@ export function ExpressStation({
   const [recording, setRecording] = useState<{ blob: Blob; mime: string } | null>(
     null,
   );
+  const [hasInk, setHasInk] = useState(false);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [judgeResult, setJudgeResult] = useState<JudgeResult | null>(null);
 
+  const drawingPadRef = useRef<DrawingPadHandle | null>(null);
   const uniqueId = useId();
   const textareaId = `${station.id}-answer`;
   const modeGroupLabelId = `${station.id}-${uniqueId}-mode-label`;
   const modeRadioName = `${station.id}-${uniqueId}-answer-mode`;
 
   const isVoiceMode = supportsVoice && answerMode === "voice";
-  const canSubmit = isVoiceMode
-    ? recording !== null
-    : text.trim().length > 0;
+  const canSubmit = isDrawingStation
+    ? hasInk || text.trim().length > 0
+    : isVoiceMode
+      ? recording !== null
+      : text.trim().length > 0;
 
   const rubricDescById = new Map(
     station.rubric.map((criterion) => [criterion.id, criterion.desc]),
@@ -85,6 +92,13 @@ export function ExpressStation({
     },
     [],
   );
+
+  const handleDrawingChange = useCallback((nextHasInk: boolean) => {
+    setHasInk(nextHasInk);
+    if (nextHasInk) {
+      setError(null);
+    }
+  }, []);
 
   function triggerShake() {
     if (!reduced && scope.current) {
@@ -103,7 +117,7 @@ export function ExpressStation({
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (isVoiceMode && !recording) {
+    if (!canSubmit) {
       return;
     }
 
@@ -111,7 +125,30 @@ export function ExpressStation({
     setError(null);
 
     let payload: JudgeRequest;
-    if (isVoiceMode && recording) {
+    if (isDrawingStation) {
+      if (hasInk) {
+        const image = drawingPadRef.current?.toBase64();
+        if (!image || image.data_base64.length === 0) {
+          setError("Không đọc được hình vẽ, thử lại nhé.");
+          haptic("error");
+          triggerShake();
+          setLoading(false);
+          return;
+        }
+        payload = {
+          level_id: levelId,
+          station_id: station.id,
+          text,
+          image,
+        };
+      } else {
+        payload = {
+          level_id: levelId,
+          station_id: station.id,
+          text,
+        };
+      }
+    } else if (isVoiceMode && recording) {
       try {
         const dataBase64 = await blobToBase64(recording.blob);
         payload = {
@@ -201,6 +238,28 @@ export function ExpressStation({
         </div>
       )}
 
+      {isDrawingStation && station.sample_image && (
+        <div className="mt-3 rounded-md border border-gold/50 bg-gold/15 p-3">
+          <p className="text-xs font-bold uppercase tracking-wider text-ink">
+            Hoa văn mẫu
+          </p>
+          <div className="mt-2 overflow-hidden rounded-md border border-ink/10 bg-sand p-2">
+            <Image
+              src={
+                station.sample_image.startsWith("/")
+                  ? station.sample_image
+                  : `/${station.sample_image}`
+              }
+              alt="Hoa văn mẫu"
+              width={400}
+              height={150}
+              unoptimized
+              className="mx-auto h-auto max-h-36 w-full object-contain"
+            />
+          </div>
+        </div>
+      )}
+
       {!judgeResult ? (
         <form ref={scope} onSubmit={handleSubmit} className="mt-4 space-y-3">
           {supportsVoice && (
@@ -269,13 +328,23 @@ export function ExpressStation({
             </div>
           ) : (
             <>
+              {isDrawingStation && (
+                <DrawingPad
+                  ref={drawingPadRef}
+                  disabled={loading}
+                  onChange={handleDrawingChange}
+                />
+              )}
+
               <div>
                 <div className="flex items-center justify-between gap-2">
                   <label
                     htmlFor={textareaId}
                     className="block text-sm font-semibold text-ink"
                   >
-                    Bài làm của bạn
+                    {isDrawingStation
+                      ? "Mô tả thêm (không bắt buộc)"
+                      : "Bài làm của bạn"}
                   </label>
                   <span className="text-xs text-muted">
                     {text.length}/{station.max_chars}
@@ -283,12 +352,16 @@ export function ExpressStation({
                 </div>
                 <textarea
                   id={textareaId}
-                  rows={4}
+                  rows={isDrawingStation ? 2 : 4}
                   maxLength={station.max_chars}
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   disabled={loading}
-                  placeholder="Nhập phần thể hiện của bạn tại đây..."
+                  placeholder={
+                    isDrawingStation
+                      ? "Mô tả ngắn về hoa văn bạn vẽ (không bắt buộc)..."
+                      : "Nhập phần thể hiện của bạn tại đây..."
+                  }
                   className="mt-1 w-full rounded-md border border-ink/20 bg-white px-3 py-2 text-sm text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta disabled:opacity-60"
                 />
               </div>

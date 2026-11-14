@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 300" fill="none">
+  <defs>
+    <radialGradient id="den-long-glow" cx="50%" cy="48%" r="50%">
+      <stop offset="0%" stop-color="#FFE08A" stop-opacity="0.95" />
+      <stop offset="55%" stop-color="#E2522E" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#A62B17" stop-opacity="1" />
+    </radialGradient>
+  </defs>
+
+  <!-- Day treo -->
+  <line x1="90" y1="0" x2="90" y2="54" stroke="#5E351B" stroke-width="4" />
+  <!-- Nap tren -->
+  <rect x="64" y="52" width="52" height="12" rx="4" fill="#C99A2E" />
+  <!-- Than den long -->
+  <ellipse cx="90" cy="134" rx="58" ry="72" fill="url(#den-long-glow)" />
+  <!-- Nan tre doc -->
+  <ellipse cx="90" cy="134" rx="34" ry="72" stroke="#8C2212" stroke-opacity="0.45" stroke-width="3" />
+  <ellipse cx="90" cy="134" rx="14" ry="72" stroke="#8C2212" stroke-opacity="0.45" stroke-width="2.5" />
+  <!-- Nap duoi -->
+  <rect x="66" y="204" width="48" height="12" rx="4" fill="#C99A2E" />
+  <!-- Tua rua vang do -->
+  <line x1="90" y1="216" x2="90" y2="278" stroke="#D9482B" stroke-width="6" stroke-linecap="round" />
+  <line x1="80" y1="224" x2="76" y2="270" stroke="#E8B43E" stroke-width="3" stroke-linecap="round" />
+  <line x1="100" y1="224" x2="104" y2="270" stroke="#E8B43E" stroke-width="3" stroke-linecap="round" />
+  <circle cx="90" cy="222" r="6" fill="#C99A2E" />
+</svg>

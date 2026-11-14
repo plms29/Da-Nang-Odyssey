@@ -25,6 +25,9 @@ Mọi agent `ui-*` gọi với `model: "haiku"` (chỉ điều phối, Gemini vi
 Các task W1–W5 không sửa chung file nên chạy song song, sau khi C1–C3 xong. Mỗi task có `reviewer` chấm, tối đa 2 vòng sửa.
 Điều kiện chấp nhận: `npx tsc --noEmit`, `npx eslint app components lib scripts`, `npx vitest run`, `node scripts/validate-content.mjs` đều qua; chơi hết 6 màn trên trình duyệt ở 375px và 1440px.
 
+**Kết quả (2026-11-14):** W1–W5 xong, reviewer duyệt cả 5 (W1, W2, W4 qua 1–2 vòng sửa; W5 phiên chính bỏ lớp cầu Rồng trùng và thêm preset trời). Kiểm trên trình duyệt: màn 4 chơi trọn (sắp xếp, vẽ, chấm dự phòng, sao, dấu), màn 5 trạm Nấu, màn 6 trạm Xưa và nay ở 1024px và 375px, đoạn kết khi đủ 6 trang. tsc, eslint, 130 test, validate-content, next build qua.
+Còn mở: tiêu đề thẻ màn chạy lại hiệu ứng một lần sau khi tải trang với người chơi cũ (LevelCard đổi cây bọc khi mở khóa, chỉ thẩm mỹ); nút Hoàn tác khi vẽ nhiều ngón (nit); chưa kiểm màn 1–3 sau khi thay nội dung, chưa thử Gemini chấm ảnh thật (máy không có khóa).
+
 **Không làm trong đợt này** (ghi lại để làm sau): trò phụ "kéo hiện vật về đúng phòng" (màn 1) và "gõ theo nhịp" (màn 3); trạm Tìm có hai ghim (màn 4 chỉ ghim làng đá, làng Nam Ô nhắc trong truyện); ảnh thật cho trò ghép hình; tranh AI cho 3 kit mới (đợi hạn mức ảnh); chặn mở màn khóa bằng đường dẫn trực tiếp (chỉ khóa trên danh sách).
 
 ---
