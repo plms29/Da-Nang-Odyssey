@@ -6,7 +6,8 @@ const layers: SceneLayer[] = [
   {
     src: "/scenes/lich-su-giu-thanh/ai-map.webp",
     depth: 0,
-    className: "inset-0 h-full w-full object-cover",
+    // 150% of the 100dvh box covers the 130% world plus the 15% depth-0 scroll offset, so no empty sky shows at the top
+    className: "bottom-0 left-0 h-[150%] w-full object-cover",
   },
   {
     src: "/scenes/lich-su-giu-thanh/ai-co.webp",
