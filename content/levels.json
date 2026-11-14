@@ -107,5 +107,297 @@
     ],
     "reveal": { "text": "[CHỜ KIỂM CHỨNG] Phần mở khóa tri thức của màn 3.", "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }] },
     "status": "draft"
+  },
+  {
+    "id": "man-4-lang-nghe",
+    "order": 4,
+    "title": "Bàn tay làng nghề",
+    "spot_ids": [
+      "lang-da-non-nuoc",
+      "lang-nuoc-mam-nam-o"
+    ],
+    "intro": {
+      "text": "[CHỜ KIỂM CHỨNG] Truyện dẫn cố định cho màn Bàn tay làng nghề."
+    },
+    "stations": [
+      {
+        "id": "tim",
+        "type": "map_pin",
+        "clue": "[CHỜ KIỂM CHỨNG] Manh mối dẫn tới bàn tay làng nghề.",
+        "target": {
+          "lat": 0,
+          "lng": 0,
+          "radius_m": 150
+        },
+        "hints": [
+          "Gợi ý 1 (giữ chỗ)",
+          "Gợi ý 2 (giữ chỗ)",
+          "Gợi ý 3 (giữ chỗ)"
+        ]
+      },
+      {
+        "id": "lam",
+        "type": "order",
+        "instruction": "Xếp các bước làm nghề theo đúng quy trình.",
+        "items": [
+          {
+            "id": "buoc-1",
+            "label": "[Bước 1 — chờ kiểm chứng]"
+          },
+          {
+            "id": "buoc-2",
+            "label": "[Bước 2 — chờ kiểm chứng]"
+          },
+          {
+            "id": "buoc-3",
+            "label": "[Bước 3 — chờ kiểm chứng]"
+          },
+          {
+            "id": "buoc-4",
+            "label": "[Bước 4 — chờ kiểm chứng]"
+          }
+        ],
+        "hints": [
+          "Gợi ý 1 (giữ chỗ)",
+          "Gợi ý 2 (giữ chỗ)",
+          "Gợi ý 3 (giữ chỗ)"
+        ]
+      },
+      {
+        "id": "the-hien",
+        "type": "open_text_or_voice",
+        "prompt": "Người thợ kể chuyện: viết 3 đến 4 câu giới thiệu nghề của làng cho một vị khách.",
+        "max_chars": 600,
+        "rubric": [
+          {
+            "id": "dung",
+            "desc": "Không trái với kho tri thức"
+          },
+          {
+            "id": "du-y",
+            "desc": "Nhắc đủ các ý bắt buộc",
+            "must_include": [
+              "[ý 1]",
+              "[ý 2]"
+            ]
+          },
+          {
+            "id": "nhap-vai",
+            "desc": "Giữ đúng vai người thợ làng nghề"
+          }
+        ]
+      }
+    ],
+    "reveal": {
+      "text": "[CHỜ KIỂM CHỨNG] Phần mở khóa tri thức của màn 4.",
+      "sources": [
+        {
+          "title": "[Nguồn cần bổ sung]",
+          "url": ""
+        }
+      ]
+    },
+    "unlock": {
+      "after": "man-3-ho-bai-choi",
+      "min_stars": 1
+    },
+    "status": "draft"
+  },
+  {
+    "id": "man-5-vi-quang",
+    "order": 5,
+    "title": "Vị Quảng",
+    "spot_ids": [
+      "diem-mi-quang"
+    ],
+    "intro": {
+      "text": "[CHỜ KIỂM CHỨNG] Truyện dẫn cố định cho màn Vị Quảng."
+    },
+    "stations": [
+      {
+        "id": "tim",
+        "type": "map_pin",
+        "clue": "[CHỜ KIỂM CHỨNG] Manh mối dẫn tới vị quảng.",
+        "target": {
+          "lat": 0,
+          "lng": 0,
+          "radius_m": 150
+        },
+        "hints": [
+          "Gợi ý 1 (giữ chỗ)",
+          "Gợi ý 2 (giữ chỗ)",
+          "Gợi ý 3 (giữ chỗ)"
+        ]
+      },
+      {
+        "id": "lam",
+        "type": "order",
+        "instruction": "\"Nấu\" tô mì Quảng: xếp nguyên liệu và các bước theo đúng thứ tự.",
+        "items": [
+          {
+            "id": "buoc-1",
+            "label": "[Bước 1 — chờ kiểm chứng]"
+          },
+          {
+            "id": "buoc-2",
+            "label": "[Bước 2 — chờ kiểm chứng]"
+          },
+          {
+            "id": "buoc-3",
+            "label": "[Bước 3 — chờ kiểm chứng]"
+          },
+          {
+            "id": "buoc-4",
+            "label": "[Bước 4 — chờ kiểm chứng]"
+          },
+          {
+            "id": "buoc-5",
+            "label": "[Bước 5 — chờ kiểm chứng]"
+          }
+        ],
+        "hints": [
+          "Gợi ý 1 (giữ chỗ)",
+          "Gợi ý 2 (giữ chỗ)",
+          "Gợi ý 3 (giữ chỗ)"
+        ]
+      },
+      {
+        "id": "the-hien",
+        "type": "open_text_or_voice",
+        "prompt": "Mời khách: giới thiệu món mì Quảng cho một vị khách lạ trong 2 đến 3 câu.",
+        "max_chars": 600,
+        "rubric": [
+          {
+            "id": "dung",
+            "desc": "Không trái với kho tri thức"
+          },
+          {
+            "id": "du-y",
+            "desc": "Nhắc đủ các ý bắt buộc",
+            "must_include": [
+              "[ý 1]",
+              "[ý 2]"
+            ]
+          },
+          {
+            "id": "nhap-vai",
+            "desc": "Giữ đúng vai người mời khách"
+          }
+        ]
+      }
+    ],
+    "reveal": {
+      "text": "[CHỜ KIỂM CHỨNG] Phần mở khóa tri thức của màn 5.",
+      "sources": [
+        {
+          "title": "[Nguồn cần bổ sung]",
+          "url": ""
+        }
+      ]
+    },
+    "unlock": {
+      "after": "man-4-lang-nghe",
+      "min_stars": 1
+    },
+    "status": "draft"
+  },
+  {
+    "id": "man-6-thanh-pho-ben-song",
+    "order": 6,
+    "title": "Thành phố bên sông",
+    "spot_ids": [
+      "cau-rong",
+      "ngu-hanh-son"
+    ],
+    "intro": {
+      "text": "[CHỜ KIỂM CHỨNG] Truyện dẫn cố định cho màn Thành phố bên sông."
+    },
+    "stations": [
+      {
+        "id": "tim",
+        "type": "map_pin",
+        "clue": "[CHỜ KIỂM CHỨNG] Manh mối dẫn tới thành phố bên sông.",
+        "target": {
+          "lat": 0,
+          "lng": 0,
+          "radius_m": 150
+        },
+        "hints": [
+          "Gợi ý 1 (giữ chỗ)",
+          "Gợi ý 2 (giữ chỗ)",
+          "Gợi ý 3 (giữ chỗ)"
+        ]
+      },
+      {
+        "id": "lam",
+        "type": "match",
+        "instruction": "Nối mỗi địa điểm với đặc điểm của nó.",
+        "pairs": [
+          {
+            "id": "cap-1",
+            "left": "[Địa điểm 1 — chờ kiểm chứng]",
+            "right": "[Đặc điểm 1 — chờ kiểm chứng]"
+          },
+          {
+            "id": "cap-2",
+            "left": "[Địa điểm 2 — chờ kiểm chứng]",
+            "right": "[Đặc điểm 2 — chờ kiểm chứng]"
+          },
+          {
+            "id": "cap-3",
+            "left": "[Địa điểm 3 — chờ kiểm chứng]",
+            "right": "[Đặc điểm 3 — chờ kiểm chứng]"
+          },
+          {
+            "id": "cap-4",
+            "left": "[Địa điểm 4 — chờ kiểm chứng]",
+            "right": "[Đặc điểm 4 — chờ kiểm chứng]"
+          }
+        ],
+        "hints": [
+          "Gợi ý 1 (giữ chỗ)",
+          "Gợi ý 2 (giữ chỗ)",
+          "Gợi ý 3 (giữ chỗ)"
+        ]
+      },
+      {
+        "id": "the-hien",
+        "type": "open_text_or_voice",
+        "prompt": "Bưu thiếp Đà Nẵng: viết lời nhắn 3 đến 4 câu tổng kết hành trình của bạn.",
+        "max_chars": 600,
+        "rubric": [
+          {
+            "id": "dung",
+            "desc": "Không trái với kho tri thức"
+          },
+          {
+            "id": "du-y",
+            "desc": "Nhắc đủ các ý bắt buộc",
+            "must_include": [
+              "[ý 1]",
+              "[ý 2]"
+            ]
+          },
+          {
+            "id": "nhap-vai",
+            "desc": "Giọng bưu thiếp gửi người thân"
+          }
+        ]
+      }
+    ],
+    "reveal": {
+      "text": "[CHỜ KIỂM CHỨNG] Phần mở khóa tri thức của màn 6.",
+      "sources": [
+        {
+          "title": "[Nguồn cần bổ sung]",
+          "url": ""
+        }
+      ]
+    },
+    "unlock": {
+      "after": "man-5-vi-quang",
+      "min_stars": 1
+    },
+    "status": "draft"
   }
 ]

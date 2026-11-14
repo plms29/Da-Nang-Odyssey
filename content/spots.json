@@ -43,5 +43,125 @@
     "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho điểm bài chòi.",
     "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }],
     "status": "draft"
+  },
+  {
+    "id": "lang-da-non-nuoc",
+    "name": "Làng đá mỹ nghệ Non Nước",
+    "theme": "lang-nghe",
+    "checkin": {
+      "lat": 0,
+      "lng": 0,
+      "radius_m": 200
+    },
+    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về Làng đá mỹ nghệ Non Nước. Đội nội dung điền sau khi đối chiếu hai nguồn.",
+    "tour_seconds": 60,
+    "route_order": 4,
+    "image": "images/lang-da-non-nuoc.jpg",
+    "frame": "frames/lang-da-non-nuoc.png",
+    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho Làng đá mỹ nghệ Non Nước.",
+    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho Làng đá mỹ nghệ Non Nước.",
+    "sources": [
+      {
+        "title": "[Nguồn cần bổ sung]",
+        "url": ""
+      }
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "lang-nuoc-mam-nam-o",
+    "name": "Làng nước mắm Nam Ô",
+    "theme": "lang-nghe",
+    "checkin": {
+      "lat": 0,
+      "lng": 0,
+      "radius_m": 200
+    },
+    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về Làng nước mắm Nam Ô. Đội nội dung điền sau khi đối chiếu hai nguồn.",
+    "tour_seconds": 60,
+    "route_order": 5,
+    "image": "images/lang-nuoc-mam-nam-o.jpg",
+    "frame": "frames/lang-nuoc-mam-nam-o.png",
+    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho Làng nước mắm Nam Ô.",
+    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho Làng nước mắm Nam Ô.",
+    "sources": [
+      {
+        "title": "[Nguồn cần bổ sung]",
+        "url": ""
+      }
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "diem-mi-quang",
+    "name": "[Điểm mì Quảng — đội chọn]",
+    "theme": "am-thuc",
+    "checkin": {
+      "lat": 0,
+      "lng": 0,
+      "radius_m": 200
+    },
+    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về [Điểm mì Quảng — đội chọn]. Đội nội dung điền sau khi đối chiếu hai nguồn.",
+    "tour_seconds": 60,
+    "route_order": 6,
+    "image": "images/diem-mi-quang.jpg",
+    "frame": "frames/diem-mi-quang.png",
+    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho [Điểm mì Quảng — đội chọn].",
+    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho [Điểm mì Quảng — đội chọn].",
+    "sources": [
+      {
+        "title": "[Nguồn cần bổ sung]",
+        "url": ""
+      }
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "cau-rong",
+    "name": "Cầu Rồng",
+    "theme": "do-thi-song-le-hoi",
+    "checkin": {
+      "lat": 0,
+      "lng": 0,
+      "radius_m": 200
+    },
+    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về Cầu Rồng. Đội nội dung điền sau khi đối chiếu hai nguồn.",
+    "tour_seconds": 60,
+    "route_order": 7,
+    "image": "images/cau-rong.jpg",
+    "frame": "frames/cau-rong.png",
+    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho Cầu Rồng.",
+    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho Cầu Rồng.",
+    "sources": [
+      {
+        "title": "[Nguồn cần bổ sung]",
+        "url": ""
+      }
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "ngu-hanh-son",
+    "name": "Ngũ Hành Sơn",
+    "theme": "do-thi-song-le-hoi",
+    "checkin": {
+      "lat": 0,
+      "lng": 0,
+      "radius_m": 200
+    },
+    "story": "[CHỜ KIỂM CHỨNG] Truyện kể về Ngũ Hành Sơn. Đội nội dung điền sau khi đối chiếu hai nguồn.",
+    "tour_seconds": 60,
+    "route_order": 8,
+    "image": "images/ngu-hanh-son.jpg",
+    "frame": "frames/ngu-hanh-son.png",
+    "caption_fallback": "[CHỜ KIỂM CHỨNG] Câu chú thích viết sẵn cho Ngũ Hành Sơn.",
+    "narration_fallback": "[CHỜ KIỂM CHỨNG] Lời kể dựng sẵn cho Ngũ Hành Sơn.",
+    "sources": [
+      {
+        "title": "[Nguồn cần bổ sung]",
+        "url": ""
+      }
+    ],
+    "status": "draft"
   }
 ]

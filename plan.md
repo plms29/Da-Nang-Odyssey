@@ -19,6 +19,7 @@ Ngoài phạm vi (theo thứ tự cắt của KH): trạm vẽ `open_drawing`, h
 - Chấp nhận: tsc, eslint, vitest qua (test mới cho mọi hàm trên).
 
 ## E2. Nội dung Màn 4–6 (Claude soạn nháp, đội nội dung kiểm chứng)
+**Nháp xong 2026-11-14:** 5 điểm + 3 màn đã vào `content/*.json` dạng khung giữ chỗ `[CHỜ KIỂM CHỨNG]` (tọa độ 0, mục/nhãn giữ chỗ, chưa có ảnh/khung), khóa chuỗi màn 3 → 4 → 5 → 6. Điểm mì Quảng tạm là `diem-mi-quang` (tên giữ chỗ), Màn 6 = Cầu Rồng + Ngũ Hành Sơn. Đội nội dung điền dữ kiện, tọa độ, nguồn.
 - `content/spots.json`: thêm `lang-da-non-nuoc`, `lang-nuoc-mam-nam-o` (theme `lang-nghe`), một điểm mì Quảng do đội chọn (`am-thuc`), `cau-rong`, `ngu-hanh-son` (`do-thi-song-le-hoi`). Mọi `story` ghi `[CHỜ KIỂM CHỨNG]`, `status: "draft"`, kèm nguồn.
 - `content/levels.json`: `man-4-lang-nghe` (`unlock.after: man-3-ho-bai-choi`), `man-5-vi-quang` (after màn 4), `man-6-thanh-pho-ben-song` (after màn 5). Trạm Làm: màn 4 `order` (quy trình làm nghề), màn 5 `order` (nấu tô mì), màn 6 `match` (công trình ↔ đặc điểm). Trạm Thể hiện: `open_text_or_voice` có rubric.
 - Chấp nhận: `node scripts/validate-content.mjs` qua; nội dung nháp hiện nhãn "Nội dung nháp" như hiện nay.
