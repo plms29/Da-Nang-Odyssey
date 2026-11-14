@@ -1,3 +1,22 @@
+# Kế hoạch: tab 3D, góc nhìn thứ nhất, bắt đầu với Bảo tàng Chăm
+
+Hướng: phòng low-poly bằng three.js, hiện vật là ảnh 2D dạng billboard (ảnh luôn quay về phía người xem). Chưa dùng mô hình .glb.
+Bước chuẩn bị (main session, không phải code UI): `npm i three @react-three/fiber @react-three/drei` và `@types/three` (dev).
+File mẫu: `app/photobooth/page.tsx` (trang + PageHeader), `components/shell/BottomNav.tsx` (mục nav), `public/scenes/di-san-cham/ai-*.webp` (ảnh có sẵn).
+Quy tắc chung: chỉ client tải three.js (`next/dynamic` với `ssr:false`) để trang khác không nặng thêm; tôn trọng reduced-motion; điện thoại là ưu tiên. Mọi chữ về hiện vật ghi `[CHỜ KIỂM CHỨNG]` cho đến khi đội nội dung đối chiếu nguồn.
+Chấp nhận chung: `npx tsc --noEmit`, `npx eslint`, `npx vitest run`, `npm run build` đều qua; reviewer duyệt.
+
+| Task | File (chỉ sửa) | Worker |
+|---|---|---|
+| T9 Dữ liệu + trang + nav: `content/museum-3d.json` gồm id bảo tàng, kích thước sảnh, 6–8 hiện vật {id, tên, mô tả, ảnh, vị trí x/z}; ảnh tạm dùng `ai-*.webp`. Route `/3d` có danh sách địa điểm (hiện chỉ Bảo tàng Chăm), `/3d/[spotId]` dùng PageHeader và nạp động `MuseumScene`. Thêm mục "3D" vào BottomNav | `content/museum-3d.json`, `app/3d/page.tsx`, `app/3d/[spotId]/page.tsx`, `components/shell/BottomNav.tsx` | ui-hydrogen |
+| T10 Cảnh 3D: `<Canvas>`, sảnh gạch đỏ Chăm (sàn, 4 tường, cột vuông), nền trời `ai-sky.webp`, bệ đá + billboard ảnh hiện vật, ánh sáng ấm, sương mù nhẹ. Đến gần ≤2m thì hiện thẻ kính có tên và mô tả | `components/museum3d/MuseumScene.tsx`, `components/museum3d/Exhibit.tsx` | ui-argon |
+| T11 Điều khiển: máy tính dùng WASD/mũi tên, nhìn quanh bằng PointerLock; điện thoại có joystick ảo bên trái, kéo nửa phải để nhìn quanh. Có va chạm với tường (chặn trong hình chữ nhật). Nút "Thoát" và hướng dẫn lần đầu. Có test cho hàm kẹp va chạm | `components/museum3d/FirstPersonControls.tsx`, `components/museum3d/Joystick.tsx`, `lib/museum3d/collide.ts`, `lib/museum3d/collide.test.ts` | ui-hydrogen-high |
+
+Thứ tự: T9 song song T11. T10 chạy sau T9 (cần schema JSON). T10 gắn T11 vào qua `<FirstPersonControls bounds={...} />`, nên T11 phải xuất props này trước.
+Đợt sau (không làm lần này): gen ảnh PNG tách nền cho từng hiện vật, thay billboard bằng `.glb` cho 1–2 món tiêu biểu, thêm các địa điểm khác.
+
+---
+
 # Kế hoạch: làm đẹp /tour + bản máy tính (mục 3.3 báo cáo)
 
 Mẫu phong cách: trang chủ/màn chơi hiện có (`components/fx/*`: Glass, GlowButton, TiltCard, KineticText, PhaseTransition, StampPress, Celebrate, ShaderBackdrop; `components/level/LevelPlayer.tsx` cho bố cục máy tính `lg:` 2 cột, cảnh trái sticky).

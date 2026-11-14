@@ -1,0 +1,68 @@
+[
+  {
+    "spotId": "bao-tang-cham",
+    "hall": {
+      "width": 16,
+      "depth": 24,
+      "height": 5
+    },
+    "exhibits": [
+      {
+        "id": "vu-nu-tra-kieu",
+        "name": "[CHỜ KIỂM CHỨNG] Vũ nữ Trà Kiệu",
+        "description": "[CHỜ KIỂM CHỨNG] Phù điêu vũ nữ Apsara uyển chuyển, tiêu biểu cho phong cách điêu khắc Trà Kiệu.",
+        "image": "/scenes/di-san-cham/ai-be-tho.webp",
+        "x": -4,
+        "z": 5
+      },
+      {
+        "id": "be-tho-my-son-e1",
+        "name": "[CHỜ KIỂM CHỨNG] Bệ thờ Mỹ Sơn E1",
+        "description": "[CHỜ KIỂM CHỨNG] Bệ thờ đá sa thạch chạm khắc cảnh sinh hoạt tu sĩ và hoa văn cổ.",
+        "image": "/scenes/di-san-cham/ai-thap.webp",
+        "x": 4,
+        "z": 5
+      },
+      {
+        "id": "tuong-shiva",
+        "name": "[CHỜ KIỂM CHỨNG] Tượng Shiva",
+        "description": "[CHỜ KIỂM CHỨNG] Tượng thần Shiva ngồi thiền trên đài sen, biểu tượng trung tâm trong tín ngưỡng Chăm.",
+        "image": "/scenes/di-san-cham/ai-hoa-sen.webp",
+        "x": -5,
+        "z": 0
+      },
+      {
+        "id": "garuda",
+        "name": "[CHỜ KIỂM CHỨNG] Garuda",
+        "description": "[CHỜ KIỂM CHỨNG] Tượng chim thần Garuda dũng mãnh, thường được chạm ở góc bệ thờ và tháp.",
+        "image": "/scenes/di-san-cham/ai-doi-xa.webp",
+        "x": 0,
+        "z": 0
+      },
+      {
+        "id": "makara",
+        "name": "[CHỜ KIỂM CHỨNG] Makara",
+        "description": "[CHỜ KIỂM CHỨNG] Linh vật thủy quái Makara trong thần thoại Ấn Độ giáo, trang trí trên vòm cửa tháp Chăm.",
+        "image": "/scenes/di-san-cham/ai-be-tho.webp",
+        "x": 5,
+        "z": 0
+      },
+      {
+        "id": "dau-kala",
+        "name": "[CHỜ KIỂM CHỨNG] Đầu Kala",
+        "description": "[CHỜ KIỂM CHỨNG] Phù điêu đầu thần thời gian Kala với nét chạm khắc sâu và họa tiết đối xứng.",
+        "image": "/scenes/di-san-cham/ai-thap.webp",
+        "x": -4,
+        "z": -6
+      },
+      {
+        "id": "linga-yoni",
+        "name": "[CHỜ KIỂM CHỨNG] Linga-Yoni",
+        "description": "[CHỜ KIỂM CHỨNG] Đài thờ Linga-Yoni bằng đá nguyên khối, biểu trưng cho sự sinh sôi và sáng tạo.",
+        "image": "/scenes/di-san-cham/ai-hoa-sen.webp",
+        "x": 4,
+        "z": -6
+      }
+    ]
+  }
+]
