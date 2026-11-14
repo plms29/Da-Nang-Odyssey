@@ -54,10 +54,17 @@ for (const l of levels) {
     need(lam.before && lam.after && lam.spots?.length >= 1 && lam.spots.every((p) => [p.x, p.y, p.r].every((n) => n >= 0 && n <= 100)), `${w}: spot_diff cần before, after và spots có x, y, r trong 0..100`);
   if (lam?.type === "jigsaw") need(lam.image && lam.grid?.length === 2, `${w}: jigsaw cần image và grid`);
   for (const s of [tim, lam]) if (s) need(s.hints?.length === 3, `${w}/${s.id}: cần đúng 3 gợi ý`);
-  need(["open_text_or_voice", "open_drawing"].includes(the?.type), `${w}: trạm 3 phải là trạm Thể hiện`);
-  need(the?.rubric?.length === 3, `${w}: rubric cần đúng 3 tiêu chí`);
-  if (the?.type === "open_drawing") need(the.sample_image, `${w}: open_drawing cần sample_image`);
-  need(the?.max_chars > 0, `${w}: trạm Thể hiện cần max_chars`);
+  need(["open_text_or_voice", "open_drawing", "learn_retell"].includes(the?.type), `${w}: trạm 3 phải là trạm Thể hiện`);
+  if (the?.type === "learn_retell") {
+    const ids = (the.blanks ?? []).map((b) => b.id);
+    need(the.cards?.length >= 1 && ids.length >= 1, `${w}: learn_retell cần cards và blanks`);
+    need(ids.every((id) => the.template?.includes(`{{${id}}}`)), `${w}: mỗi blank phải có {{id}} trong template`);
+    need(the.blanks?.every((b) => b.answer && b.distractors?.length === 2 && b.explain), `${w}: blank cần answer, 2 distractors, explain`);
+  } else {
+    need(the?.rubric?.length === 3, `${w}: rubric cần đúng 3 tiêu chí`);
+    if (the?.type === "open_drawing") need(the.sample_image, `${w}: open_drawing cần sample_image`);
+    need(the?.max_chars > 0, `${w}: trạm Thể hiện cần max_chars`);
+  }
   checkStatus(w, l.status);
 }
 

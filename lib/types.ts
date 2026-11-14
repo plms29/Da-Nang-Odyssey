@@ -55,6 +55,8 @@ export interface MapPinStation {
   clue: string;
   target: CheckinArea;
   hints: Hints;
+  /** Named places drawn on the map so a newcomer learns the area. */
+  landmarks?: { name: string; lat: number; lng: number; note: string }[];
 }
 
 export interface JigsawStation {
@@ -71,7 +73,8 @@ export interface OrderStation {
   id: string;
   type: "order";
   instruction: string;
-  items: { id: string; label: string }[];
+  /** note: 1–2 sentences that teach the event; shown before and after sorting. */
+  items: { id: string; label: string; note?: string }[];
   hints: Hints;
 }
 
@@ -125,6 +128,26 @@ export interface ExpressStation {
   rubric: RubricCriterion[];
 }
 
+/** One gap in the model commentary: the answer plus two wrong choices. */
+export interface RetellBlank {
+  id: string;
+  answer: string;
+  distractors: [string, string];
+  /** Shown when a wrong choice is picked: teaches, does not just say "sai". */
+  explain: string;
+}
+
+/** Learn first, then retell: read cards, fill the commentary, read it aloud. Graded locally. */
+export interface RetellStation {
+  id: string;
+  type: "learn_retell";
+  prompt: string;
+  cards: { title: string; body: string; image?: string }[];
+  /** Commentary text; each gap is written as {{blank-id}}. */
+  template: string;
+  blanks: RetellBlank[];
+}
+
 export type ActivityStation =
   | MapPinStation
   | JigsawStation
@@ -132,7 +155,7 @@ export type ActivityStation =
   | MatchStation
   | RecipeStation
   | SpotDiffStation;
-export type Station = ActivityStation | ExpressStation;
+export type Station = ActivityStation | ExpressStation | RetellStation;
 
 /** C2 — one fixed level: intro, three stations (Tìm, Làm, Thể hiện), reveal. */
 export interface Level {
@@ -162,7 +185,7 @@ export interface JudgeResult {
   stars: 1 | 2 | 3;
   praise: string;
   addition: string;
-  graded_by: "gemini" | "fallback";
+  graded_by: "gemini" | "fallback" | "local";
   /** Gemini's transcript of a voice answer, when one was sent. */
   transcript?: string;
 }
