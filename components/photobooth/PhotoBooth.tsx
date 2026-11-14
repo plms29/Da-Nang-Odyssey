@@ -6,6 +6,7 @@ import { GlassPanel } from "@/components/fx/Glass";
 import { GlowButton } from "@/components/fx/GlowButton";
 import { TiltCard } from "@/components/fx/TiltCard";
 import { haptic } from "@/lib/haptics";
+import { sharePhoto } from "@/lib/community/photos";
 import type { Spot } from "@/lib/types";
 import {
   captureRawFrame,
@@ -83,6 +84,8 @@ export function PhotoBooth({
   const [usedPhoto, setUsedPhoto] = useState(false);
   const [captureError, setCaptureError] = useState<string | null>(null);
   const [showFlash, setShowFlash] = useState(false);
+  const [shareToCommunity, setShareToCommunity] = useState(false);
+  const [shareNote, setShareNote] = useState<string | null>(null);
 
   const reducedMotion = Boolean(useReducedMotion());
   const [countdownScope, animateCountdown] = useAnimate();
@@ -457,6 +460,11 @@ export function PhotoBooth({
     usedPhotoRef.current = true;
     setUsedPhoto(true);
     onCaptured?.(capturedBlob);
+    if (shareToCommunity) {
+      void sharePhoto(capturedBlob, spot, caption).then(
+        (ok) => setShareNote(ok ? "Đã đăng lên Cộng đồng." : "Không đăng được (cần đăng nhập)."),
+      );
+    }
   }
 
   const modeBadgeLabel =
@@ -485,7 +493,7 @@ export function PhotoBooth({
         <p className="text-sm leading-relaxed text-ink">
           Ứng dụng cần quyền truy cập camera để chụp ảnh lưu niệm cùng khung
           hình văn hóa của <strong>{spot.name}</strong>. Ảnh được xử lý hoàn
-          toàn trên thiết bị của bạn và không tải lên máy chủ.
+          toàn trên thiết bị của bạn; chỉ khi bạn tick chia sẻ, ảnh mới được đăng lên Cộng đồng.
         </p>
 
         <div className="pt-1">
@@ -581,6 +589,18 @@ export function PhotoBooth({
             )}
           </div>
         </TiltCard>
+
+        <label className="flex items-center gap-2 text-sm font-medium text-ink">
+          <input
+            type="checkbox"
+            checked={shareToCommunity}
+            disabled={usedPhoto}
+            onChange={(e) => setShareToCommunity(e.target.checked)}
+            className="h-5 w-5"
+          />
+          Chia sẻ ảnh này lên Cộng đồng (mọi người cùng thấy)
+        </label>
+        {shareNote && <p role="status" className="text-xs font-medium text-ink/80">{shareNote}</p>}
 
         <div className="flex flex-wrap items-center gap-2.5">
           <GlowButton
