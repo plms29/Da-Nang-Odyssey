@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" fill="none">
+  <defs>
+    <linearGradient id="to-mi-quang-bowl" x1="600" y1="190" x2="600" y2="410" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FAF3E3" />
+      <stop offset="65%" stop-color="#E7D8BE" />
+      <stop offset="100%" stop-color="#C7B28E" />
+    </linearGradient>
+    <linearGradient id="to-mi-quang-broth" x1="600" y1="130" x2="600" y2="255" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E69B35" />
+      <stop offset="100%" stop-color="#C46D1B" />
+    </linearGradient>
+  </defs>
+
+  <!-- Bong do duoi to mi -->
+  <ellipse cx="600" cy="396" rx="235" ry="20" fill="#5E381B" fill-opacity="0.28" />
+
+  <!-- Than to su lon -->
+  <path
+    d="M320 198 C326 322, 422 392, 600 392 C778 392, 874 322, 880 198 Z"
+    fill="url(#to-mi-quang-bowl)"
+  />
+  <!-- Hoa van xanh lam co dien tren to -->
+  <path
+    d="M356 266 C440 296, 760 296, 844 266"
+    stroke="#3B6B82"
+    stroke-opacity="0.55"
+    stroke-width="6"
+    stroke-linecap="round"
+  />
+  <!-- Chan de to -->
+  <rect x="492" y="378" width="216" height="18" rx="6" fill="#C7B28E" />
+
+  <!-- Mieng to va nuoc leo nghe vang -->
+  <ellipse cx="600" cy="196" rx="280" ry="64" fill="#FFF8EB" stroke="#D5C1A0" stroke-width="5" />
+  <ellipse cx="600" cy="198" rx="258" ry="52" fill="url(#to-mi-quang-broth)" />
+
+  <!-- Soi mi Quang vang nghe -->
+  <g stroke="#F7C948" stroke-width="11" stroke-linecap="round">
+    <path d="M405 204 C470 170, 560 228, 635 190" />
+    <path d="M430 222 C505 186, 595 236, 685 198" />
+    <path d="M475 182 C545 156, 645 210, 745 188" />
+    <path d="M510 226 C590 202, 680 232, 775 206" />
+  </g>
+
+  <!-- Banh trang me nuong cam ben mep to -->
+  <path d="M685 178 C712 104, 804 98, 832 168 Z" fill="#F2D79A" stroke="#C99446" stroke-width="3" />
+  <g fill="#5C4428">
+    <circle cx="748" cy="138" r="2.2" />
+    <circle cx="772" cy="144" r="2.2" />
+    <circle cx="760" cy="156" r="2.2" />
+    <circle cx="788" cy="154" r="2.2" />
+  </g>
+
+  <!-- Tom tuoi do hong -->
+  <path d="M452 178 C462 146, 512 146, 524 176 C504 166, 476 168, 452 178 Z" fill="#E66439" />
+  <path d="M542 164 C554 134, 602 136, 612 166 C592 156, 564 158, 542 164 Z" fill="#E66439" />
+
+  <!-- Trung cut luoc -->
+  <ellipse cx="645" cy="176" rx="22" ry="16" fill="#FFFDF8" />
+  <circle cx="645" cy="176" r="8" fill="#F2A93B" />
+
+  <!-- Thit heo ram va rau song, hanh la -->
+  <ellipse cx="520" cy="204" rx="28" ry="15" fill="#B55B34" />
+  <ellipse cx="566" cy="212" rx="26" ry="14" fill="#9E4B28" />
+  <g fill="#569442">
+    <ellipse cx="422" cy="196" rx="22" ry="11" transform="rotate(-18 422 196)" />
+    <ellipse cx="446" cy="214" rx="20" ry="10" transform="rotate(14 446 214)" />
+    <ellipse cx="696" cy="214" rx="22" ry="10" transform="rotate(-12 696 214)" />
+  </g>
+  <!-- Dau phong rang -->
+  <g fill="#D49B54">
+    <circle cx="592" cy="192" r="5" />
+    <circle cx="608" cy="198" r="4.5" />
+    <circle cx="578" cy="186" r="4.5" />
+  </g>
+
+  <!-- Doi dua tre gac tren mieng to -->
+  <line x1="650" y1="158" x2="960" y2="108" stroke="#8B5A33" stroke-width="7" stroke-linecap="round" />
+  <line x1="654" y1="172" x2="968" y2="130" stroke="#734725" stroke-width="7" stroke-linecap="round" />
+</svg>

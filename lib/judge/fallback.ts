@@ -85,3 +85,21 @@ export function gradeFallback(
     graded_by: "fallback",
   };
 }
+
+/** Fallback for drawings: code cannot see the picture, so a submitted drawing gets a middle score (2 stars). */
+export function gradeDrawingFallback(level: Level, station: ExpressStation): JudgeResult {
+  const criteria = station.rubric.map((criterion) => ({
+    id: criterion.id,
+    score: 2 as const,
+    evidence: "",
+  }));
+  const score = totalScore(criteria);
+  return {
+    criteria,
+    score,
+    stars: starsFor(score),
+    praise: "Cảm ơn bạn đã vẽ lại hoa văn!",
+    addition: firstSentence(level.reveal.text),
+    graded_by: "fallback",
+  };
+}

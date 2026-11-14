@@ -4,6 +4,8 @@ import type {
   MapPinStation,
   MatchStation,
   OrderStation,
+  RecipeStation,
+  SpotDiffStation,
   StationResult,
 } from "@/lib/types";
 
@@ -55,6 +57,32 @@ export function checkMatch(
       Object.prototype.hasOwnProperty.call(mapping, pair.id) &&
       mapping[pair.id] === pair.id
   );
+}
+
+/** Check whether the bowl holds exactly the recipe steps, in order (no distractors). */
+export function checkRecipe(station: RecipeStation, submittedIds: string[]): boolean {
+  if (submittedIds.length !== station.steps.length) return false;
+  return station.steps.every((step, index) => submittedIds[index] === step.id);
+}
+
+/** Return the id of the spot hit by a tap at (x, y) percent of the picture, or null. */
+export function hitSpot(
+  station: SpotDiffStation,
+  x: number,
+  y: number,
+  aspect = 1,
+): string | null {
+  // r is a percent of width; y percents are scaled by aspect (height / width) so the hit area is round.
+  const hit = station.spots.find(
+    (s) => Math.hypot(x - s.x, (y - s.y) * aspect) <= s.r,
+  );
+  return hit?.id ?? null;
+}
+
+/** Check whether every changed spot has been found. */
+export function checkSpotDiff(station: SpotDiffStation, foundIds: string[]): boolean {
+  const found = new Set(foundIds);
+  return station.spots.every((s) => found.has(s.id));
 }
 
 /** Build a StationResult; incorrect attempts always score 0. */

@@ -3,109 +3,597 @@
     "id": "man-1-dau-an-cham",
     "order": 1,
     "title": "Dấu ấn Chăm",
-    "spot_ids": ["bao-tang-cham"],
-    "intro": { "text": "[CHỜ KIỂM CHỨNG] Truyện dẫn cố định khoảng 30 giây cho màn Dấu ấn Chăm.", "audio": "audio/man-1-intro.mp3" },
+    "page": "Trang 1: Đá kể chuyện",
+    "spot_ids": [
+      "bao-tang-cham"
+    ],
+    "intro": {
+      "text": "Trang đầu tiên rơi gần một ngôi nhà mái cong như tháp cổ bên sông Hàn. Ông mình kể, trong ngôi nhà ấy có những vũ nữ bằng đá đã múa hơn một nghìn năm. Trang sổ bị kẹt dưới một phù điêu vỡ thành nhiều mảnh. Mình cùng tìm đường tới đó, ghép lại phù điêu, rồi làm thuyết minh viên một lần nhé!",
+      "audio": "audio/man-1-intro.mp3"
+    },
     "stations": [
       {
-        "id": "tim", "type": "map_pin",
-        "clue": "[CHỜ KIỂM CHỨNG] Manh mối dẫn tới Bảo tàng Điêu khắc Chăm.",
-        "target": { "lat": 0.0, "lng": 0.0, "radius_m": 150 },
-        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+        "id": "tim",
+        "type": "map_pin",
+        "clue": "Hãy tìm ngôi nhà mái cong như tháp Chăm, đứng ở góc đường mang tên ngày Quốc khánh, nhìn ra sông Hàn.",
+        "target": {
+          "lat": 16.0605,
+          "lng": 108.2235,
+          "radius_m": 250
+        },
+        "hints": [
+          "Nơi này nằm ở bờ tây sông Hàn, quận Hải Châu.",
+          "Tên con đường là 2 Tháng 9, giao với đường Bạch Đằng.",
+          "Đó là Bảo tàng Điêu khắc Chăm, ngay đầu phía nam đường Bạch Đằng, gần Cầu Rồng."
+        ]
       },
       {
-        "id": "lam", "type": "jigsaw",
-        "instruction": "Ghép các mảnh để hoàn thiện phù điêu.",
-        "image": "images/man-1-phu-dieu.jpg", "grid": [3, 3],
-        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+        "id": "lam",
+        "type": "jigsaw",
+        "instruction": "Ghép các mảnh để hoàn thiện phù điêu vũ nữ trên Đài thờ Trà Kiệu.",
+        "image": "images/man-1-phu-dieu.jpg",
+        "grid": [
+          3,
+          3
+        ],
+        "hints": [
+          "Bắt đầu từ bốn góc, các góc có viền thẳng.",
+          "Hàng trên là phần đầu và mũ của vũ nữ.",
+          "Hàng dưới là phần đế đài thờ, có hoa văn chạy ngang."
+        ]
       },
       {
-        "id": "the-hien", "type": "open_text_or_voice",
-        "prompt": "Thuyết minh viên 30 giây: giới thiệu hiện vật vừa ghép cho một du khách.",
-        "max_seconds": 30, "max_chars": 600,
+        "id": "the-hien",
+        "type": "open_text_or_voice",
+        "prompt": "Thuyết minh viên 30 giây: giới thiệu Đài thờ Trà Kiệu vừa ghép cho một du khách.",
+        "max_seconds": 30,
+        "max_chars": 600,
         "rubric": [
-          { "id": "dung", "desc": "Không trái với kho tri thức" },
-          { "id": "du-y", "desc": "Nêu đủ ba ý bắt buộc", "must_include": ["[ý 1]", "[ý 2]", "[ý 3]"] },
-          { "id": "de-hieu", "desc": "Diễn đạt dễ hiểu với người chưa biết" }
+          {
+            "id": "dung",
+            "desc": "Không trái với kho tri thức"
+          },
+          {
+            "id": "du-y",
+            "desc": "Nêu đủ ba ý: tên hiện vật, chất liệu, hình chạm nổi bật",
+            "must_include": [
+              "Trà Kiệu",
+              "sa thạch",
+              "vũ nữ"
+            ]
+          },
+          {
+            "id": "de-hieu",
+            "desc": "Diễn đạt dễ hiểu với người chưa biết"
+          }
         ]
       }
     ],
-    "reveal": { "text": "[CHỜ KIỂM CHỨNG] Phần mở khóa tri thức của màn 1.", "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }] },
+    "reveal": {
+      "text": "Đài thờ Trà Kiệu là bảo vật quốc gia, tạc bằng đá sa thạch, quanh chân đài là các vũ nữ Apsara và nhạc công. Bảo tàng Điêu khắc Chăm mở cửa năm 1919 và giữ sưu tập điêu khắc Chăm lớn nhất. Trang 1 của sổ tay đã về với Hàn. Trên mép trang có vết mực vẽ một tòa thành vuông bên bờ sông: đó là nơi trang tiếp theo đang chờ.",
+      "sources": [
+        {
+          "title": "Bảo tàng Điêu khắc Chăm Đà Nẵng (trang chính thức)",
+          "url": "https://chammuseum.danang.vn"
+        }
+      ]
+    },
     "status": "draft"
   },
   {
     "id": "man-2-giu-thanh",
     "order": 2,
     "title": "Giữ thành",
-    "spot_ids": ["thanh-dien-hai"],
-    "intro": { "text": "[CHỜ KIỂM CHỨNG] Truyện dẫn cố định cho màn Giữ thành.", "audio": "audio/man-2-intro.mp3" },
+    "page": "Trang 2: Lũy đất bên sông",
+    "spot_ids": [
+      "thanh-dien-hai"
+    ],
+    "intro": {
+      "text": "Trang thứ hai bay ngược dòng, tới một tòa thành cổ từng canh giữ cửa biển. Ông mình nói, mỗi viên gạch ở đó đều nhớ năm 1858, khi tiếng súng nổ trên vịnh Đà Nẵng. Nhưng các trang ghi chép về thành bị xáo trộn hết thứ tự. Mình cùng tìm thành, xếp lại dòng thời gian, rồi viết một lá thư trong vai người giữ thành nhé.",
+      "audio": "audio/man-2-intro.mp3"
+    },
     "stations": [
       {
-        "id": "tim", "type": "map_pin",
-        "clue": "[CHỜ KIỂM CHỨNG] Manh mối dẫn tới thành bên sông Hàn.",
-        "target": { "lat": 0.0, "lng": 0.0, "radius_m": 150 },
-        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+        "id": "tim",
+        "type": "map_pin",
+        "clue": "Tòa thành này mang tên nghĩa là \"điện bên biển\". Nó nằm trên con đường mang tên một chí sĩ yêu nước, gần sông Hàn.",
+        "target": {
+          "lat": 16.0759,
+          "lng": 108.2217,
+          "radius_m": 300
+        },
+        "hints": [
+          "Thành nằm ở quận Hải Châu, phía bắc trung tâm, cách sông Hàn vài trăm mét.",
+          "Con đường là Trần Phú.",
+          "Đó là Thành Điện Hải, gần chỗ đường Trần Phú gặp đường Lý Tự Trọng."
+        ]
       },
       {
-        "id": "lam", "type": "order",
-        "instruction": "Xếp các sự kiện vào đúng dòng thời gian.",
+        "id": "lam",
+        "type": "order",
+        "instruction": "Xếp các sự kiện vào đúng dòng thời gian, từ sớm nhất đến muộn nhất.",
         "items": [
-          { "id": "su-kien-1", "label": "[Sự kiện 1 — chờ kiểm chứng]" },
-          { "id": "su-kien-2", "label": "[Sự kiện 2 — chờ kiểm chứng]" },
-          { "id": "su-kien-3", "label": "[Sự kiện 3 — chờ kiểm chứng]" },
-          { "id": "su-kien-4", "label": "[Sự kiện 4 — chờ kiểm chứng]" }
+          {
+            "id": "1813",
+            "label": "Triều Nguyễn xây đồn Điện Hải gần cửa sông Hàn"
+          },
+          {
+            "id": "1823",
+            "label": "Đồn dời vào trong, xây lại bằng gạch, đổi tên thành thành Điện Hải"
+          },
+          {
+            "id": "1847",
+            "label": "Tàu chiến Pháp bắn phá cửa biển Đà Nẵng"
+          },
+          {
+            "id": "1858",
+            "label": "Liên quân Pháp và Tây Ban Nha tấn công, Nguyễn Tri Phương chỉ huy giữ thành"
+          }
         ],
-        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+        "hints": [
+          "Phải có đồn trước rồi mới có thành.",
+          "Hai sự kiện có tiếng súng đều xảy ra sau khi thành đã xây lại.",
+          "Thứ tự năm: 1813, 1823, 1847, 1858."
+        ]
       },
       {
-        "id": "the-hien", "type": "open_text_or_voice",
-        "prompt": "Lá thư từ thành: viết 3 đến 4 câu trong vai một người giữ thành.",
+        "id": "the-hien",
+        "type": "open_text_or_voice",
+        "prompt": "Lá thư từ thành: viết 3 đến 4 câu trong vai một người lính giữ thành Điện Hải năm 1858, gửi về cho gia đình.",
         "max_chars": 600,
         "rubric": [
-          { "id": "dung", "desc": "Không trái với kho tri thức" },
-          { "id": "du-y", "desc": "Nhắc đủ các ý bắt buộc", "must_include": ["[ý 1]", "[ý 2]"] },
-          { "id": "nhap-vai", "desc": "Giữ đúng vai người giữ thành" }
+          {
+            "id": "dung",
+            "desc": "Không trái với kho tri thức"
+          },
+          {
+            "id": "du-y",
+            "desc": "Nhắc tới thành Điện Hải và cửa sông Hàn",
+            "must_include": [
+              "Điện Hải",
+              "sông Hàn"
+            ]
+          },
+          {
+            "id": "nhap-vai",
+            "desc": "Giữ đúng vai người giữ thành, giọng thư gửi người thân"
+          }
         ]
       }
     ],
-    "reveal": { "text": "[CHỜ KIỂM CHỨNG] Phần mở khóa tri thức của màn 2.", "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }] },
+    "reveal": {
+      "text": "Đồn Điện Hải xây năm 1813, dời vào trong và đổi thành thành Điện Hải năm 1823. Năm 1858, quân dân trong thành theo Nguyễn Tri Phương đắp lũy, cầm chân liên quân Pháp và Tây Ban Nha nhiều tháng. Trang 2 đã về. Mặt sau trang có câu thơ lục bát chép vội, kèm hình chiếc trống và mấy cái chòi tre.",
+      "sources": [
+        {
+          "title": "Cổng thông tin Sở Văn hóa và Thể thao Đà Nẵng",
+          "url": "https://svhtt.danang.gov.vn"
+        }
+      ]
+    },
     "status": "draft"
   },
   {
     "id": "man-3-ho-bai-choi",
     "order": 3,
     "title": "Hô bài chòi",
-    "spot_ids": ["diem-bai-choi"],
-    "intro": { "text": "[CHỜ KIỂM CHỨNG] Truyện dẫn cố định cho màn Hô bài chòi.", "audio": "audio/man-3-intro.mp3" },
+    "page": "Trang 3: Tiếng hô giữa phố",
+    "spot_ids": [
+      "diem-bai-choi"
+    ],
+    "intro": {
+      "text": "Trang thứ ba theo gió vào phố cổ, nơi tối tối có tiếng trống và tiếng hô vang bên sông Hoài. Ông mình mê bài chòi lắm, ngày trẻ từng ngồi chòi suốt đêm Tết. Muốn lấy lại trang sổ, mình phải hiểu cuộc chơi và tự hô được một câu. Đi thôi!",
+      "audio": "audio/man-3-intro.mp3"
+    },
     "stations": [
       {
-        "id": "tim", "type": "map_pin",
-        "clue": "[CHỜ KIỂM CHỨNG] Manh mối dẫn tới nơi diễn bài chòi.",
-        "target": { "lat": 0.0, "lng": 0.0, "radius_m": 150 },
-        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+        "id": "tim",
+        "type": "map_pin",
+        "clue": "Tìm phố cổ bên sông Hoài, nơi có chiếc cầu mái ngói và đèn lồng thắp sáng mỗi tối.",
+        "target": {
+          "lat": 15.8768,
+          "lng": 108.3285,
+          "radius_m": 500
+        },
+        "hints": [
+          "Nơi này ở phía nam, cách trung tâm Đà Nẵng khoảng 30 km.",
+          "Đó là phố cổ Hội An, gần Chùa Cầu.",
+          "Sân diễn bài chòi ở dọc đường Bạch Đằng, ngay bờ sông Hoài."
+        ]
       },
       {
-        "id": "lam", "type": "match",
-        "instruction": "Ghép mỗi con bài với câu hô của nó.",
+        "id": "lam",
+        "type": "match",
+        "instruction": "Ghép mỗi thứ trong sân bài chòi với vai trò của nó.",
         "pairs": [
-          { "id": "con-bai-1", "left": "[Con bài 1]", "right": "[Câu hô 1 — chờ kiểm chứng]" },
-          { "id": "con-bai-2", "left": "[Con bài 2]", "right": "[Câu hô 2 — chờ kiểm chứng]" },
-          { "id": "con-bai-3", "left": "[Con bài 3]", "right": "[Câu hô 3 — chờ kiểm chứng]" }
+          {
+            "id": "anh-hieu",
+            "left": "Anh hiệu, chị hiệu",
+            "right": "Rút thẻ và hô câu thai"
+          },
+          {
+            "id": "choi",
+            "left": "Chòi tre",
+            "right": "Nơi người chơi ngồi chờ con bài"
+          },
+          {
+            "id": "ong-the",
+            "left": "Ống tre đựng thẻ",
+            "right": "Để rút con bài ngẫu nhiên"
+          },
+          {
+            "id": "trong-mo",
+            "left": "Trống, mõ",
+            "right": "Đổ hồi khi có người tới"
+          }
         ],
-        "hints": ["Gợi ý 1 (giữ chỗ)", "Gợi ý 2 (giữ chỗ)", "Gợi ý 3 (giữ chỗ)"]
+        "hints": [
+          "Người đứng giữa sân là người dẫn cuộc chơi.",
+          "Con bài phải được rút ngẫu nhiên để công bằng.",
+          "Tiếng trống mõ vang lên là lúc có người đủ ba con bài."
+        ]
       },
       {
-        "id": "the-hien", "type": "open_text_or_voice",
+        "id": "the-hien",
+        "type": "open_text_or_voice",
         "prompt": "Hô một câu bài chòi theo câu mẫu (ghi âm tối đa 20 giây, hoặc gõ chữ).",
-        "sample": "[Câu mẫu — chờ kiểm chứng]",
-        "max_seconds": 20, "max_chars": 300,
+        "sample": "Chiều xuân phố Hội lên đèn, anh hiệu rút thẻ hô liền: con Nhứt Trò!",
+        "max_seconds": 20,
+        "max_chars": 300,
         "rubric": [
-          { "id": "dung-loi", "desc": "Đúng lời câu mẫu" },
-          { "id": "ro-tieng", "desc": "Rõ tiếng, nghe được từng chữ" },
-          { "id": "ngat-nhip", "desc": "Có ngắt nhịp theo câu hô" }
+          {
+            "id": "dung-loi",
+            "desc": "Đúng lời câu mẫu",
+            "must_include": [
+              "phố Hội",
+              "Nhứt Trò"
+            ]
+          },
+          {
+            "id": "ro-tieng",
+            "desc": "Rõ tiếng, nghe được từng chữ"
+          },
+          {
+            "id": "ngat-nhip",
+            "desc": "Có ngắt nhịp theo câu hô"
+          }
         ]
       }
     ],
-    "reveal": { "text": "[CHỜ KIỂM CHỨNG] Phần mở khóa tri thức của màn 3.", "sources": [{ "title": "[Nguồn cần bổ sung]", "url": "" }] },
+    "reveal": {
+      "text": "Bài chòi là lối chơi dân gian miền Trung: anh hiệu rút thẻ, hô câu thai lục bát, ai đủ ba con bài thì trống mõ đổ hồi. Năm 2017, UNESCO ghi danh Nghệ thuật Bài Chòi Trung Bộ Việt Nam. Trang 3 đã về. Trên trang dính một ít bụi đá trắng và vẽ năm ngọn núi nhỏ.",
+      "sources": [
+        {
+          "title": "UNESCO: Art of Bài Chòi in Central Viet Nam",
+          "url": "https://ich.unesco.org/en/RL/art-of-bai-choi-in-central-viet-nam-01296"
+        }
+      ]
+    },
+    "status": "draft"
+  },
+  {
+    "id": "man-4-lang-nghe",
+    "order": 4,
+    "title": "Bàn tay làng nghề",
+    "page": "Trang 4: Bụi đá và hoa văn",
+    "spot_ids": [
+      "lang-da-non-nuoc"
+    ],
+    "intro": {
+      "text": "Trang thứ tư rơi xuống dưới chân năm ngọn núi, nơi cả ngày vang tiếng đục đá lách cách. Ông mình có một con rùa đá nhỏ mua ở đây từ hồi cưới bà. Người thợ đá già nói sẽ trả trang sổ nếu mình hiểu được cách làm nghề và vẽ lại được một hoa văn. Thử tay nhé!"
+    },
+    "stations": [
+      {
+        "id": "tim",
+        "type": "map_pin",
+        "clue": "Tìm làng nghề dưới chân năm ngọn núi đá vôi mang tên năm hành Kim, Mộc, Thủy, Hỏa, Thổ.",
+        "target": {
+          "lat": 16.0035,
+          "lng": 108.2635,
+          "radius_m": 700
+        },
+        "hints": [
+          "Làng ở phía đông nam thành phố, gần biển.",
+          "Năm ngọn núi đó là Ngũ Hành Sơn.",
+          "Làng đá mỹ nghệ Non Nước nằm dọc đường Huyền Trân Công Chúa, ngay chân núi."
+        ]
+      },
+      {
+        "id": "lam",
+        "type": "order",
+        "instruction": "Xếp các bước làm một tác phẩm đá theo đúng quy trình của người thợ.",
+        "items": [
+          {
+            "id": "chon-da",
+            "label": "Chọn khối đá"
+          },
+          {
+            "id": "phac-hinh",
+            "label": "Phác hình lên khối đá"
+          },
+          {
+            "id": "duc-tho",
+            "label": "Đục thô cho ra dáng"
+          },
+          {
+            "id": "cham-chi-tiet",
+            "label": "Chạm khắc chi tiết"
+          },
+          {
+            "id": "mai-bong",
+            "label": "Mài bóng"
+          }
+        ],
+        "hints": [
+          "Chưa có đá thì chưa làm gì được.",
+          "Phải ra dáng tổng thể rồi mới chạm chi tiết.",
+          "Mài bóng luôn là bước cuối cùng."
+        ]
+      },
+      {
+        "id": "the-hien",
+        "type": "open_drawing",
+        "prompt": "Phác hoa văn: vẽ lại hoa văn sóng nước theo mẫu của người thợ đá.",
+        "sample_image": "/patterns/hoa-van-song.svg",
+        "max_chars": 200,
+        "rubric": [
+          {
+            "id": "bo-cuc",
+            "desc": "Đúng bố cục mẫu: các ngọn sóng lặp lại thành dải"
+          },
+          {
+            "id": "chi-tiet",
+            "desc": "Có chi tiết đặc trưng của mẫu: ngọn sóng cuộn tròn"
+          },
+          {
+            "id": "net",
+            "desc": "Nét liền, đều tay"
+          }
+        ]
+      }
+    ],
+    "reveal": {
+      "text": "Thợ đá Non Nước làm theo năm bước: chọn đá, phác hình, đục thô, chạm chi tiết, mài bóng. Hoa văn sóng nước, mây, hoa sen thường gặp trên đồ đá. Phía bắc thành phố còn làng nước mắm Nam Ô, nơi cá cơm ủ muối trong thùng gỗ khoảng một năm. Trang 4 đã về, thơm mùi nghệ và có vết nước dùng: trang sau ở một khu chợ.",
+      "sources": [
+        {
+          "title": "Cổng thông tin điện tử thành phố Đà Nẵng",
+          "url": "https://danang.gov.vn"
+        },
+        {
+          "title": "Cổng du lịch Đà Nẵng",
+          "url": "https://danangfantasticity.com"
+        }
+      ]
+    },
+    "status": "draft"
+  },
+  {
+    "id": "man-5-vi-quang",
+    "order": 5,
+    "title": "Vị Quảng",
+    "page": "Trang 5: Tô mì của bà",
+    "spot_ids": [
+      "cho-han"
+    ],
+    "intro": {
+      "text": "Trang thứ năm bay vào một khu chợ đông vui bên sông, rơi đúng quầy mì của một cô bán hàng. Ông mình nói, bà ngày trước nấu mì Quảng ngon nhất xóm, và công thức nằm trong chính trang này. Cô bán hàng sẽ trả trang nếu mình nấu đúng một tô. Vào bếp thôi!"
+    },
+    "stations": [
+      {
+        "id": "tim",
+        "type": "map_pin",
+        "clue": "Tìm khu chợ lâu đời mang tên dòng sông, ngay bờ tây sông, gần cây cầu quay.",
+        "target": {
+          "lat": 16.0682,
+          "lng": 108.2245,
+          "radius_m": 250
+        },
+        "hints": [
+          "Chợ nằm ở quận Hải Châu, gần đường Bạch Đằng.",
+          "Tên chợ trùng với tên sông chảy qua thành phố.",
+          "Đó là Chợ Hàn, giữa đường Trần Phú và đường Bạch Đằng, gần cầu sông Hàn."
+        ]
+      },
+      {
+        "id": "lam",
+        "type": "recipe",
+        "instruction": "Nấu một tô mì Quảng: chọn đúng nguyên liệu và cho vào tô theo đúng thứ tự.",
+        "steps": [
+          {
+            "id": "rau-song",
+            "label": "Lót rau sống dưới đáy tô"
+          },
+          {
+            "id": "soi-mi",
+            "label": "Cho sợi mì vàng"
+          },
+          {
+            "id": "tom-thit",
+            "label": "Xếp tôm, thịt, trứng lên trên"
+          },
+          {
+            "id": "nuoc-nhan",
+            "label": "Chan nước nhân xâm xấp"
+          },
+          {
+            "id": "dau-phong",
+            "label": "Rắc đậu phộng, kèm bánh tráng mè"
+          }
+        ],
+        "distractors": [
+          {
+            "id": "nuoc-ngap",
+            "label": "Chan nước dùng ngập tô"
+          },
+          {
+            "id": "bun-tuoi",
+            "label": "Thả sợi bún tươi"
+          },
+          {
+            "id": "nuoc-cot-dua",
+            "label": "Rưới nước cốt dừa"
+          }
+        ],
+        "hints": [
+          "Mì Quảng không ăn ngập nước như phở.",
+          "Sợi mì Quảng làm từ gạo, màu vàng nghệ, không phải bún.",
+          "Thứ tự: rau, mì, tôm thịt, nước nhân, đậu phộng và bánh tráng."
+        ]
+      },
+      {
+        "id": "the-hien",
+        "type": "open_text_or_voice",
+        "prompt": "Mời khách: giới thiệu tô mì Quảng cho một người khách lạ trong 2 đến 3 câu.",
+        "max_seconds": 30,
+        "max_chars": 400,
+        "rubric": [
+          {
+            "id": "dung",
+            "desc": "Không trái với kho tri thức"
+          },
+          {
+            "id": "du-y",
+            "desc": "Nêu được nét riêng: sợi mì, nước ít, bánh tráng",
+            "must_include": [
+              "mì",
+              "nước",
+              "bánh tráng"
+            ]
+          },
+          {
+            "id": "moi-moc",
+            "desc": "Có lời mời thân thiện, hấp dẫn"
+          }
+        ]
+      }
+    ],
+    "reveal": {
+      "text": "Mì Quảng có sợi mì gạo vàng màu nghệ, rau sống lót đáy, tôm thịt bên trên, nước nhân chỉ xâm xấp, rắc đậu phộng và ăn kèm bánh tráng nướng mè. Chợ Hàn bên sông là nơi tìm được nhiều món Quảng. Trang 5 đã về. Trang cuối cùng, theo lời cô bán hàng, đã bay ra giữa sông, phía có con rồng vàng.",
+      "sources": [
+        {
+          "title": "Cổng thông tin điện tử thành phố Đà Nẵng",
+          "url": "https://danang.gov.vn"
+        },
+        {
+          "title": "Cổng du lịch Đà Nẵng",
+          "url": "https://danangfantasticity.com"
+        }
+      ]
+    },
+    "status": "draft"
+  },
+  {
+    "id": "man-6-thanh-pho-ben-song",
+    "order": 6,
+    "title": "Thành phố bên sông",
+    "page": "Trang 6: Hai bờ một dòng",
+    "spot_ids": [
+      "cau-rong"
+    ],
+    "intro": {
+      "text": "Trang cuối cùng mắc trên lan can một cây cầu hình rồng vắt ngang sông Hàn. Đó là trang ông mình vẽ bờ sông từ hồi mình còn chưa sinh ra. Giờ nhìn lại, thành phố đã đổi khác rất nhiều. Mình cùng tìm xem những gì đã thay đổi, rồi gửi một tấm bưu thiếp khép lại hành trình nhé."
+    },
+    "stations": [
+      {
+        "id": "tim",
+        "type": "map_pin",
+        "clue": "Tìm cây cầu hình rồng dài 666 mét, cuối tuần phun lửa và phun nước.",
+        "target": {
+          "lat": 16.0612,
+          "lng": 108.2272,
+          "radius_m": 300
+        },
+        "hints": [
+          "Cầu bắc qua sông Hàn, ở phía nam cầu sông Hàn.",
+          "Đầu cầu phía tây gần Bảo tàng Điêu khắc Chăm.",
+          "Đó là Cầu Rồng, nối đường Bạch Đằng với đường Võ Văn Kiệt ở bờ đông."
+        ]
+      },
+      {
+        "id": "lam",
+        "type": "spot_diff",
+        "instruction": "Ảnh xưa và nay: chạm vào những chỗ trên bờ sông hôm nay đã khác so với tranh ông vẽ năm xưa.",
+        "before": "/scenes/do-thi-song-le-hoi/xua.svg",
+        "after": "/scenes/do-thi-song-le-hoi/nay.svg",
+        "spots": [
+          {
+            "id": "cau-rong",
+            "label": "Cầu Rồng",
+            "x": 30,
+            "y": 58,
+            "r": 10
+          },
+          {
+            "id": "cau-song-han",
+            "label": "Cầu sông Hàn",
+            "x": 75,
+            "y": 55,
+            "r": 9
+          },
+          {
+            "id": "nha-cao-tang",
+            "label": "Nhà cao tầng",
+            "x": 52,
+            "y": 22,
+            "r": 9
+          },
+          {
+            "id": "den-ven-song",
+            "label": "Đèn ven sông",
+            "x": 12,
+            "y": 80,
+            "r": 7
+          },
+          {
+            "id": "du-thuyen",
+            "label": "Du thuyền",
+            "x": 58,
+            "y": 76,
+            "r": 8
+          }
+        ],
+        "hints": [
+          "Hãy nhìn những cây cầu bắc qua sông.",
+          "Nhìn lên đường chân trời và xuống mặt nước.",
+          "Có năm chỗ: hai cây cầu, nhà cao tầng, đèn ven sông và du thuyền."
+        ]
+      },
+      {
+        "id": "the-hien",
+        "type": "open_text_or_voice",
+        "prompt": "Bưu thiếp Đà Nẵng: viết lời nhắn gửi một người thân, kể lại hành trình sáu trang sổ của bạn.",
+        "max_chars": 500,
+        "rubric": [
+          {
+            "id": "dung",
+            "desc": "Không trái với kho tri thức"
+          },
+          {
+            "id": "nhac-lai",
+            "desc": "Nhắc lại ít nhất hai điều đã học trên hành trình"
+          },
+          {
+            "id": "loi-nhan",
+            "desc": "Viết như lời nhắn gửi người thân, có lời mời đến Đà Nẵng",
+            "must_include": [
+              "Đà Nẵng"
+            ]
+          }
+        ]
+      }
+    ],
+    "reveal": {
+      "text": "Cầu sông Hàn khánh thành năm 2000, là cây cầu quay đầu tiên của Việt Nam. Cầu Rồng khánh thành năm 2013, dài 666 mét, cuối tuần phun lửa và phun nước. Hành trình của bạn đã đi qua đá Chăm, thành Điện Hải, bài chòi phố Hội, làng đá Non Nước và tô mì Quảng. Trang 6 đã về: sổ tay sông Hàn lại đủ sáu trang.",
+      "sources": [
+        {
+          "title": "Cổng thông tin điện tử thành phố Đà Nẵng",
+          "url": "https://danang.gov.vn"
+        },
+        {
+          "title": "Cổng du lịch Đà Nẵng",
+          "url": "https://danangfantasticity.com"
+        }
+      ]
+    },
     "status": "draft"
   }
 ]

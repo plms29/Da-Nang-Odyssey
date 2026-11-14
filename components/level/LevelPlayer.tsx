@@ -38,6 +38,8 @@ import { JigsawStation } from "./stations/JigsawStation";
 import { OrderStation } from "./stations/OrderStation";
 import { MatchStation } from "./stations/MatchStation";
 import { ExpressStation } from "./stations/ExpressStation";
+import { RecipeStation } from "./stations/RecipeStation";
+import { SpotDiffStation } from "./stations/SpotDiffStation";
 
 export interface LevelPlayerProps {
   level: Level;
@@ -537,6 +539,22 @@ function renderStation(
     case "match":
       return (
         <MatchStation
+          key={station.id}
+          station={station}
+          onDone={(result) => dispatch({ type: "completeActivity", result })}
+        />
+      );
+    case "recipe":
+      return (
+        <RecipeStation
+          key={station.id}
+          station={station}
+          onDone={(result) => dispatch({ type: "completeActivity", result })}
+        />
+      );
+    case "spot_diff":
+      return (
+        <SpotDiffStation
           key={station.id}
           station={station}
           onDone={(result) => dispatch({ type: "completeActivity", result })}

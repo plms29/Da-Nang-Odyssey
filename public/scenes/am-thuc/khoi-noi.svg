@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" fill="none">
+  <defs>
+    <linearGradient id="khoi-noi-wisp-1" x1="160" y1="300" x2="160" y2="20" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFDF8" stop-opacity="0.58" />
+      <stop offset="60%" stop-color="#FFF7E6" stop-opacity="0.32" />
+      <stop offset="100%" stop-color="#FFF7E6" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="khoi-noi-wisp-2" x1="160" y1="290" x2="160" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFDF8" stop-opacity="0.48" />
+      <stop offset="100%" stop-color="#FFF7E6" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <path
+    d="M118 295 C92 246, 148 212, 124 158 C104 112, 144 68, 128 24"
+    stroke="url(#khoi-noi-wisp-1)"
+    stroke-width="26"
+    stroke-linecap="round"
+  />
+  <path
+    d="M168 302 C196 250, 140 202, 174 146 C198 106, 158 58, 178 18"
+    stroke="url(#khoi-noi-wisp-1)"
+    stroke-width="30"
+    stroke-linecap="round"
+  />
+  <path
+    d="M214 292 C190 248, 232 204, 206 154 C188 118, 218 76, 204 38"
+    stroke="url(#khoi-noi-wisp-2)"
+    stroke-width="22"
+    stroke-linecap="round"
+  />
+</svg>

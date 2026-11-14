@@ -57,3 +57,27 @@ export function validateAudio(audio: unknown, station: ExpressStation): string |
 
   return null;
 }
+
+export const ALLOWED_IMAGE_MIME_TYPES = ["image/png", "image/jpeg", "image/webp"] as const;
+export const MAX_IMAGE_DECODED_BYTES = 1_500_000;
+
+/** Validate a drawing payload: only for `open_drawing`, image MIME allowlist, size cap. */
+export function validateImage(image: unknown, station: ExpressStation): string | null {
+  if (station.type !== "open_drawing") return "Station does not support drawings";
+  if (typeof image !== "object" || image === null || Array.isArray(image)) {
+    return "image must be an object";
+  }
+  const { mime, data_base64 } = image as { mime?: unknown; data_base64?: unknown };
+  if (typeof mime !== "string" || typeof data_base64 !== "string") {
+    return "image.mime and image.data_base64 must be strings";
+  }
+  if (data_base64.trim().length === 0) return "image.data_base64 must not be empty";
+  if (!/^[A-Za-z0-9+/]+={0,2}$/.test(data_base64)) return "image.data_base64 is not valid base64";
+  if (!(ALLOWED_IMAGE_MIME_TYPES as readonly string[]).includes(extractBaseMime(mime))) {
+    return "Unsupported image mime type";
+  }
+  if (Math.floor((data_base64.length * 3) / 4) > MAX_IMAGE_DECODED_BYTES) {
+    return "Image payload exceeds size limit";
+  }
+  return null;
+}
