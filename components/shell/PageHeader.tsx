@@ -50,7 +50,7 @@ export function PageHeader({
     <header
       className={`-mx-4 mb-6 px-4 py-2 transition-[background-color,box-shadow,border-color] duration-200 lg:-mx-8 lg:px-8 ${
         scrolled
-          ? "sticky top-0 z-30 rounded-b-2xl border-b border-white/50 bg-sand/65 shadow-sm backdrop-blur-[18px] backdrop-saturate-[1.6] lg:top-20"
+          ? "sticky top-0 z-30 rounded-b-2xl border-b border-white/50 bg-sand/65 shadow-sm backdrop-blur-[18px] backdrop-saturate-[1.6] lg:static lg:rounded-none lg:border-transparent lg:bg-transparent lg:shadow-none lg:backdrop-blur-none lg:backdrop-saturate-100"
           : "border-b border-transparent"
       }`}
     >

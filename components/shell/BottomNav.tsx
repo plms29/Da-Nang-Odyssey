@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { GlassFilterDefs, GlassPanel } from "@/components/fx/Glass";
 
 interface NavItem {
@@ -97,11 +97,24 @@ const navItems: NavItem[] = [
 export function BottomNav() {
   const pathname = usePathname();
   const reduce = useReducedMotion();
+  const [hidden, setHidden] = useState(false);
+
+  // Desktop: hide the top nav while scrolling down, show it again on scroll up.
+  useEffect(() => {
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setHidden(y > last && y > 80);
+      last = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <>
       <GlassFilterDefs />
-      <div className="fixed bottom-[calc(12px+env(safe-area-inset-bottom))] left-1/2 z-50 w-[min(456px,calc(100%-24px))] -translate-x-1/2 lg:top-4 lg:bottom-auto lg:w-max lg:max-w-[720px]">
+      <div className={`fixed bottom-[calc(12px+env(safe-area-inset-bottom))] left-1/2 z-50 w-[min(456px,calc(100%-24px))] -translate-x-1/2 lg:top-4 lg:bottom-auto lg:w-max lg:max-w-[720px] lg:transition-transform lg:duration-300 ${hidden ? "lg:-translate-y-24" : ""}`}>
         <GlassPanel
           as="nav"
           tone="light"
