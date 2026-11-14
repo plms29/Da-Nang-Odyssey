@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { GlassPanel } from "@/components/fx/Glass";
 import {
   demoPosition,
   getCurrentPosition,
@@ -127,14 +128,19 @@ export function CheckinFlow({ spots }: CheckinFlowProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 lg:space-y-6">
       {demoSpot && (
-        <div
+        <GlassPanel
+          tone="light"
           role="status"
-          className="rounded-lg border border-gold bg-gold/20 px-4 py-3 text-sm font-semibold text-ink"
+          className="inline-flex items-center gap-2 rounded-full! border border-gold/70 bg-gold/25! px-4 py-2 text-sm font-semibold text-ink shadow-[0_0_16px_rgba(201,154,46,0.25)]!"
         >
-          Chế độ demo: giả lập đang đứng tại {demoSpot.name}
-        </div>
+          <span
+            aria-hidden="true"
+            className="h-2 w-2 shrink-0 rounded-full bg-gold"
+          />
+          <span>Chế độ demo: giả lập đang đứng tại {demoSpot.name}</span>
+        </GlassPanel>
       )}
 
       {step.kind === "intro" && (
