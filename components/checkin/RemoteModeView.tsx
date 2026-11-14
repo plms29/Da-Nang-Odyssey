@@ -2,7 +2,12 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore, type RefObject } from "react";
 import Link from "next/link";
+import { GlassPanel } from "@/components/fx/Glass";
+import { GlowButton } from "@/components/fx/GlowButton";
+import { KineticText } from "@/components/fx/KineticText";
+import { TiltCard } from "@/components/fx/TiltCard";
 import { PhotoBooth } from "@/components/photobooth/PhotoBooth";
+import { haptic } from "@/lib/haptics";
 import { usePassport } from "@/lib/passport/store";
 import type { Spot } from "@/lib/types";
 
@@ -57,43 +62,55 @@ export function RemoteModeView({
 
   if (selectedSpot) {
     return (
-      <section className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-ink/15 bg-white/80 p-4">
-          <div>
-            <h2
-              ref={headingRef}
-              tabIndex={-1}
-              className="text-base font-bold text-ink focus:outline-none"
-            >
-              Ghé thăm từ xa: {selectedSpot.name}
-            </h2>
-            <p className="mt-0.5 text-xs text-muted">
-              Ảnh kỷ niệm trực tuyến không ghi thêm dấu ĐÃ ĐẾN.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setSelectedSpotId(null)}
-            className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-sand px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
-          >
-            Chọn điểm khác
-          </button>
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start lg:gap-8">
+        <div className="lg:sticky lg:top-24 lg:order-2 lg:col-span-5">
+          <GlassPanel tone="light" className="space-y-4 p-4 lg:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3 lg:flex-col lg:items-stretch">
+              <div className="min-w-0">
+                <h2
+                  ref={headingRef}
+                  tabIndex={-1}
+                  className="text-base font-bold text-ink focus:outline-none lg:text-xl"
+                >
+                  Ghé thăm từ xa: {selectedSpot.name}
+                </h2>
+                <p className="mt-0.5 text-xs text-muted lg:mt-1.5 lg:text-sm">
+                  Ảnh kỷ niệm trực tuyến không ghi thêm dấu ĐÃ ĐẾN.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  haptic("tap");
+                  setSelectedSpotId(null);
+                }}
+                className="fx-glass fx-glass--light inline-flex min-h-11 items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold text-ink transition-colors motion-reduce:transition-none hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta lg:w-full"
+              >
+                Chọn điểm khác
+              </button>
+            </div>
+          </GlassPanel>
         </div>
 
-        <PhotoBooth spot={selectedSpot} mode="remote" />
+        <div className="min-w-0 lg:order-1 lg:col-span-7">
+          <PhotoBooth spot={selectedSpot} mode="remote" />
+        </div>
       </section>
     );
   }
 
   return (
-    <section className="space-y-4 rounded-lg border border-ink/15 bg-white/80 p-5">
+    <GlassPanel as="section" tone="light" className="space-y-5 p-5 lg:p-8">
       <div>
         <h2
           ref={headingRef}
           tabIndex={-1}
-          className="text-lg font-bold text-ink focus:outline-none"
+          className="text-lg font-bold text-ink focus:outline-none lg:text-2xl"
         >
-          Ghé thăm từ xa
+          <KineticText as="span" shimmer>
+            Ghé thăm từ xa
+          </KineticText>
         </h2>
         <p className="mt-1 text-sm leading-relaxed text-muted">
           Chọn điểm bạn đã mở khóa để chụp ảnh với khung hình từ xa (không ghi
@@ -108,43 +125,58 @@ export function RemoteModeView({
       ) : spots.length === 0 ? (
         <p className="text-sm text-muted">Chưa có điểm tham quan nào.</p>
       ) : (
-        <ul className="space-y-3">
+        <ul className="grid grid-cols-1 gap-3 lg:grid-cols-3 lg:gap-4">
           {spots.map((spot) => {
             const entry = stamps[spot.id];
             const unlocked = Boolean(entry?.level || entry?.tour);
+            const hasStamp = Boolean(
+              entry?.level || entry?.tour || entry?.visited,
+            );
 
             return (
-              <li
-                key={spot.id}
-                className="rounded-md border border-ink/15 bg-sand/60 p-3.5"
-              >
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-sm font-bold text-ink">{spot.name}</p>
+              <li key={spot.id}>
+                <TiltCard
+                  max={5}
+                  glare={false}
+                  className="flex h-full flex-col justify-between gap-3 rounded-xl border border-ink/15 bg-sand/70 p-3.5 transition-shadow motion-reduce:transition-none lg:p-4"
+                >
+                  <div className="space-y-2.5">
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <p className="text-sm font-bold text-ink">{spot.name}</p>
+                      {hasStamp && (
+                        <span className="inline-flex shrink-0 items-center rounded-full border border-gold/60 bg-gold/15 px-2.5 py-0.5 text-xs font-semibold text-ink">
+                          Đã có dấu
+                        </span>
+                      )}
+                    </div>
+
                     {!unlocked && (
-                      <p className="mt-1 text-xs text-muted">
+                      <p className="text-xs text-muted">
                         Hoàn thành màn hoặc nghe tour để mở khóa
                       </p>
                     )}
                   </div>
 
                   {unlocked ? (
-                    <button
+                    <GlowButton
                       type="button"
-                      onClick={() => setSelectedSpotId(spot.id)}
-                      className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-md bg-river px-4 py-2 text-sm font-semibold text-sand transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+                      onClick={() => {
+                        haptic("tap");
+                        setSelectedSpotId(spot.id);
+                      }}
+                      className="min-h-11 w-full px-4 py-2 text-sm"
                     >
                       Chụp ảnh từ xa
-                    </button>
+                    </GlowButton>
                   ) : (
                     <Link
                       href="/kham-pha"
-                      className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-md border border-terracotta/40 bg-white px-4 py-2 text-sm font-semibold text-terracotta transition-colors hover:bg-terracotta/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+                      className="fx-glass fx-glass--light inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-terracotta/40 px-4 py-2 text-sm font-semibold text-terracotta transition-colors motion-reduce:transition-none hover:bg-terracotta/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
                     >
                       Đến Khám phá
                     </Link>
                   )}
-                </div>
+                </TiltCard>
               </li>
             );
           })}
@@ -154,12 +186,15 @@ export function RemoteModeView({
       <div className="pt-1">
         <button
           type="button"
-          onClick={onBack}
-          className="inline-flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-sand px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+          onClick={() => {
+            haptic("tap");
+            onBack();
+          }}
+          className="fx-glass fx-glass--light inline-flex min-h-11 items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold text-ink transition-colors motion-reduce:transition-none hover:bg-gold/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
         >
           Quay lại check-in tại chỗ
         </button>
       </div>
-    </section>
+    </GlassPanel>
   );
 }
