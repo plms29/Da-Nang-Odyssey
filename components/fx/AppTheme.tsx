@@ -43,7 +43,7 @@ export function useAppTheme(): SceneId {
     : "home";
 }
 
-/** Exposes `--app-accent` and paints a subtle static sky backdrop behind pages for non-home themes. */
+/** Exposes `--app-accent`; the page background itself comes from AppBackground. */
 export function AppThemeFrame({ children }: { children: ReactNode }) {
   const theme = useAppTheme();
   const kit = getSceneKit(theme);
@@ -54,13 +54,6 @@ export function AppThemeFrame({ children }: { children: ReactNode }) {
       className="flex flex-1 flex-col"
       style={{ "--app-accent": accent } as CSSProperties}
     >
-      {theme !== "home" && (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-0"
-          style={{ background: kit.sky, opacity: 0.18 }}
-        />
-      )}
       <div className="relative flex flex-1 flex-col">{children}</div>
     </div>
   );

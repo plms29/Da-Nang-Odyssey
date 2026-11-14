@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useState, type ReactNode } from "react";
 import { useAppTheme } from "@/components/fx/AppTheme";
+import { ThemeSettings } from "@/components/shell/ThemeSettings";
 import { GlassFilterDefs, GlassPanel } from "@/components/fx/Glass";
 
 interface NavItem {
@@ -132,7 +133,7 @@ export function BottomNav() {
             <span className="hidden text-xs font-bold whitespace-nowrap text-ink lg:block">
               Hành trình văn hóa Đà Nẵng
             </span>
-            <ul className="grid grid-cols-4 gap-1 px-2 py-1.5 lg:flex lg:items-center lg:gap-2 lg:px-0 lg:whitespace-nowrap">
+            <ul className="grid grid-cols-5 gap-1 px-2 py-1.5 lg:flex lg:items-center lg:gap-2 lg:px-0 lg:whitespace-nowrap">
               {navItems.map((item) => {
                 const isActive =
                   pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -175,6 +176,9 @@ export function BottomNav() {
                   </li>
                 );
               })}
+              <li className="flex items-center justify-center">
+                <ThemeSettings compact />
+              </li>
             </ul>
           </div>
         </GlassPanel>
