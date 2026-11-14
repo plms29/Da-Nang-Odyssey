@@ -25,6 +25,7 @@ Ngoài phạm vi (theo thứ tự cắt của KH): trạm vẽ `open_drawing`, h
 - Chấp nhận: `node scripts/validate-content.mjs` qua; nội dung nháp hiện nhãn "Nội dung nháp" như hiện nay.
 
 ## E3. Tranh 3 thế giới mới (Claude điều phối tạo ảnh, song song với E2)
+**Tiến độ 2026-11-14:** prompt 12 lớp đã thêm vào `scripts/gen-scene-art.mjs`. Có 6/12: `lang-nghe` đủ 4 lớp (sky, nui-da, xuong-da, chum-mam), `am-thuc` có sky + pho-cho. Hết hạn mức ảnh, hồi 06:33 UTC 14/11. Còn: `am-thuc` ganh-hang, to-mi; `do-thi-song-le-hoi` cả 4 lớp (chạy lại `.agy-tasks/e3-art.md`, bỏ 6 ảnh đã có). Cần đội nội dung xem: đèn đá trong xuong-da có dáng Nhật, núi đá giống Quế Lâm hơn Ngũ Hành Sơn; lưới trong chum-mam ánh hồng do tách nền.
 - Kit `lang-nghe` (núi đá, xưởng đá, thuyền thúng, chum nước mắm), `am-thuc` (gánh hàng, tô mì, khói bếp), `do-thi-song-le-hoi` (cầu Rồng, sông Hàn đêm, pháo hoa). Mỗi kit 3–5 lớp, qua `invoke_subagent` → `image-generator` của agy, rồi `node scripts/gen-scene-art.mjs --kit <kit>`.
 - Hạn mức ảnh hồi 10:55 UTC mỗi lần hết; thiếu ảnh thì kit tạm dùng trời + shader + 1–2 lớp SVG.
 
