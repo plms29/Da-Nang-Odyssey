@@ -1,5 +1,16 @@
+import { getSceneKit, sceneIdForSpot } from "@/lib/scene";
 import type { Spot } from "@/lib/types";
+import { drawWorldBackground } from "./background";
 import { drawFrame } from "./frames";
+
+/** frame = camera photo + theme frame; world = person on the world's backdrop + frame; bg-only = backdrop, no frame. */
+export type BgMode = "frame" | "world" | "bg-only";
+
+/** Which layers to paint. Without a mask the photo cannot be cut out, so it falls back to "frame". */
+export function layersFor(bg: BgMode, hasMask: boolean): { world: boolean; frame: boolean } {
+  if (!hasMask || bg === "frame") return { world: false, frame: true };
+  return { world: true, frame: bg === "world" };
+}
 
 export const OUTPUT_WIDTH = 1080;
 export const OUTPUT_HEIGHT = 1920;
@@ -17,6 +28,9 @@ export interface ComposeCanvasOptions {
   mode: "onsite" | "remote";
   date: Date;
   caption?: string;
+  bg?: BgMode;
+  /** Person mask from `segmentPerson`, same size as the source. */
+  mask?: HTMLCanvasElement | null;
 }
 
 /**
@@ -90,7 +104,21 @@ export async function composeFromCanvas(
     throw new Error("Không thể khởi tạo khung vẽ 2D.");
   }
 
-  ctx.drawImage(sourceCanvas, 0, 0, OUTPUT_WIDTH, OUTPUT_HEIGHT);
+  const layers = layersFor(opts.bg ?? "frame", Boolean(opts.mask));
+  if (layers.world && opts.mask) {
+    await drawWorldBackground(ctx, getSceneKit(sceneIdForSpot(opts.spot.id)), OUTPUT_WIDTH, OUTPUT_HEIGHT);
+    const person = document.createElement("canvas");
+    person.width = OUTPUT_WIDTH;
+    person.height = OUTPUT_HEIGHT;
+    const pctx = person.getContext("2d");
+    if (!pctx) throw new Error("Không thể khởi tạo khung vẽ 2D.");
+    pctx.drawImage(sourceCanvas, 0, 0, OUTPUT_WIDTH, OUTPUT_HEIGHT);
+    pctx.globalCompositeOperation = "destination-in";
+    pctx.drawImage(opts.mask, 0, 0, OUTPUT_WIDTH, OUTPUT_HEIGHT);
+    ctx.drawImage(person, 0, 0);
+  } else {
+    ctx.drawImage(sourceCanvas, 0, 0, OUTPUT_WIDTH, OUTPUT_HEIGHT);
+  }
 
   // CK-05: Wait for Be Vietnam Pro font to finish loading before drawing Vietnamese diacritics
   if (typeof document !== "undefined" && document.fonts?.ready) {
@@ -105,12 +133,14 @@ export async function composeFromCanvas(
     } catch {}
   }
 
-  drawFrame(ctx, OUTPUT_WIDTH, OUTPUT_HEIGHT, {
-    spot: opts.spot,
-    mode: opts.mode,
-    date: opts.date,
-    caption: opts.caption,
-  });
+  if (layers.frame) {
+    drawFrame(ctx, OUTPUT_WIDTH, OUTPUT_HEIGHT, {
+      spot: opts.spot,
+      mode: opts.mode,
+      date: opts.date,
+      caption: opts.caption,
+    });
+  }
 
   return new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(

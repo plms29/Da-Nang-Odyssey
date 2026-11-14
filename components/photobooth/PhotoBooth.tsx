@@ -8,13 +8,21 @@ import { TiltCard } from "@/components/fx/TiltCard";
 import { haptic } from "@/lib/haptics";
 import type { Spot } from "@/lib/types";
 import {
+  type BgMode,
   captureRawFrame,
   composeFromCanvas,
   OUTPUT_HEIGHT,
   OUTPUT_WIDTH,
 } from "./compose";
 import { drawFrame } from "./frames";
+import { segmentPerson } from "./segment";
 import { useCamera } from "./useCamera";
+
+const BG_MODES: { id: BgMode; label: string }[] = [
+  { id: "frame", label: "Khung" },
+  { id: "world", label: "Phông thế giới" },
+  { id: "bg-only", label: "Chỉ giữ phông" },
+];
 
 export interface PhotoBoothProps {
   spot: Spot;
@@ -83,6 +91,9 @@ export function PhotoBooth({
   const [usedPhoto, setUsedPhoto] = useState(false);
   const [captureError, setCaptureError] = useState<string | null>(null);
   const [showFlash, setShowFlash] = useState(false);
+  const [bgMode, setBgMode] = useState<BgMode>("frame");
+  const [segmenting, setSegmenting] = useState(false);
+  const [bgNote, setBgNote] = useState<string | null>(null);
 
   const reducedMotion = Boolean(useReducedMotion());
   const [countdownScope, animateCountdown] = useAnimate();
@@ -92,6 +103,9 @@ export function PhotoBooth({
   const usedPhotoRef = useRef(false);
   const mountedRef = useRef(true);
   const rawFrameRef = useRef<HTMLCanvasElement | null>(null);
+  const maskRef = useRef<HTMLCanvasElement | null>(null);
+  // Bumped on every mode click / retake so only the latest request may update state.
+  const bgRunRef = useRef(0);
   const captureDateRef = useRef<Date | null>(null);
   const composedCaptionRef = useRef<string | undefined>(undefined);
   const captionRef = useRef<string | undefined>(caption);
@@ -323,6 +337,7 @@ export function PhotoBooth({
     }
 
     let cancelled = false;
+    const run = bgRunRef.current;
     const timer = window.setTimeout(() => {
       void (async () => {
         try {
@@ -331,8 +346,10 @@ export function PhotoBooth({
             mode,
             date: captureDate,
             caption,
+            bg: bgMode,
+            mask: maskRef.current,
           });
-          if (cancelled || !mountedRef.current) {
+          if (cancelled || run !== bgRunRef.current || !mountedRef.current) {
             return;
           }
 
@@ -356,7 +373,7 @@ export function PhotoBooth({
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [phase, caption, spot, mode]);
+  }, [phase, caption, spot, mode, bgMode]);
 
   // 3-2-1 countdown timer
   useEffect(() => {
@@ -413,7 +430,63 @@ export function PhotoBooth({
     setPhase("countdown");
   }
 
+  async function handleBgMode(next: BgMode) {
+    const rawCanvas = rawFrameRef.current;
+    const captureDate = captureDateRef.current;
+    if (next === bgMode || !rawCanvas || !captureDate) {
+      return;
+    }
+    const run = ++bgRunRef.current;
+    setBgNote(null);
+
+    let mask = maskRef.current;
+    if (next !== "frame" && !mask) {
+      setSegmenting(true);
+      mask = await segmentPerson(rawCanvas);
+      if (run !== bgRunRef.current || !mountedRef.current) {
+        return;
+      }
+      setSegmenting(false);
+      if (!mask) {
+        setBgNote("Không tách được phông, giữ ảnh gốc.");
+        return;
+      }
+      maskRef.current = mask;
+    }
+
+    try {
+      const blob = await composeFromCanvas(rawCanvas, {
+        spot,
+        mode,
+        date: captureDate,
+        caption: captionRef.current,
+        bg: next,
+        mask,
+      });
+      if (run !== bgRunRef.current || !mountedRef.current) {
+        return;
+      }
+      const fileName = `checkin-${spot.id}-${formatDateIso(captureDate)}.jpg`;
+      const { file, shareSupported } = buildShareMetadata(blob, fileName);
+      composedCaptionRef.current = captionRef.current;
+      setBgMode(next);
+      setCapturedBlob(blob);
+      setShareFile(file);
+      setCanShareFile(shareSupported);
+      setReviewUrl(URL.createObjectURL(blob));
+    } catch {
+      if (run === bgRunRef.current && mountedRef.current) {
+        setBgNote("Không ghép được ảnh, giữ ảnh hiện tại.");
+      }
+    }
+  }
+
   async function handleRetake() {
+    bgRunRef.current++;
+    maskRef.current = null;
+    setBgMode("frame");
+    setSegmenting(false);
+    setBgNote(null);
     rawFrameRef.current = null;
     captureDateRef.current = null;
     composedCaptionRef.current = undefined;
@@ -581,6 +654,25 @@ export function PhotoBooth({
             )}
           </div>
         </TiltCard>
+
+        <div role="group" aria-label="Kiểu ảnh" className="flex flex-wrap gap-2">
+          {BG_MODES.map((m) => (
+            <button
+              key={m.id}
+              type="button"
+              aria-pressed={bgMode === m.id}
+              disabled={segmenting || usedPhoto}
+              onClick={() => void handleBgMode(m.id)}
+              className={`${GLASS_BUTTON_CLASS} ${bgMode === m.id ? "border-ink/60 bg-gold/30 ring-1 ring-ink/40" : ""} disabled:cursor-not-allowed disabled:opacity-60`}
+            >
+              {bgMode === m.id && <span aria-hidden="true">✓&nbsp;</span>}
+              {m.label}
+            </button>
+          ))}
+        </div>
+        <p aria-live="polite" className="min-h-4 text-xs font-medium text-ink/80">
+          {segmenting ? "Đang tách phông…" : bgNote}
+        </p>
 
         <div className="flex flex-wrap items-center gap-2.5">
           <GlowButton
