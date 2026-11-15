@@ -233,7 +233,7 @@ export function OnsiteBooth({ spot, headingRef, onReset }: OnsiteBoothProps) {
           </div>
 
           <p className="text-xs text-muted">
-            Chỉ mã điểm được gửi để viết chú thích, ảnh không rời máy.
+            Chỉ mã điểm được gửi để viết chú thích. Ảnh chỉ rời máy khi bạn tick &ldquo;Chia sẻ lên Cộng đồng&rdquo;.
           </p>
         </GlassPanel>
       </div>

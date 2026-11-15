@@ -1,0 +1,61 @@
+<!doctype html><meta charset=utf-8>
+<style>
+:root{--sand:#F6EFE4;--terra:#A84825;--blue:#1F4E6B;--gold:#C99A2E;--ink:#1F1A17}
+*{box-sizing:border-box}body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--ink);color:var(--sand);font-family:"Segoe UI",system-ui,sans-serif;position:relative}
+.scene{position:absolute;inset:0;display:none}
+#title:target,#tech:target,#outro:target{display:block}
+.bg{position:absolute;inset:0;background-size:cover;background-position:center}
+.kb{animation:kb 22s ease-out forwards}@keyframes kb{from{transform:scale(1.04)}to{transform:scale(1.16) translateX(-1.5%)}}
+.rise{opacity:0;animation:rise 1.2s cubic-bezier(.2,.7,.2,1) forwards}@keyframes rise{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+.eyebrow{letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:700;font-size:26px}
+/* title + outro: art panel right, text left */
+.split .art{position:absolute;right:0;top:0;width:700px;height:1080px;overflow:hidden}
+.split .art div{width:100%;height:100%;background-size:cover;background-position:center;animation:kb 12s ease-out forwards}
+.split .art:before{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,var(--ink),transparent 40%)}
+.split .txt{position:absolute;left:130px;top:0;bottom:0;width:1000px;display:flex;flex-direction:column;justify-content:center}
+.split h1{font-size:128px;line-height:1.02;margin:24px 0 32px;font-weight:800}
+.split h1 em{font-style:normal;color:var(--gold)}
+.split p{font-size:40px;margin:0;color:#e8dccb;font-weight:300}
+/* tech */
+#tech .bg{filter:blur(14px) brightness(.38) saturate(1.1);transform:scale(1.15)}
+#tech:before{content:""}
+.tech-wrap{position:absolute;inset:0;padding:90px 120px;display:flex;flex-direction:column;justify-content:center}
+.tech-wrap h2{font-size:84px;margin:14px 0 64px;font-weight:800}
+.g{background:linear-gradient(90deg,#8ab4f8,#c58af9,#f28b82);-webkit-background-clip:text;background-clip:text;color:transparent}
+.row{display:flex;gap:36px}
+.card{flex:1;border-radius:32px;padding:52px;background:rgba(246,239,228,.09);border:1px solid rgba(246,239,228,.2);backdrop-filter:blur(8px);opacity:0;animation:rise 1s forwards}
+.card .n{font-size:22px;letter-spacing:.2em;color:var(--gold);font-weight:700}
+.card h3{font-size:52px;margin:14px 0 16px;line-height:1.1}
+.card p{font-size:31px;line-height:1.4;margin:0;color:#e8dccb;font-weight:300}
+.spark{display:inline-block;width:46px;height:46px;vertical-align:-8px;margin-right:12px;background:conic-gradient(from 0deg,#4285f4,#9b72cb,#d96570,#4285f4);clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);animation:spin 6s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.stack{margin-top:46px;display:flex;gap:18px;flex-wrap:wrap}
+.pill{padding:16px 30px;border-radius:99px;border:1px solid rgba(246,239,228,.35);font-size:28px;opacity:0;animation:rise .8s forwards}
+</style>
+
+<section class="scene split" id="title">
+ <div class="bg" style="background:linear-gradient(120deg,#1F1A17 0%,#3a251b 60%,#A84825 140%)"></div>
+ <div class="art"><div style="background-image:url(art/open.jpg)"></div></div>
+ <div class="txt"><div class="eyebrow rise">Di sản &amp; trải nghiệm</div><h1 class="rise" style="animation-delay:.3s">Hành trình<br>văn hóa <em>Đà Nẵng</em></h1><p class="rise" style="animation-delay:.8s">Nghe, làm, thể hiện và đến tận nơi</p></div>
+</section>
+
+<section class="scene" id="tech">
+ <div class="bg kb" style="background-image:url(art/close.jpg)"></div>
+ <div class="tech-wrap">
+  <div class="eyebrow rise">Công nghệ phía sau</div>
+  <h2 class="rise" style="animation-delay:.2s"><span class="spark"></span><span class="g">Gemini API</span> là bộ não của hành trình</h2>
+  <div class="row">
+   <div class="card" style="animation-delay:1.2s"><div class="n">01 · CHẤM ĐIỂM</div><h3>Nghe giọng, xem ảnh</h3><p>Gemini chấm phần thể hiện theo từng tiêu chí rubric, trả về JSON schema chặt chẽ, có phương án dự phòng khi mất mạng.</p></div>
+   <div class="card" style="animation-delay:3.4s"><div class="n">02 · SÁNG TẠO</div><h3>Lời đề tặng cho từng ảnh</h3><p>Mỗi ảnh photobooth được Gemini viết caption riêng theo địa điểm bạn vừa đến.</p></div>
+   <div class="card" style="animation-delay:5.6s"><div class="n">03 · KỂ CHUYỆN</div><h3>Tour năm phút</h3><p>Gemini dựng lộ trình và lời dẫn, đối chiếu với dữ liệu di sản đã kiểm chứng.</p></div>
+  </div>
+  <div class="stack">
+   <span class="pill" style="animation-delay:8s">Next.js 15</span><span class="pill" style="animation-delay:8.4s">MediaPipe tách nền trên máy</span><span class="pill" style="animation-delay:8.8s">Supabase đăng nhập &amp; đồng bộ</span><span class="pill" style="animation-delay:9.2s">Leaflet bản đồ</span><span class="pill" style="animation-delay:9.6s">Cloud Run</span>
+  </div>
+ </div>
+</section>
+
+<section class="scene split" id="outro">
+ <div class="bg" style="background:linear-gradient(120deg,#0e2a3b 0%,#1F1A17 80%)"></div>
+ <div class="art"><div style="background-image:url(art/close.jpg)"></div></div>
+ <div class="txt"><div class="eyebrow rise">Hành trình văn hóa Đà Nẵng</div><h1 class="rise" style="animation-delay:.3s">Đi để <em>nhớ</em>,<br>chơi để <em>hiểu</em></h1><p class="rise" style="animation-delay:.9s">Và kể lại bằng giọng của bạn</p></div>
+</section>
